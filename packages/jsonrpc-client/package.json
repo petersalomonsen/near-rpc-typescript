@@ -1,0 +1,54 @@
+{
+  "name": "@near-js/jsonrpc-client",
+  "version": "0.1.0",
+  "description": "TypeScript client for NEAR Protocol JSON-RPC API",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@near-js/jsonrpc-types": "workspace:*",
+    "cross-fetch": "^4.0.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.2",
+    "typescript": "^5.3.3",
+    "@types/node": "^20.11.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/near-rpc-typescript.git",
+    "directory": "packages/jsonrpc-client"
+  },
+  "keywords": [
+    "near",
+    "protocol",
+    "rpc",
+    "client",
+    "typescript",
+    "fetch",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,460 @@
+// Main code generation script
+// This will fetch the NEAR OpenAPI spec and generate TypeScript types and Zod schemas
+
+import { promises as fs } from 'fs';
+import { join } from 'path';
+
+// OpenAPI spec types
+interface OpenAPISpec {
+  openapi: string;
+  info: any;
+  servers: any[];
+  paths: Record<string, any>;
+  components: {
+    schemas: Record<string, any>;
+  };
+}
+
+interface Schema {
+  type?: string;
+  properties?: Record<string, Schema>;
+  items?: Schema;
+  oneOf?: Schema[];
+  anyOf?: Schema[];
+  allOf?: Schema[];
+  $ref?: string;
+  description?: string;
+  enum?: string[];
+  required?: string[];
+  additionalProperties?: boolean | Schema;
+  format?: string;
+}
+
+// Path to method mapping based on SPEC_ANALYSIS.md findings
+const PATH_TO_METHOD_MAP: Record<string, string> = {
+  '/block': 'block',
+  '/chunk': 'chunk', 
+  '/gas_price': 'gas_price',
+  '/status': 'status',
+  '/health': 'health',
+  '/network_info': 'network_info',
+  '/validators': 'validators',
+  '/client_config': 'client_config',
+  '/broadcast_tx_async': 'broadcast_tx_async',
+  '/broadcast_tx_commit': 'broadcast_tx_commit',
+  '/send_tx': 'send_tx',
+  '/tx': 'tx',
+  '/query': 'query',
+  '/light_client_proof': 'light_client_proof',
+  '/EXPERIMENTAL_changes': 'EXPERIMENTAL_changes',
+  '/EXPERIMENTAL_changes_in_block': 'EXPERIMENTAL_changes_in_block',
+  '/EXPERIMENTAL_validators_ordered': 'EXPERIMENTAL_validators_ordered',
+  '/EXPERIMENTAL_protocol_config': 'EXPERIMENTAL_protocol_config',
+  '/EXPERIMENTAL_genesis_config': 'EXPERIMENTAL_genesis_config',
+  '/EXPERIMENTAL_light_client_proof': 'EXPERIMENTAL_light_client_proof',
+  '/EXPERIMENTAL_light_client_block_proof': 'EXPERIMENTAL_light_client_block_proof',
+  '/EXPERIMENTAL_receipt': 'EXPERIMENTAL_receipt',
+  '/EXPERIMENTAL_tx_status': 'EXPERIMENTAL_tx_status',
+  '/EXPERIMENTAL_split_storage_info': 'EXPERIMENTAL_split_storage_info',
+  '/EXPERIMENTAL_congestion_level': 'EXPERIMENTAL_congestion_level',
+  '/EXPERIMENTAL_maintenance_windows': 'EXPERIMENTAL_maintenance_windows',
+};
+
+// Case conversion utilities
+function snakeToCamel(str: string): string {
+  return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+}
+
+function camelToSnake(str: string): string {
+  return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+}
+
+function pascalCase(str: string): string {
+  const camel = snakeToCamel(str);
+  return camel.charAt(0).toUpperCase() + camel.slice(1);
+}
+
+// Fetch OpenAPI spec
+async function fetchOpenAPISpec(): Promise<OpenAPISpec> {
+  const response = await fetch('https://raw.githubusercontent.com/near/nearcore/master/chain/jsonrpc/openapi/openapi.json');
+  if (!response.ok) {
+    throw new Error(`Failed to fetch OpenAPI spec: ${response.status}`);
+  }
+  return response.json();
+}
+
+// Type generation utilities
+function resolveSchemaRef(ref: string, schemas: Record<string, Schema>): Schema {
+  const refName = ref.replace('#/components/schemas/', '');
+  return schemas[refName] || { type: 'unknown' };
+}
+
+function generateTypeScriptType(schema: Schema, schemas: Record<string, Schema>, depth = 0): string {
+  if (depth > 10) return 'unknown'; // Prevent infinite recursion
+
+  if (schema.$ref) {
+    const refName = schema.$ref.replace('#/components/schemas/', '');
+    return pascalCase(refName);
+  }
+
+  if (schema.oneOf) {
+    return schema.oneOf.map(s => generateTypeScriptType(s, schemas, depth + 1)).join(' | ');
+  }
+
+  if (schema.anyOf) {
+    return schema.anyOf.map(s => generateTypeScriptType(s, schemas, depth + 1)).join(' | ');
+  }
+
+  if (schema.allOf) {
+    return schema.allOf.map(s => generateTypeScriptType(s, schemas, depth + 1)).join(' & ');
+  }
+
+  if (schema.enum) {
+    return schema.enum.map(val => `"${val}"`).join(' | ');
+  }
+
+  switch (schema.type) {
+    case 'string':
+      return 'string';
+    case 'number':
+    case 'integer':
+      return 'number';
+    case 'boolean':
+      return 'boolean';
+    case 'array':
+      const itemType = schema.items ? generateTypeScriptType(schema.items, schemas, depth + 1) : 'unknown';
+      return `${itemType}[]`;
+    case 'object':
+      if (!schema.properties) {
+        if (schema.additionalProperties === true) {
+          return 'Record<string, unknown>';
+        } else if (schema.additionalProperties && typeof schema.additionalProperties === 'object') {
+          const valueType = generateTypeScriptType(schema.additionalProperties, schemas, depth + 1);
+          return `Record<string, ${valueType}>`;
+        }
+        return 'Record<string, unknown>';
+      }
+      
+      const properties = Object.entries(schema.properties).map(([key, prop]) => {
+        const isOptional = !schema.required?.includes(key);
+        const camelKey = snakeToCamel(key);
+        const type = generateTypeScriptType(prop, schemas, depth + 1);
+        return `  ${camelKey}${isOptional ? '?' : ''}: ${type};`;
+      });
+      
+      return `{\n${properties.join('\n')}\n}`;
+    default:
+      return 'unknown';
+  }
+}
+
+function isComplexType(schema: Schema): boolean {
+  return !!(schema.oneOf || schema.anyOf || schema.allOf || (schema.type === 'object' && schema.properties));
+}
+
+function formatComment(description: string): string {
+  if (!description) return '';
+  
+  // Clean up the description
+  const cleanDescription = description
+    .replace(/\n/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  
+  if (cleanDescription.length <= 80) {
+    return `/** ${cleanDescription} */\n`;
+  }
+  
+  // Multi-line comment
+  const words = cleanDescription.split(' ');
+  const lines: string[] = [];
+  let currentLine = '';
+  
+  for (const word of words) {
+    if ((currentLine + ' ' + word).length <= 75) {
+      currentLine = currentLine ? currentLine + ' ' + word : word;
+    } else {
+      if (currentLine) lines.push(currentLine);
+      currentLine = word;
+    }
+  }
+  if (currentLine) lines.push(currentLine);
+  
+  return `/**\n${lines.map(line => ` * ${line}`).join('\n')}\n */\n`;
+}
+
+function generateZodSchema(schema: Schema, schemas: Record<string, Schema>, depth = 0): string {
+  if (depth > 10) return 'z.unknown()'; // Prevent infinite recursion
+
+  if (schema.$ref) {
+    const refName = schema.$ref.replace('#/components/schemas/', '');
+    return `z.lazy(() => ${pascalCase(refName)}Schema)`;
+  }
+
+  if (schema.oneOf) {
+    const options = schema.oneOf.map(s => generateZodSchema(s, schemas, depth + 1));
+    if (options.length === 1) {
+      return options[0];
+    }
+    return `z.union([${options.join(', ')}])`;
+  }
+
+  if (schema.anyOf) {
+    const options = schema.anyOf.map(s => generateZodSchema(s, schemas, depth + 1));
+    if (options.length === 1) {
+      return options[0];
+    }
+    return `z.union([${options.join(', ')}])`;
+  }
+
+  if (schema.allOf) {
+    const allSchemas = schema.allOf.map(s => generateZodSchema(s, schemas, depth + 1));
+    if (allSchemas.length === 1) {
+      return allSchemas[0];
+    }
+    return `z.intersection(${allSchemas.join(', ')})`;
+  }
+
+  if (schema.enum) {
+    return `z.enum([${schema.enum.map(val => `"${val}"`).join(', ')}])`;
+  }
+
+  switch (schema.type) {
+    case 'string':
+      return 'z.string()';
+    case 'number':
+    case 'integer':
+      return 'z.number()';
+    case 'boolean':
+      return 'z.boolean()';
+    case 'array':
+      const itemSchema = schema.items ? generateZodSchema(schema.items, schemas, depth + 1) : 'z.unknown()';
+      return `z.array(${itemSchema})`;
+    case 'object':
+      if (!schema.properties) {
+        if (schema.additionalProperties === true) {
+          return 'z.record(z.unknown())';
+        } else if (schema.additionalProperties && typeof schema.additionalProperties === 'object') {
+          const valueSchema = generateZodSchema(schema.additionalProperties, schemas, depth + 1);
+          return `z.record(${valueSchema})`;
+        }
+        return 'z.record(z.unknown())';
+      }
+      
+      const properties = Object.entries(schema.properties).map(([key, prop]) => {
+        const isOptional = !schema.required?.includes(key);
+        const camelKey = snakeToCamel(key);
+        const zodSchema = generateZodSchema(prop, schemas, depth + 1);
+        return `  ${camelKey}: ${zodSchema}${isOptional ? '.optional()' : ''}`;
+      });
+      
+      return `z.object({\n${properties.join(',\n')}\n})`;
+    default:
+      return 'z.unknown()';
+  }
+}
+
+// Add explicit types for problematic schemas
+function getSchemaExplicitType(schemaName: string): string | null {
+  const circularSchemas = ['Action', 'DelegateAction', 'NonDelegateAction', 'SignedDelegateAction'];
+  if (circularSchemas.includes(schemaName)) {
+    return 'z.ZodType<any>';
+  }
+  return null;
+}
+export async function generateTypes() {
+  console.log('🔄 Starting OpenAPI spec analysis and type generation...');
+  
+  try {
+    // Fetch the OpenAPI spec
+    console.log('📥 Fetching NEAR OpenAPI specification...');
+    const spec = await fetchOpenAPISpec();
+    console.log(`✅ Fetched spec with ${Object.keys(spec.paths).length} endpoints and ${Object.keys(spec.components.schemas).length} schemas`);
+    
+    const outputDir = join(process.cwd(), '../../packages/jsonrpc-types/src');
+    const { schemas } = spec.components;
+    
+    // Generate TypeScript types
+    console.log('🔧 Generating TypeScript types...');
+    const typeExports: string[] = [];
+    const typeDefinitions: string[] = [];
+    
+    // Generate types for each schema
+    Object.entries(schemas).forEach(([schemaName, schema]) => {
+      const typeName = pascalCase(schemaName);
+      const typeDefinition = generateTypeScriptType(schema, schemas);
+      
+      // Add description as JSDoc if available
+      const description = formatComment(schema.description || '');
+      
+      // Determine if this should be an interface or type alias
+      const isComplex = isComplexType(schema);
+      const hasUnion = typeDefinition.includes(' | ');
+      
+      if (isComplex && !hasUnion && typeDefinition.startsWith('{')) {
+        typeDefinitions.push(`${description}export interface ${typeName} ${typeDefinition}`);
+      } else {
+        typeDefinitions.push(`${description}export type ${typeName} = ${typeDefinition};`);
+      }
+      
+      typeExports.push(typeName);
+    });
+    
+    // Generate method parameter and response types
+    const methodTypes: string[] = [];
+    Object.entries(spec.paths).forEach(([path, pathSpec]) => {
+      const methodName = PATH_TO_METHOD_MAP[path];
+      if (!methodName) return;
+      
+      const post = pathSpec.post;
+      if (!post) return;
+      
+      const methodNamePascal = pascalCase(methodName);
+      
+      // Generate request type
+      if (post.requestBody?.content?.['application/json']?.schema) {
+        const requestSchema = post.requestBody.content['application/json'].schema;
+        const requestType = generateTypeScriptType(requestSchema, schemas);
+        methodTypes.push(`export type ${methodNamePascal}Request = ${requestType};`);
+      }
+      
+      // Generate response type
+      if (post.responses?.['200']?.content?.['application/json']?.schema) {
+        const responseSchema = post.responses['200'].content['application/json'].schema;
+        const responseType = generateTypeScriptType(responseSchema, schemas);
+        methodTypes.push(`export type ${methodNamePascal}Response = ${responseType};`);
+      }
+    });
+    
+    const typesContent = `// Auto-generated TypeScript types from NEAR OpenAPI spec
+// Generated on: ${new Date().toISOString()}
+// Do not edit manually - run 'pnpm generate' to regenerate
+
+${typeDefinitions.join('\n\n')}
+
+// Method-specific types
+${methodTypes.join('\n\n')}
+
+// Re-exports for convenience
+export * from './schemas';
+`;
+
+    // Generate Zod schemas
+    console.log('🔧 Generating Zod schemas...');
+    const schemaExports: string[] = [];
+    const schemaDefinitions: string[] = [];
+    
+    Object.entries(schemas).forEach(([schemaName, schema]) => {
+      const schemaTypeName = `${pascalCase(schemaName)}Schema`;
+      const zodSchema = generateZodSchema(schema, schemas);
+      
+      // Add description as comment if available
+      const description = schema.description ? formatComment(schema.description).replace(/\/\*\*/g, '//').replace(/\*\//g, '').replace(/\* /g, '// ') : '';
+      
+      // Handle circular references with explicit types
+      const explicitType = getSchemaExplicitType(schemaName);
+      const typeAnnotation = explicitType ? `: ${explicitType}` : '';
+      
+      schemaDefinitions.push(`${description}export const ${schemaTypeName}${typeAnnotation} = ${zodSchema};`);
+      schemaExports.push(schemaTypeName);
+    });
+    
+    // Generate method schemas
+    const methodSchemas: string[] = [];
+    Object.entries(spec.paths).forEach(([path, pathSpec]) => {
+      const methodName = PATH_TO_METHOD_MAP[path];
+      if (!methodName) return;
+      
+      const post = pathSpec.post;
+      if (!post) return;
+      
+      const methodNamePascal = pascalCase(methodName);
+      
+      // Generate request schema
+      if (post.requestBody?.content?.['application/json']?.schema) {
+        const requestSchema = post.requestBody.content['application/json'].schema;
+        const zodSchema = generateZodSchema(requestSchema, schemas);
+        methodSchemas.push(`export const ${methodNamePascal}RequestSchema = ${zodSchema};`);
+      }
+      
+      // Generate response schema
+      if (post.responses?.['200']?.content?.['application/json']?.schema) {
+        const responseSchema = post.responses['200'].content['application/json'].schema;
+        const zodSchema = generateZodSchema(responseSchema, schemas);
+        methodSchemas.push(`export const ${methodNamePascal}ResponseSchema = ${zodSchema};`);
+      }
+    });
+
+    const schemasContent = `// Auto-generated Zod schemas from NEAR OpenAPI spec
+// Generated on: ${new Date().toISOString()}
+// Do not edit manually - run 'pnpm generate' to regenerate
+
+import { z } from 'zod';
+
+${schemaDefinitions.join('\n\n')}
+
+// Method-specific schemas
+${methodSchemas.join('\n\n')}
+
+// Utility schemas
+export const JsonRpcRequestSchema = z.object({
+  jsonrpc: z.literal('2.0'),
+  id: z.string(),
+  method: z.string(),
+  params: z.unknown().optional(),
+});
+
+export const JsonRpcErrorSchema = z.object({
+  code: z.number(),
+  message: z.string(),
+  data: z.unknown().optional(),
+});
+
+export const JsonRpcResponseSchema = z.object({
+  jsonrpc: z.literal('2.0'),
+  id: z.string(),
+  result: z.unknown().optional(),
+  error: JsonRpcErrorSchema.optional(),
+});
+`;
+
+    // Generate method mapping
+    const methodMappingContent = `// Auto-generated method mapping from NEAR OpenAPI spec
+// Generated on: ${new Date().toISOString()}
+// Do not edit manually - run 'pnpm generate' to regenerate
+
+// Maps OpenAPI paths to actual JSON-RPC method names
+export const PATH_TO_METHOD_MAP = ${JSON.stringify(PATH_TO_METHOD_MAP, null, 2)};
+
+// Reverse mapping for convenience
+export const METHOD_TO_PATH_MAP: Record<string, string> = {};
+Object.entries(PATH_TO_METHOD_MAP).forEach(([path, method]) => {
+  METHOD_TO_PATH_MAP[method] = path;
+});
+
+// Available RPC methods
+export const RPC_METHODS = Object.values(PATH_TO_METHOD_MAP);
+export type RpcMethod = typeof RPC_METHODS[number];
+`;
+
+    // Write all generated files
+    await fs.writeFile(join(outputDir, 'types.ts'), typesContent);
+    await fs.writeFile(join(outputDir, 'schemas.ts'), schemasContent);
+    await fs.writeFile(join(outputDir, 'methods.ts'), methodMappingContent);
+    
+    console.log('✅ Type generation complete!');
+    console.log('📁 Generated files:');
+    console.log(`  - packages/jsonrpc-types/src/types.ts (${typeExports.length} types)`);
+    console.log(`  - packages/jsonrpc-types/src/schemas.ts (${schemaExports.length} schemas)`);
+    console.log(`  - packages/jsonrpc-types/src/methods.ts (${Object.keys(PATH_TO_METHOD_MAP).length} methods)`);
+    
+  } catch (error) {
+    console.error('❌ Generation failed:', error);
+    throw error;
+  }
+}
+
+// CLI execution
+if (import.meta.url === `file://${process.argv[1]}`) {
+  generateTypes().catch(console.error);
+}

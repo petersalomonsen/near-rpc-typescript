@@ -1,0 +1,49 @@
+{
+  "name": "near-rpc-typescript",
+  "version": "0.1.0",
+  "description": "Automated TypeScript RPC client for NEAR Protocol",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "packageManager": "pnpm@8.15.0",
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "clean": "pnpm -r clean",
+    "generate": "pnpm --filter @near-js/jsonrpc-types generate",
+    "typecheck": "pnpm -r typecheck",
+    "dev": "pnpm -r --parallel dev"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3",
+    "tsx": "^4.7.1",
+    "vitest": "^1.2.2",
+    "@vitest/coverage-v8": "^1.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/near-rpc-typescript.git"
+  },
+  "keywords": [
+    "near",
+    "protocol",
+    "rpc",
+    "typescript",
+    "blockchain",
+    "api",
+    "client"
+  ],
+  "author": "",
+  "license": "MIT"
+}

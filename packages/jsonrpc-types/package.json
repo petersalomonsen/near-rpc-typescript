@@ -1,0 +1,53 @@
+{
+  "name": "@near-js/jsonrpc-types",
+  "version": "0.1.0",
+  "description": "TypeScript types and Zod schemas for NEAR Protocol JSON-RPC API",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest",
+    "generate": "tsx ../../tools/codegen/generate.ts"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.2",
+    "typescript": "^5.3.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/near-rpc-typescript.git",
+    "directory": "packages/jsonrpc-types"
+  },
+  "keywords": [
+    "near",
+    "protocol",
+    "rpc",
+    "types",
+    "typescript",
+    "zod",
+    "validation"
+  ],
+  "author": "",
+  "license": "MIT"
+}

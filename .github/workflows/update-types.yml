@@ -1,0 +1,64 @@
+name: Update Generated Types
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Daily at 6 AM UTC
+  workflow_dispatch:
+
+jobs:
+  update-types:
+    name: Update Types from OpenAPI Spec
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate types
+        run: pnpm generate
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: update generated types from OpenAPI spec'
+          title: 'chore: update generated types from OpenAPI spec'
+          body: |
+            This PR contains auto-generated updates from the NEAR Protocol OpenAPI specification.
+            
+            ## Changes
+            - Updated TypeScript types
+            - Updated Zod schemas
+            
+            ## Validation
+            - [ ] Types compile successfully
+            - [ ] Tests pass
+            - [ ] No breaking changes detected
+          branch: update-generated-types
+          delete-branch: true
