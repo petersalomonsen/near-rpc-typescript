@@ -112,16 +112,16 @@ export interface BlockResponse {
 ## Phase 3: Client Implementation (Week 2)
 
 ### 3.1 Base RPC Client
-- [ ] Create core `JsonRpcClient` class with fetch-based transport
-- [ ] Implement request/response handling with Zod validation
-- [ ] Add error handling for RPC errors and network issues
-- [ ] Support for custom endpoints and configuration
+- [x] Create core `JsonRpcClient` class with fetch-based transport
+- [x] Implement request/response handling with Zod validation
+- [x] Add error handling for RPC errors and network issues
+- [x] Support for custom endpoints and configuration
 
 ### 3.2 Method Implementations
-- [ ] Generate individual method functions
-- [ ] Auto-typing based on generated schemas
-- [ ] Request transformation (camelCase → snake_case)
-- [ ] Response transformation (snake_case → camelCase)
+- [x] Generate individual method functions
+- [x] Auto-typing based on generated schemas
+- [x] Request transformation (camelCase → snake_case)
+- [x] Response transformation (snake_case → camelCase)
 
 ### 3.3 Client Features
 ```typescript

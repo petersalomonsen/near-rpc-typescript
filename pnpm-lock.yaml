@@ -44,6 +44,9 @@ importers:
       cross-fetch:
         specifier: ^4.0.0
         version: 4.1.0
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.67
     devDependencies:
       '@types/node':
         specifier: ^20.11.0
