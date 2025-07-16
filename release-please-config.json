@@ -1,0 +1,6 @@
+{
+  "packages": {
+    "packages/jsonrpc-client": {},
+    "packages/jsonrpc-types": {}
+  }
+}
