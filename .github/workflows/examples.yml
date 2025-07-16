@@ -1,0 +1,48 @@
+name: Examples
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  run_examples:
+    name: Run Examples
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Run basic-usage example
+        run: pnpm tsx examples/basic-usage.ts
+
+      - name: Run get-latest-block example
+        run: pnpm tsx examples/get-latest-block.ts
+
+      - name: Run call-contract-method-view-function example
+        run: pnpm tsx examples/call-contract-method-view-function.ts
+
+      - name: Run call-contract-method example
+        run: pnpm tsx examples/call-contract-method.ts
