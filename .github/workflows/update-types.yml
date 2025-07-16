@@ -37,8 +37,8 @@ jobs:
       - name: Generate types
         run: pnpm generate
 
-      - name: Lint generated code
-        run: pnpm lint
+      - name: Format generated code
+        run: pnpm prettier --write "packages/jsonrpc-types/src/**/*.ts"
 
       - name: Check for changes
         id: changes
