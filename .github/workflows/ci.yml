@@ -43,4 +43,7 @@ jobs:
 
       - name: Test & Generate Coverage
         run: pnpm -r run test:coverage
+      
+      - name: Test generate script
+        run: pnpm generate
 
