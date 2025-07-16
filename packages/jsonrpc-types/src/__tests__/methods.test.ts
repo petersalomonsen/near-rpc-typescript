@@ -24,7 +24,7 @@ describe('RPC_METHODS', () => {
       'network_info',
       'status',
       'validators',
-      'EXPERIMENTAL_tx_status'
+      'EXPERIMENTAL_tx_status',
     ];
 
     expectedMethods.forEach(method => {

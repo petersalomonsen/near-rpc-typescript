@@ -12,7 +12,7 @@ describe('JsonRpcRequestSchema', () => {
       jsonrpc: '2.0' as const,
       id: 'test-id',
       method: 'block',
-      params: { finality: 'final' }
+      params: { finality: 'final' },
     };
 
     const result = JsonRpcRequestSchema.safeParse(validRequest);
@@ -22,7 +22,7 @@ describe('JsonRpcRequestSchema', () => {
   it('should reject request without jsonrpc field', () => {
     const invalidRequest = {
       id: 'test-id',
-      method: 'block'
+      method: 'block',
     };
 
     const result = JsonRpcRequestSchema.safeParse(invalidRequest);
@@ -33,7 +33,7 @@ describe('JsonRpcRequestSchema', () => {
     const invalidRequest = {
       jsonrpc: '1.0',
       id: 'test-id',
-      method: 'block'
+      method: 'block',
     };
 
     const result = JsonRpcRequestSchema.safeParse(invalidRequest);
@@ -43,7 +43,7 @@ describe('JsonRpcRequestSchema', () => {
   it('should reject request without id field', () => {
     const invalidRequest = {
       jsonrpc: '2.0',
-      method: 'block'
+      method: 'block',
     };
 
     const result = JsonRpcRequestSchema.safeParse(invalidRequest);
@@ -53,7 +53,7 @@ describe('JsonRpcRequestSchema', () => {
   it('should reject request without method field', () => {
     const invalidRequest = {
       jsonrpc: '2.0',
-      id: 'test-id'
+      id: 'test-id',
     };
 
     const result = JsonRpcRequestSchema.safeParse(invalidRequest);
@@ -64,7 +64,7 @@ describe('JsonRpcRequestSchema', () => {
     const validRequest = {
       jsonrpc: '2.0' as const,
       id: 'test-id',
-      method: 'block'
+      method: 'block',
     };
 
     const result = JsonRpcRequestSchema.safeParse(validRequest);
@@ -74,7 +74,7 @@ describe('JsonRpcRequestSchema', () => {
   it('should accept string id types', () => {
     const testCases = [
       { jsonrpc: '2.0' as const, id: 'string-id', method: 'block' },
-      { jsonrpc: '2.0' as const, id: 'another-string-id', method: 'block' }
+      { jsonrpc: '2.0' as const, id: 'another-string-id', method: 'block' },
     ];
 
     testCases.forEach(request => {
@@ -89,7 +89,7 @@ describe('JsonRpcResponseSchema', () => {
     const validResponse = {
       jsonrpc: '2.0' as const,
       id: 'test-id',
-      result: { someData: 'value' }
+      result: { someData: 'value' },
     };
 
     const result = JsonRpcResponseSchema.safeParse(validResponse);
@@ -102,8 +102,8 @@ describe('JsonRpcResponseSchema', () => {
       id: 'test-id',
       error: {
         code: -32601,
-        message: 'Method not found'
-      }
+        message: 'Method not found',
+      },
     };
 
     const result = JsonRpcResponseSchema.safeParse(validResponse);
@@ -113,7 +113,7 @@ describe('JsonRpcResponseSchema', () => {
   it('should reject response without jsonrpc field', () => {
     const invalidResponse = {
       id: 'test-id',
-      result: { someData: 'value' }
+      result: { someData: 'value' },
     };
 
     const result = JsonRpcResponseSchema.safeParse(invalidResponse);
@@ -124,7 +124,7 @@ describe('JsonRpcResponseSchema', () => {
     const invalidResponse = {
       jsonrpc: '1.0',
       id: 'test-id',
-      result: { someData: 'value' }
+      result: { someData: 'value' },
     };
 
     const result = JsonRpcResponseSchema.safeParse(invalidResponse);
@@ -134,7 +134,7 @@ describe('JsonRpcResponseSchema', () => {
   it('should reject response without id field', () => {
     const invalidResponse = {
       jsonrpc: '2.0',
-      result: { someData: 'value' }
+      result: { someData: 'value' },
     };
 
     const result = JsonRpcResponseSchema.safeParse(invalidResponse);
@@ -146,7 +146,7 @@ describe('JsonRpcResponseSchema', () => {
       jsonrpc: '2.0',
       id: 'test-id',
       result: { someData: 'value' },
-      error: { code: -32601, message: 'Method not found' }
+      error: { code: -32601, message: 'Method not found' },
     };
 
     const result = JsonRpcResponseSchema.safeParse(responseWithBoth);
@@ -157,7 +157,7 @@ describe('JsonRpcResponseSchema', () => {
   it('should allow response with neither result nor error (per current schema)', () => {
     const responseWithNeither = {
       jsonrpc: '2.0',
-      id: 'test-id'
+      id: 'test-id',
     };
 
     const result = JsonRpcResponseSchema.safeParse(responseWithNeither);
@@ -170,7 +170,7 @@ describe('JsonRpcErrorSchema', () => {
   it('should validate a valid JSON-RPC error', () => {
     const validError = {
       code: -32601,
-      message: 'Method not found'
+      message: 'Method not found',
     };
 
     const result = JsonRpcErrorSchema.safeParse(validError);
@@ -181,7 +181,7 @@ describe('JsonRpcErrorSchema', () => {
     const validError = {
       code: -32602,
       message: 'Invalid params',
-      data: { details: 'Missing required parameter' }
+      data: { details: 'Missing required parameter' },
     };
 
     const result = JsonRpcErrorSchema.safeParse(validError);
@@ -190,7 +190,7 @@ describe('JsonRpcErrorSchema', () => {
 
   it('should reject error without code field', () => {
     const invalidError = {
-      message: 'Method not found'
+      message: 'Method not found',
     };
 
     const result = JsonRpcErrorSchema.safeParse(invalidError);
@@ -199,7 +199,7 @@ describe('JsonRpcErrorSchema', () => {
 
   it('should reject error without message field', () => {
     const invalidError = {
-      code: -32601
+      code: -32601,
     };
 
     const result = JsonRpcErrorSchema.safeParse(invalidError);
@@ -213,7 +213,7 @@ describe('JsonRpcErrorSchema', () => {
       { code: -32602, message: 'Error', data: { object: 'data' } },
       { code: -32602, message: 'Error', data: ['array', 'data'] },
       { code: -32602, message: 'Error', data: null },
-      { code: -32602, message: 'Error', data: true }
+      { code: -32602, message: 'Error', data: true },
     ];
 
     testCases.forEach(error => {

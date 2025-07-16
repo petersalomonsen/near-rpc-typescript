@@ -13,11 +13,11 @@ export function convertKeysToSnakeCase(obj: any): any {
   if (obj === null || typeof obj !== 'object') {
     return obj;
   }
-  
+
   if (Array.isArray(obj)) {
     return obj.map(convertKeysToSnakeCase);
   }
-  
+
   const converted: any = {};
   for (const [key, value] of Object.entries(obj)) {
     const snakeKey = camelToSnake(key);
@@ -30,11 +30,11 @@ export function convertKeysToCamelCase(obj: any): any {
   if (obj === null || typeof obj !== 'object') {
     return obj;
   }
-  
+
   if (Array.isArray(obj)) {
     return obj.map(convertKeysToCamelCase);
   }
-  
+
   const converted: any = {};
   for (const [key, value] of Object.entries(obj)) {
     const camelKey = snakeToCamel(key);

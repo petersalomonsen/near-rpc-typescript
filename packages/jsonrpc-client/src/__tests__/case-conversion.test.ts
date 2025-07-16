@@ -4,7 +4,7 @@ import {
   camelToSnake,
   snakeToCamel,
   convertKeysToSnakeCase,
-  convertKeysToCamelCase
+  convertKeysToCamelCase,
 } from './test-utils';
 
 describe('Case Conversion Utilities', () => {
@@ -59,7 +59,9 @@ describe('Case Conversion Utilities', () => {
     });
 
     it('should handle multiple consecutive underscores', () => {
-      expect(snakeToCamel('some__double__underscore')).toBe('someDoubleUnderscore');
+      expect(snakeToCamel('some__double__underscore')).toBe(
+        'someDoubleUnderscore'
+      );
     });
 
     it('should handle trailing underscores', () => {
@@ -72,13 +74,13 @@ describe('Case Conversion Utilities', () => {
       const input = {
         accountId: 'test.near',
         blockHeight: 12345,
-        finality: 'final'
+        finality: 'final',
       };
 
       const expected = {
         account_id: 'test.near',
         block_height: 12345,
-        finality: 'final'
+        finality: 'final',
       };
 
       expect(convertKeysToSnakeCase(input)).toEqual(expected);
@@ -89,18 +91,18 @@ describe('Case Conversion Utilities', () => {
         outerProp: {
           innerProp: 'value',
           anotherInner: {
-            deepProp: 'deep value'
-          }
-        }
+            deepProp: 'deep value',
+          },
+        },
       };
 
       const expected = {
         outer_prop: {
           inner_prop: 'value',
           another_inner: {
-            deep_prop: 'deep value'
-          }
-        }
+            deep_prop: 'deep value',
+          },
+        },
       };
 
       expect(convertKeysToSnakeCase(input)).toEqual(expected);
@@ -110,15 +112,15 @@ describe('Case Conversion Utilities', () => {
       const input = {
         items: [
           { itemId: 1, itemName: 'first' },
-          { itemId: 2, itemName: 'second' }
-        ]
+          { itemId: 2, itemName: 'second' },
+        ],
       };
 
       const expected = {
         items: [
           { item_id: 1, item_name: 'first' },
-          { item_id: 2, item_name: 'second' }
-        ]
+          { item_id: 2, item_name: 'second' },
+        ],
       };
 
       expect(convertKeysToSnakeCase(input)).toEqual(expected);
@@ -147,14 +149,14 @@ describe('Case Conversion Utilities', () => {
         { itemProp: 'value' },
         'string',
         123,
-        { anotherProp: 'another value' }
+        { anotherProp: 'another value' },
       ];
 
       const expected = [
         { item_prop: 'value' },
         'string',
         123,
-        { another_prop: 'another value' }
+        { another_prop: 'another value' },
       ];
 
       expect(convertKeysToSnakeCase(input)).toEqual(expected);
@@ -166,13 +168,13 @@ describe('Case Conversion Utilities', () => {
       const input = {
         account_id: 'test.near',
         block_height: 12345,
-        finality: 'final'
+        finality: 'final',
       };
 
       const expected = {
         accountId: 'test.near',
         blockHeight: 12345,
-        finality: 'final'
+        finality: 'final',
       };
 
       expect(convertKeysToCamelCase(input)).toEqual(expected);
@@ -183,18 +185,18 @@ describe('Case Conversion Utilities', () => {
         outer_prop: {
           inner_prop: 'value',
           another_inner: {
-            deep_prop: 'deep value'
-          }
-        }
+            deep_prop: 'deep value',
+          },
+        },
       };
 
       const expected = {
         outerProp: {
           innerProp: 'value',
           anotherInner: {
-            deepProp: 'deep value'
-          }
-        }
+            deepProp: 'deep value',
+          },
+        },
       };
 
       expect(convertKeysToCamelCase(input)).toEqual(expected);
@@ -204,15 +206,15 @@ describe('Case Conversion Utilities', () => {
       const input = {
         items: [
           { item_id: 1, item_name: 'first' },
-          { item_id: 2, item_name: 'second' }
-        ]
+          { item_id: 2, item_name: 'second' },
+        ],
       };
 
       const expected = {
         items: [
           { itemId: 1, itemName: 'first' },
-          { itemId: 2, itemName: 'second' }
-        ]
+          { itemId: 2, itemName: 'second' },
+        ],
       };
 
       expect(convertKeysToCamelCase(input)).toEqual(expected);
@@ -242,7 +244,7 @@ describe('Case Conversion Utilities', () => {
       const original = {
         accountId: 'test.near',
         blockHeight: 12345,
-        someProperty: 'value'
+        someProperty: 'value',
       };
 
       const snakeCase = convertKeysToSnakeCase(original);
@@ -255,11 +257,8 @@ describe('Case Conversion Utilities', () => {
       const original = {
         outerProp: {
           innerProp: 'value',
-          nestedArray: [
-            { itemProp: 'item1' },
-            { itemProp: 'item2' }
-          ]
-        }
+          nestedArray: [{ itemProp: 'item1' }, { itemProp: 'item2' }],
+        },
       };
 
       const snakeCase = convertKeysToSnakeCase(original);

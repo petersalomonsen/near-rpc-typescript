@@ -1,6 +1,11 @@
 // Test suite for NearRpcClient
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { NearRpcClient, JsonRpcClientError, JsonRpcNetworkError, type ClientConfig } from '../client';
+import {
+  NearRpcClient,
+  JsonRpcClientError,
+  JsonRpcNetworkError,
+  type ClientConfig,
+} from '../client';
 
 vi.setConfig({ testTimeout: 30000 });
 
@@ -10,8 +15,6 @@ afterEach(() => {
 
 describe('NearRpcClient', () => {
   let client: NearRpcClient;
-
-  
 
   describe('constructor', () => {
     it('should create client with endpoint string', () => {
@@ -25,7 +28,7 @@ describe('NearRpcClient', () => {
         timeout: 10000,
         retries: 3,
         headers: { 'Custom-Header': 'value' },
-        validateResponses: false
+        validateResponses: false,
       };
       const configClient = new NearRpcClient(config);
       expect(configClient).toBeInstanceOf(NearRpcClient);
@@ -46,10 +49,10 @@ describe('NearRpcClient', () => {
     });
 
     it('should make query call with camelCase conversion', async () => {
-      const result = await client.query({ 
+      const result = await client.query({
         requestType: 'view_account',
         accountId: 'near.near',
-        finality: 'final'
+        finality: 'final',
       });
       expect(result).toHaveProperty('amount');
     });
@@ -75,9 +78,9 @@ describe('NearRpcClient', () => {
     });
 
     it('should make viewAccount call', async () => {
-      const result = await client.viewAccount({ 
+      const result = await client.viewAccount({
         accountId: 'near.near',
-        finality: 'final'
+        finality: 'final',
       });
       expect(result).toHaveProperty('amount');
     });
@@ -85,7 +88,10 @@ describe('NearRpcClient', () => {
 
   describe('error handling', () => {
     it('should handle JSON-RPC error responses', async () => {
-      const client = new NearRpcClient({ endpoint: 'https://rpc.mainnet.near.org', retries: 0 });
+      const client = new NearRpcClient({
+        endpoint: 'https://rpc.mainnet.near.org',
+        retries: 0,
+      });
       // @ts-expect-error - testing a method that does not exist
       await expect(client.call('non_existent_method')).rejects.toThrow(
         JsonRpcClientError
@@ -93,7 +99,10 @@ describe('NearRpcClient', () => {
     });
 
     it('should handle network errors', async () => {
-      const client = new NearRpcClient({ endpoint: 'https://rpc.mainnet.near.org', retries: 0 });
+      const client = new NearRpcClient({
+        endpoint: 'https://rpc.mainnet.near.org',
+        retries: 0,
+      });
       const fetchSpy = vi.spyOn(global, 'fetch');
       fetchSpy.mockRejectedValue(new Error('Network error'));
 
@@ -101,23 +110,31 @@ describe('NearRpcClient', () => {
     });
 
     it('should handle HTTP error responses', async () => {
-      const client = new NearRpcClient({ endpoint: 'https://rpc.mainnet.near.org', retries: 0 });
+      const client = new NearRpcClient({
+        endpoint: 'https://rpc.mainnet.near.org',
+        retries: 0,
+      });
       const fetchSpy = vi.spyOn(global, 'fetch');
       fetchSpy.mockResolvedValue({
         ok: false,
         status: 500,
-        statusText: 'Internal Server Error'
+        statusText: 'Internal Server Error',
       } as Response);
 
       await expect(client.status()).rejects.toThrow(JsonRpcNetworkError);
     });
 
     it('should handle invalid JSON responses', async () => {
-      const client = new NearRpcClient({ endpoint: 'https://rpc.mainnet.near.org', retries: 0 });
+      const client = new NearRpcClient({
+        endpoint: 'https://rpc.mainnet.near.org',
+        retries: 0,
+      });
       const fetchSpy = vi.spyOn(global, 'fetch');
       fetchSpy.mockResolvedValue({
         ok: true,
-        json: async () => { throw new Error('Invalid JSON'); }
+        json: async () => {
+          throw new Error('Invalid JSON');
+        },
       } as Response);
 
       await expect(client.status()).rejects.toThrow(JsonRpcNetworkError);
@@ -128,13 +145,13 @@ describe('NearRpcClient', () => {
     it('should include custom headers in requests', async () => {
       const client = new NearRpcClient({
         endpoint: 'https://rpc.mainnet.fastnear.com',
-        headers: { 'X-Custom-Header': 'custom-value' }
+        headers: { 'X-Custom-Header': 'custom-value' },
       });
 
       const fetchSpy = vi.spyOn(global, 'fetch');
       fetchSpy.mockResolvedValue({
         ok: true,
-        json: async () => ({ jsonrpc: '2.0', id: '1', result: {} })
+        json: async () => ({ jsonrpc: '2.0', id: '1', result: {} }),
       } as Response);
       await client.status();
 
@@ -142,8 +159,8 @@ describe('NearRpcClient', () => {
         'https://rpc.mainnet.fastnear.com',
         expect.objectContaining({
           headers: expect.objectContaining({
-            'X-Custom-Header': 'custom-value'
-          })
+            'X-Custom-Header': 'custom-value',
+          }),
         })
       );
     });
@@ -151,7 +168,7 @@ describe('NearRpcClient', () => {
     it('should handle validation disabled', async () => {
       const client = new NearRpcClient({
         endpoint: 'https://rpc.mainnet.fastnear.com',
-        validateResponses: false
+        validateResponses: false,
       });
 
       const result = await client.status();
@@ -172,7 +189,7 @@ describe('NearRpcClient', () => {
       const fetchSpy = vi.spyOn(global, 'fetch');
       fetchSpy.mockResolvedValue({
         ok: true,
-        json: async () => ({ jsonrpc: '2.0', id: '1', result: {} })
+        json: async () => ({ jsonrpc: '2.0', id: '1', result: {} }),
       } as Response);
       await client.status();
       await client.health();
@@ -188,15 +205,19 @@ describe('NearRpcClient', () => {
     const client = new NearRpcClient('https://rpc.mainnet.fastnear.com');
 
     it('should call experimental protocol config method', async () => {
-      const result = await client.experimentalProtocolConfig({ finality: 'final' });
+      const result = await client.experimentalProtocolConfig({
+        finality: 'final',
+      });
       expect(result).toHaveProperty('chainId');
     });
   });
 
   describe('error classes', () => {
     it('should create JsonRpcClientError with proper structure', () => {
-      const error = new JsonRpcClientError('Test error', -32601, { detail: 'test' });
-      
+      const error = new JsonRpcClientError('Test error', -32601, {
+        detail: 'test',
+      });
+
       expect(error).toBeInstanceOf(Error);
       expect(error).toBeInstanceOf(JsonRpcClientError);
       expect(error.message).toBe('Test error');
@@ -207,8 +228,11 @@ describe('NearRpcClient', () => {
 
     it('should create JsonRpcNetworkError with proper structure', () => {
       const originalError = new Error('Network failure');
-      const error = new JsonRpcNetworkError('Network error occurred', originalError);
-      
+      const error = new JsonRpcNetworkError(
+        'Network error occurred',
+        originalError
+      );
+
       expect(error).toBeInstanceOf(Error);
       expect(error).toBeInstanceOf(JsonRpcNetworkError);
       expect(error.message).toBe('Network error occurred');

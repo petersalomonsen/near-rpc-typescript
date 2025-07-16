@@ -1,20 +1,20 @@
 // Test suite for generated TypeScript types
 import { describe, it, expect } from 'vitest';
-import type { 
-  AccessKey,
-  AccountView,
-  RpcError
-} from '../types';
+import type { AccessKey, AccountView, RpcError } from '../types';
 import { z } from 'zod';
-import { 
+import {
   JsonRpcRequestSchema,
   JsonRpcResponseSchema,
-  JsonRpcErrorSchema
+  JsonRpcErrorSchema,
 } from '../schemas';
 
 // Infer types from schemas for testing
-type JsonRpcRequest<T = unknown> = z.infer<typeof JsonRpcRequestSchema> & { params?: T };
-type JsonRpcResponse<T = unknown> = z.infer<typeof JsonRpcResponseSchema> & { result?: T };
+type JsonRpcRequest<T = unknown> = z.infer<typeof JsonRpcRequestSchema> & {
+  params?: T;
+};
+type JsonRpcResponse<T = unknown> = z.infer<typeof JsonRpcResponseSchema> & {
+  result?: T;
+};
 type JsonRpcError = z.infer<typeof JsonRpcErrorSchema>;
 
 describe('TypeScript Types', () => {
@@ -22,7 +22,7 @@ describe('TypeScript Types', () => {
     it('should allow valid AccessKey objects', () => {
       const accessKey: AccessKey = {
         nonce: 12345,
-        permission: 'FullAccess'
+        permission: 'FullAccess',
       };
 
       expect(accessKey.nonce).toBe(12345);
@@ -36,9 +36,9 @@ describe('TypeScript Types', () => {
           FunctionCall: {
             allowance: '1000000000000000000000000',
             methodNames: ['method1', 'method2'],
-            receiverId: 'contract.testnet'
-          }
-        }
+            receiverId: 'contract.testnet',
+          },
+        },
       };
 
       expect(accessKey.permission).toHaveProperty('FunctionCall');
@@ -51,7 +51,7 @@ describe('TypeScript Types', () => {
         amount: '1000000000000000000000000',
         codeHash: '11111111111111111111111111111111',
         locked: '0',
-        storageUsage: 182
+        storageUsage: 182,
       };
 
       expect(account.amount).toBe('1000000000000000000000000');
@@ -66,7 +66,7 @@ describe('TypeScript Types', () => {
         storageUsage: 182,
         storagePaidAt: 100,
         globalContractAccountId: 'global.testnet',
-        globalContractHash: '22222222222222222222222222222222'
+        globalContractHash: '22222222222222222222222222222222',
       };
 
       expect(account.storagePaidAt).toBe(100);
@@ -80,7 +80,7 @@ describe('TypeScript Types', () => {
         jsonrpc: '2.0',
         id: 'test-id',
         method: 'block',
-        params: { finality: 'final' }
+        params: { finality: 'final' },
       };
 
       expect(request.jsonrpc).toBe('2.0');
@@ -91,7 +91,7 @@ describe('TypeScript Types', () => {
       const request: JsonRpcRequest = {
         jsonrpc: '2.0',
         id: 'test-id',
-        method: 'status'
+        method: 'status',
       };
 
       expect(request.params).toBeUndefined();
@@ -103,7 +103,7 @@ describe('TypeScript Types', () => {
       const response: JsonRpcResponse<{ height: number }> = {
         jsonrpc: '2.0',
         id: 'test-id',
-        result: { height: 12345 }
+        result: { height: 12345 },
       };
 
       expect(response.result?.height).toBe(12345);
@@ -116,8 +116,8 @@ describe('TypeScript Types', () => {
         id: 'test-id',
         error: {
           code: -32601,
-          message: 'Method not found'
-        }
+          message: 'Method not found',
+        },
       };
 
       expect(response.error?.code).toBe(-32601);
@@ -129,7 +129,7 @@ describe('TypeScript Types', () => {
     it('should allow basic error structure', () => {
       const error: JsonRpcError = {
         code: -32602,
-        message: 'Invalid params'
+        message: 'Invalid params',
       };
 
       expect(error.code).toBe(-32602);
@@ -140,7 +140,7 @@ describe('TypeScript Types', () => {
       const error: JsonRpcError = {
         code: -32602,
         message: 'Invalid params',
-        data: { details: 'Missing required field' }
+        data: { details: 'Missing required field' },
       };
 
       expect(error.data).toEqual({ details: 'Missing required field' });
@@ -151,7 +151,13 @@ describe('TypeScript Types', () => {
     it('should compile without TypeScript errors', () => {
       // This test ensures that all exported types can be imported and used
       // without TypeScript compilation errors
-      const testVar: AccessKey | AccountView | JsonRpcRequest | JsonRpcResponse | JsonRpcError | undefined = undefined;
+      const testVar:
+        | AccessKey
+        | AccountView
+        | JsonRpcRequest
+        | JsonRpcResponse
+        | JsonRpcError
+        | undefined = undefined;
       expect(testVar).toBeUndefined();
     });
   });

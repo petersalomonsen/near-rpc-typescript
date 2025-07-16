@@ -1,14 +1,14 @@
 // Core JSON-RPC client implementation
-import { 
-  JsonRpcRequestSchema, 
-  JsonRpcResponseSchema, 
+import {
+  JsonRpcRequestSchema,
+  JsonRpcResponseSchema,
   JsonRpcErrorSchema,
-  RPC_METHODS
+  RPC_METHODS,
 } from '@near-js/jsonrpc-types';
 import { z } from 'zod';
 
-// Define RpcMethod type locally 
-type RpcMethod = typeof RPC_METHODS[number];
+// Define RpcMethod type locally
+type RpcMethod = (typeof RPC_METHODS)[number];
 
 // Types for client configuration
 export interface ClientConfig {
@@ -77,11 +77,11 @@ function convertKeysToSnakeCase(obj: any): any {
   if (obj === null || typeof obj !== 'object') {
     return obj;
   }
-  
+
   if (Array.isArray(obj)) {
     return obj.map(convertKeysToSnakeCase);
   }
-  
+
   const converted: any = {};
   for (const [key, value] of Object.entries(obj)) {
     const snakeKey = camelToSnake(key);
@@ -94,11 +94,11 @@ function convertKeysToCamelCase(obj: any): any {
   if (obj === null || typeof obj !== 'object') {
     return obj;
   }
-  
+
   if (Array.isArray(obj)) {
     return obj.map(convertKeysToCamelCase);
   }
-  
+
   const converted: any = {};
   for (const [key, value] of Object.entries(obj)) {
     const camelKey = snakeToCamel(key);
@@ -152,10 +152,10 @@ export class NearRpcClient {
     params?: TParams
   ): Promise<TResult> {
     const requestId = this.generateRequestId();
-    
+
     // Convert camelCase params to snake_case for the RPC call
     const snakeCaseParams = params ? convertKeysToSnakeCase(params) : undefined;
-    
+
     const request: JsonRpcRequest = {
       jsonrpc: '2.0',
       id: requestId,
@@ -176,7 +176,7 @@ export class NearRpcClient {
     }
 
     let lastError: Error | null = null;
-    
+
     for (let attempt = 0; attempt <= this.retries; attempt++) {
       try {
         const controller = new AbortController();
@@ -222,18 +222,19 @@ export class NearRpcClient {
         }
 
         // Convert snake_case response back to camelCase
-        const camelCaseResult = rpcResponse.result ? convertKeysToCamelCase(rpcResponse.result) : rpcResponse.result;
-        
-        return camelCaseResult as TResult;
+        const camelCaseResult = rpcResponse.result
+          ? convertKeysToCamelCase(rpcResponse.result)
+          : rpcResponse.result;
 
+        return camelCaseResult as TResult;
       } catch (error) {
         lastError = error as Error;
-        
+
         // Don't retry for JSON-RPC errors or client errors
         if (error instanceof JsonRpcClientError) {
           throw error;
         }
-        
+
         // Only retry on network errors if we have attempts left
         if (attempt < this.retries) {
           // Exponential backoff
@@ -280,7 +281,9 @@ export class NearRpcClient {
   /**
    * Get chunk information
    */
-  async chunk(params: { chunkId: string } | { blockId: string | number; shardId: number }): Promise<any> {
+  async chunk(
+    params: { chunkId: string } | { blockId: string | number; shardId: number }
+  ): Promise<any> {
     return this.call('chunk', params);
   }
 
@@ -415,7 +418,7 @@ export class NearRpcClient {
   }
 
   // Experimental methods
-  
+
   /**
    * Get state changes (experimental)
    */
@@ -431,21 +434,25 @@ export class NearRpcClient {
   /**
    * Get state changes in block (experimental)
    */
-  async experimentalChangesInBlock(params: { blockId: string | number }): Promise<any> {
+  async experimentalChangesInBlock(params: {
+    blockId: string | number;
+  }): Promise<any> {
     return this.call('EXPERIMENTAL_changes_in_block', params);
   }
 
   /**
    * Get ordered validators (experimental)
    */
-  async experimentalValidatorsOrdered(params?: { blockId?: string | number }): Promise<any> {
+  async experimentalValidatorsOrdered(params?: {
+    blockId?: string | number;
+  }): Promise<any> {
     return this.call('EXPERIMENTAL_validators_ordered', params);
   }
 
   /**
    * Get protocol configuration (experimental)
    */
-  async experimentalProtocolConfig(params?: { 
+  async experimentalProtocolConfig(params?: {
     blockId?: string | number;
     finality?: 'final' | 'near-final' | 'optimistic';
   }): Promise<any> {
@@ -469,7 +476,10 @@ export class NearRpcClient {
   /**
    * Get transaction status (experimental)
    */
-  async experimentalTxStatus(params: { txHash: string; senderAccountId: string }): Promise<any> {
+  async experimentalTxStatus(params: {
+    txHash: string;
+    senderAccountId: string;
+  }): Promise<any> {
     return this.call('EXPERIMENTAL_tx_status', params);
   }
 }

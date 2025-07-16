@@ -20,7 +20,7 @@
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src --ext .ts",
+    "lint": "prettier --check src/**/*.ts",
     "test": "vitest"
   },
   "dependencies": {
@@ -29,6 +29,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "prettier": "^3.2.5",
     "tsup": "^8.0.2",
     "typescript": "^5.3.3",
     "@types/node": "^20.11.0",
