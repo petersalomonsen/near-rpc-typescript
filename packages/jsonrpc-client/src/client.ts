@@ -168,8 +168,9 @@ export class NearRpcClient {
       try {
         JsonRpcRequestSchema.parse(request);
       } catch (error) {
-        throw new JsonRpcClientError(
-          `Invalid request format: ${error instanceof Error ? error.message : 'Unknown error'}`
+        throw new JsonRpcNetworkError(
+          `Invalid request format: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          error as Error
         );
       }
     }
@@ -190,10 +191,6 @@ export class NearRpcClient {
 
         clearTimeout(timeoutId);
 
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
         const jsonResponse = await response.json();
 
         // Validate response if enabled
@@ -201,6 +198,7 @@ export class NearRpcClient {
           try {
             JsonRpcResponseSchema.parse(jsonResponse);
           } catch (error) {
+            // This indicates a malformed response, which is a client-level concern
             throw new JsonRpcClientError(
               `Invalid response format: ${error instanceof Error ? error.message : 'Unknown error'}`
             );
@@ -209,13 +207,18 @@ export class NearRpcClient {
 
         const rpcResponse = jsonResponse as JsonRpcResponse<TResult>;
 
-        // Check for JSON-RPC errors
+        // Check for JSON-RPC errors, which can be present even on non-200 responses
         if (rpcResponse.error) {
           throw new JsonRpcClientError(
             rpcResponse.error.message,
             rpcResponse.error.code,
             rpcResponse.error.data
           );
+        }
+
+        // If response is not OK and there was no RPC error, treat as a network error
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
 
         // Convert snake_case response back to camelCase
@@ -271,7 +274,7 @@ export class NearRpcClient {
    * Get current gas price
    */
   async gasPrice(params?: { blockId?: string | number }): Promise<any> {
-    return this.call('gas_price', params || null);
+    return this.call('gas_price', params);
   }
 
   /**
@@ -327,7 +330,7 @@ export class NearRpcClient {
    * Send transaction
    */
   async sendTx(params: { signedTxBase64: string }): Promise<any> {
-    return this.call('send_tx', params);
+    return await this.call('send_tx', params);
   }
 
   /**
@@ -442,7 +445,10 @@ export class NearRpcClient {
   /**
    * Get protocol configuration (experimental)
    */
-  async experimentalProtocolConfig(params?: { blockReference?: any }): Promise<any> {
+  async experimentalProtocolConfig(params?: { 
+    blockId?: string | number;
+    finality?: 'final' | 'near-final' | 'optimistic';
+  }): Promise<any> {
     return this.call('EXPERIMENTAL_protocol_config', params);
   }
 

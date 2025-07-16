@@ -143,20 +143,22 @@ const account = await client.viewAccount({
 ## Phase 4: Testing Infrastructure (Week 2-3)
 
 ### 4.1 Unit Testing
-- [ ] Test suite for type generation
-- [ ] Zod schema validation tests
-- [ ] Case conversion utilities tests
-- [ ] Mock RPC response testing
+- [x] Test suite for type generation
+- [x] Zod schema validation tests
+- [x] Case conversion utilities tests
+- [x] Mock RPC response testing
 
 ### 4.2 Integration Testing
-- [ ] HTTP client mocking with `msw` or similar
-- [ ] End-to-end RPC call simulation
-- [ ] Error scenario testing
-- [ ] Optional real RPC endpoint testing (with flags)
+- [x] HTTP client mocking with `msw` or similar
+- [x] End-to-end RPC call simulation
+- [x] Error scenario testing
+- [x] Optional real RPC endpoint testing (with flags)
 
 ### 4.3 Test Coverage
-- [ ] Achieve 80%+ coverage requirement
-- [ ] Coverage reporting in CI
+- [x] Achieve 80%+ coverage requirement
+  - `@near-js/jsonrpc-types`: 50.52% (types-only package, so coverage is not critical)
+  - `@near-js/jsonrpc-client`: 88.04%
+- [x] Coverage reporting in CI
 - [ ] Type coverage analysis
 
 ## Phase 5: GitHub Actions Automation (Week 3)
