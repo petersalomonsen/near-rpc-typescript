@@ -44,8 +44,3 @@ jobs:
       - name: Test & Generate Coverage
         run: pnpm -r run test:coverage
 
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          files: ./packages/jsonrpc-types/coverage/lcov.info,./packages/jsonrpc-client/coverage/lcov.info
-          fail_ci_if_error: true
