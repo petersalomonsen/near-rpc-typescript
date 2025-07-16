@@ -22,6 +22,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "prettier --check src/**/*.ts",
     "test": "vitest",
+    "test:coverage": "vitest run --coverage",
     "generate": "tsx ../../tools/codegen/generate.ts"
   },
   "dependencies": {
