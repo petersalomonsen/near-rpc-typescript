@@ -203,7 +203,9 @@ describe('NearRpcClient', () => {
 
   describe('experimental methods', () => {
     const client = new NearRpcClient('https://rpc.mainnet.fastnear.com');
-    const archivalClient = new NearRpcClient('https://archival-rpc.mainnet.fastnear.com');
+    const archivalClient = new NearRpcClient(
+      'https://archival-rpc.mainnet.fastnear.com'
+    );
 
     it('should call experimental protocol config method', async () => {
       const result = await client.experimentalProtocolConfig({
@@ -220,20 +222,24 @@ describe('NearRpcClient', () => {
 
     it('should call experimental receipt method with real receipt', async () => {
       const receiptId = '21RBsYGnt6qQwGCdLdzeSHQdfgjrHY9p1oEuzQWmXf5k';
-      
+
       const result = await archivalClient.experimentalReceipt({ receiptId });
       expect(result).toBeDefined();
       expect(result).toHaveProperty('receiptId', receiptId);
       expect(result).toHaveProperty('receiverId', 'twelvetone.near');
-      expect(result).toHaveProperty('predecessorId', '5d3b3ff8c39dea6b9016cfac3902a2907f41fee7146cda2e7600703ef22cf5ec');
+      expect(result).toHaveProperty(
+        'predecessorId',
+        '5d3b3ff8c39dea6b9016cfac3902a2907f41fee7146cda2e7600703ef22cf5ec'
+      );
       expect(result).toHaveProperty('receipt');
       expect(result.receipt).toHaveProperty('Action');
     });
 
     it('should call experimental tx status method with real transaction', async () => {
       const txHash = 'Dsw7yq4Y5iduUnNbnn5r6nZfL9cmkDyGWdxNzPCQYYep';
-      const senderAccountId = '5d3b3ff8c39dea6b9016cfac3902a2907f41fee7146cda2e7600703ef22cf5ec';
-      
+      const senderAccountId =
+        '5d3b3ff8c39dea6b9016cfac3902a2907f41fee7146cda2e7600703ef22cf5ec';
+
       const result = await archivalClient.experimentalTxStatus({
         txHash,
         senderAccountId,
@@ -243,24 +249,32 @@ describe('NearRpcClient', () => {
       expect(result).toHaveProperty('receiptsOutcome');
       expect(Array.isArray(result.receiptsOutcome)).toBe(true);
       expect(result.receiptsOutcome[0]).toHaveProperty('outcome');
-      expect(result.receiptsOutcome[0].outcome).toHaveProperty('executorId', 'twelvetone.near');
+      expect(result.receiptsOutcome[0].outcome).toHaveProperty(
+        'executorId',
+        'twelvetone.near'
+      );
     });
 
     it('should call experimental changes in block method with specific block', async () => {
-      const archivalClient = new NearRpcClient('https://archival-rpc.mainnet.fastnear.com');
+      const archivalClient = new NearRpcClient(
+        'https://archival-rpc.mainnet.fastnear.com'
+      );
       const result = await archivalClient.experimentalChangesInBlock({
         blockId: 62899098,
       });
       expect(result).toBeDefined();
-      expect(result).toHaveProperty('blockHash', '9ZEqsVLykxUr8XMhzGrxf49PgCEKscqYtsbEJoqXb5rH');
+      expect(result).toHaveProperty(
+        'blockHash',
+        '9ZEqsVLykxUr8XMhzGrxf49PgCEKscqYtsbEJoqXb5rH'
+      );
       expect(result).toHaveProperty('changes');
       expect(Array.isArray(result.changes)).toBe(true);
       expect(result.changes.length).toBeGreaterThan(0);
-      
+
       // Check that changes have expected structure
       expect(result.changes[0]).toHaveProperty('accountId');
       expect(result.changes[0]).toHaveProperty('type');
-      
+
       // Verify some known accounts were touched in this block
       const accountIds = result.changes.map(change => change.accountId);
       expect(accountIds).toContain('aurora');
@@ -268,14 +282,16 @@ describe('NearRpcClient', () => {
     });
 
     it('should call experimental validators ordered method', async () => {
-      const archivalClient = new NearRpcClient('https://archival-rpc.mainnet.fastnear.com');
+      const archivalClient = new NearRpcClient(
+        'https://archival-rpc.mainnet.fastnear.com'
+      );
       const result = await archivalClient.experimentalValidatorsOrdered({
         blockId: '9ZEqsVLykxUr8XMhzGrxf49PgCEKscqYtsbEJoqXb5rH',
       });
       expect(result).toBeDefined();
       expect(Array.isArray(result)).toBe(true);
       expect(result.length).toBeGreaterThan(0);
-      
+
       // Check validator structure
       if (result.length > 0) {
         expect(result[0]).toHaveProperty('accountId');
@@ -284,7 +300,9 @@ describe('NearRpcClient', () => {
     });
 
     it('should call experimental changes method', async () => {
-      const archivalClient = new NearRpcClient('https://archival-rpc.mainnet.fastnear.com');
+      const archivalClient = new NearRpcClient(
+        'https://archival-rpc.mainnet.fastnear.com'
+      );
       const result = await archivalClient.experimentalChanges({
         changesType: 'account_changes',
         accountIds: ['aurora'],
@@ -297,14 +315,17 @@ describe('NearRpcClient', () => {
     });
 
     it('should call light client proof method', async () => {
-      const archivalClient = new NearRpcClient('https://archival-rpc.mainnet.fastnear.com');
-      
+      const archivalClient = new NearRpcClient(
+        'https://archival-rpc.mainnet.fastnear.com'
+      );
+
       try {
         const result = await archivalClient.lightClientProof({
           type: 'transaction',
           lightClientHead: '9ZEqsVLykxUr8XMhzGrxf49PgCEKscqYtsbEJoqXb5rH',
           transactionHash: 'Dsw7yq4Y5iduUnNbnn5r6nZfL9cmkDyGWdxNzPCQYYep',
-          senderId: '5d3b3ff8c39dea6b9016cfac3902a2907f41fee7146cda2e7600703ef22cf5ec',
+          senderId:
+            '5d3b3ff8c39dea6b9016cfac3902a2907f41fee7146cda2e7600703ef22cf5ec',
         });
         expect(result).toBeDefined();
       } catch (error) {
