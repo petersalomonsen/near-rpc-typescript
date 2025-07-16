@@ -14,18 +14,23 @@
     "clean": "pnpm -r clean",
     "generate": "pnpm --filter @near-js/jsonrpc-types generate",
     "typecheck": "pnpm -r typecheck",
+    "type-coverage": "typescript-coverage-report",
     "dev": "pnpm -r --parallel dev"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
+    "@vitest/coverage-v8": "^1.2.2",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "prettier": "^3.2.5",
-    "typescript": "^5.3.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "semantic-ui-react": "^2.1.5",
     "tsx": "^4.7.1",
-    "vitest": "^1.2.2",
-    "@vitest/coverage-v8": "^1.2.2"
+    "typescript": "^5.3.3",
+    "typescript-coverage-report": "^1.1.1",
+    "vitest": "^1.2.2"
   },
   "engines": {
     "node": ">=18.0.0",

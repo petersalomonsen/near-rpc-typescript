@@ -159,7 +159,7 @@ const account = await client.viewAccount({
   - `@near-js/jsonrpc-types`: 50.52% (types-only package, so coverage is not critical)
   - `@near-js/jsonrpc-client`: 88.04%
 - [x] Coverage reporting in CI
-- [ ] Type coverage analysis
+- [x] Type coverage analysis (92.39% overall)
 
 ## Phase 5: GitHub Actions Automation (Week 3)
 

@@ -108,3 +108,6 @@ lib/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Type Coverage
+coverage-ts
