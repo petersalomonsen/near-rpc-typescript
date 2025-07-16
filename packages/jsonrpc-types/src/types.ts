@@ -1,5 +1,5 @@
 // Auto-generated TypeScript types from NEAR OpenAPI spec
-// Generated on: 2025-06-28T04:37:45.371Z
+// Generated on: 2025-07-16T21:51:14.474Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 /**
@@ -2627,8 +2627,8 @@ export interface StateItem {
   value: string;
 }
 
-/** Options for dumping state to S3. */
 export interface StateSyncConfig {
+  concurrency?: SyncConcurrency;
   dump?: DumpConfig;
   sync?: SyncConfig;
 }
@@ -2679,6 +2679,13 @@ export interface StorageUsageConfigView {
 }
 
 export type SyncCheckpoint = 'genesis' | 'earliest_available';
+
+export interface SyncConcurrency {
+  apply: number;
+  applyDuringCatchup: number;
+  peerDownloads: number;
+  perShard: number;
+}
 
 /** Configures how to fetch state parts during state sync. */
 export type SyncConfig =
