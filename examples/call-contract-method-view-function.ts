@@ -10,14 +10,16 @@
 import { NearRpcClient } from '@near-js/jsonrpc-client';
 
 const provider = new NearRpcClient({
-    endpoint: 'https://rpc.mainnet.fastnear.com',
+  endpoint: 'https://rpc.mainnet.fastnear.com',
 });
 
 const result = await provider.viewFunction({
-    accountId: 'intents.near',
-    methodName: 'mt_tokens_for_owner',
-    argsBase64: Buffer.from(JSON.stringify({ account_id: 'webassemblymusic-treasury.sputnik-dao.near' })).toString('base64'),
-    finality: 'final',
+  accountId: 'intents.near',
+  methodName: 'mt_tokens_for_owner',
+  argsBase64: Buffer.from(
+    JSON.stringify({ account_id: 'webassemblymusic-treasury.sputnik-dao.near' })
+  ).toString('base64'),
+  finality: 'final',
 });
 
 const parsedResult = JSON.parse(Buffer.from(result.result).toString());

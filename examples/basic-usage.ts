@@ -16,7 +16,7 @@ const latestBlock = await client.block({ finality: 'final' });
 console.log('Latest block:', latestBlock.header.height);
 
 console.log('\nViewing account...');
-const account = await client.viewAccount({ 
+const account = await client.viewAccount({
   accountId: 'example.testnet',
   finality: 'final',
 });

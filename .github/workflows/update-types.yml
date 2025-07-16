@@ -2,7 +2,7 @@ name: Update Generated Types
 
 on:
   schedule:
-    - cron: '0 6 * * *'  # Daily at 6 AM UTC
+    - cron: '0 6 * * *' # Daily at 6 AM UTC
   workflow_dispatch:
 
 jobs:
@@ -33,6 +33,9 @@ jobs:
       - name: Generate types
         run: pnpm generate
 
+      - name: Lint generated code
+        run: pnpm lint
+
       - name: Check for changes
         id: changes
         run: |
@@ -51,11 +54,11 @@ jobs:
           title: 'chore: update generated types from OpenAPI spec'
           body: |
             This PR contains auto-generated updates from the NEAR Protocol OpenAPI specification.
-            
+
             ## Changes
             - Updated TypeScript types
             - Updated Zod schemas
-            
+
             ## Validation
             - [ ] Types compile successfully
             - [ ] Tests pass

@@ -1,5 +1,5 @@
 // Auto-generated Zod schemas from NEAR OpenAPI spec
-// Generated on: 2025-06-28T04:37:45.373Z
+// Generated on: 2025-07-16T21:25:56.853Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod';
@@ -2727,8 +2727,8 @@ export const StateItemSchema = z.object({
   value: z.string(),
 });
 
-// Options for dumping state to S3.
 export const StateSyncConfigSchema = z.object({
+  concurrency: z.lazy(() => SyncConcurrencySchema).optional(),
   dump: z.lazy(() => DumpConfigSchema).optional(),
   sync: z.lazy(() => SyncConfigSchema).optional(),
 });
@@ -2780,6 +2780,13 @@ export const StorageUsageConfigViewSchema = z.object({
 });
 
 export const SyncCheckpointSchema = z.enum(['genesis', 'earliest_available']);
+
+export const SyncConcurrencySchema = z.object({
+  apply: z.number(),
+  applyDuringCatchup: z.number(),
+  peerDownloads: z.number(),
+  perShard: z.number(),
+});
 
 // Configures how to fetch state parts during state sync.
 export const SyncConfigSchema = z.union([

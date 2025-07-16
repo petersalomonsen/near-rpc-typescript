@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Test generate script
+        run: pnpm generate
+
       - name: Lint
         run: pnpm lint
 
@@ -43,7 +46,3 @@ jobs:
 
       - name: Test & Generate Coverage
         run: pnpm -r run test:coverage
-      
-      - name: Test generate script
-        run: pnpm generate
-

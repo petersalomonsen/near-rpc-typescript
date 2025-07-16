@@ -20,23 +20,23 @@ We welcome contributions to this project! Please follow these guidelines to ensu
 
 ## Development
 
--   Run the tests:
+- Run the tests:
 
-    ```bash
-    pnpm test
-    ```
+  ```bash
+  pnpm test
+  ```
 
--   Run the linter:
+- Run the linter:
 
-    ```bash
-    pnpm lint
-    ```
+  ```bash
+  pnpm lint
+  ```
 
--   Build the packages:
+- Build the packages:
 
-    ```bash
-    pnpm build
-    ```
+  ```bash
+  pnpm build
+  ```
 
 ## Submitting a Pull Request
 

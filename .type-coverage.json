@@ -1,8 +1,4 @@
 {
-  "ignoreFiles": [
-    "**/node_modules/**",
-    "**/dist/**",
-    "**/*.test.ts"
-  ],
+  "ignoreFiles": ["**/node_modules/**", "**/dist/**", "**/*.test.ts"],
   "strict": true
 }

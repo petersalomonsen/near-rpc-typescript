@@ -79,7 +79,7 @@ pnpm -r test
 pnpm -r test -- run
 ```
 
-*Note: The root `pnpm test` command is an alias for `pnpm -r test`.*
+_Note: The root `pnpm test` command is an alias for `pnpm -r test`._
 
 ### Running Tests for a Specific Package
 

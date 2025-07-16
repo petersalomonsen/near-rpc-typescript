@@ -10,11 +10,11 @@
 import { NearRpcClient } from '@near-js/jsonrpc-client';
 
 const provider = new NearRpcClient({
-    endpoint: 'https://rpc.mainnet.fastnear.com',
+  endpoint: 'https://rpc.mainnet.fastnear.com',
 });
 
 const block = await provider.block({
-    finality: 'final',
+  finality: 'final',
 });
 
 console.log('block', block);

@@ -17,7 +17,7 @@ import type { BlockReference } from '@near-js/jsonrpc-types';
 import { BlockReferenceSchema } from '@near-js/jsonrpc-types';
 
 const blockReference: BlockReference = {
-  block_id: 'latest'
+  block_id: 'latest',
 };
 
 const result = BlockReferenceSchema.safeParse(blockReference);

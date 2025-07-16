@@ -2,7 +2,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   esbuild: {
-    target: 'node20'
+    target: 'node20',
   },
   test: {
     globals: true,
@@ -16,16 +16,16 @@ export default defineConfig({
         'dist/',
         '**/*.test.ts',
         '**/*.spec.ts',
-        '**/generated/**'
+        '**/generated/**',
       ],
       thresholds: {
         global: {
           branches: 85,
           functions: 80,
           lines: 80,
-          statements: 80
-        }
-      }
-    }
-  }
+          statements: 80,
+        },
+      },
+    },
+  },
 });
