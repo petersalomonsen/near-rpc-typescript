@@ -48,6 +48,12 @@ importers:
         specifier: ^1.2.2
         version: 1.6.1(@types/node@20.19.1)
 
+  examples:
+    dependencies:
+      '@near-js/jsonrpc-client':
+        specifier: workspace:*
+        version: link:../packages/jsonrpc-client
+
   packages/jsonrpc-client:
     dependencies:
       '@near-js/jsonrpc-types':
