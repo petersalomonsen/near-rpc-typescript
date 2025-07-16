@@ -63,6 +63,48 @@ pnpm lint
 pnpm generate
 ```
 
+## 🧪 Testing
+
+This project uses [Vitest](https://vitest.dev/) for testing. You can run tests for the entire project or for individual packages.
+
+### Running All Tests
+
+To run all tests for both packages, use the following command from the root of the project:
+
+```bash
+# Run all tests in watch mode
+pnpm -r test
+
+# Run all tests once
+pnpm -r test -- run
+```
+
+*Note: The root `pnpm test` command is an alias for `pnpm -r test`.*
+
+### Running Tests for a Specific Package
+
+To run tests for a specific package, use the `--filter` flag with the package name:
+
+```bash
+# Run tests for the types package in watch mode
+pnpm --filter @near-js/jsonrpc-types test
+
+# Run tests for the client package once
+pnpm --filter @near-js/jsonrpc-client test -- run
+```
+
+### Coverage
+
+To generate a coverage report, add the `--coverage` flag to the test command:
+
+```bash
+# Generate coverage for all packages
+pnpm -r test -- run --coverage
+
+# Generate coverage for a specific package
+pnpm --filter @near-js/jsonrpc-client test -- run --coverage
+```
+
 ## 🤖 Automation
 
 The project includes GitHub Actions workflows for:
