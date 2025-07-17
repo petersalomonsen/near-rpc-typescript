@@ -22,7 +22,7 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
 
-  publish:
+  build-and-upload:
     needs: release-please
     if: ${{ needs.release-please.outputs.releases_created == 'true' }}
     runs-on: ubuntu-latest
@@ -33,11 +33,20 @@ jobs:
           version: 8
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: 'pnpm'
-          registry-url: 'https://npm.pkg.github.com'
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - run: pnpm publish -r --access public --no-git-checks
+      - run: |
+          pnpm pack --pack-destination . -C packages/jsonrpc-types
+          pnpm pack --pack-destination . -C packages/jsonrpc-client
+      - name: Upload package tarballs to release
+        run: |
+          for tarball in packages/*/near-js-*.tgz; do
+            if [ -f "$tarball" ]; then
+              echo "Uploading $tarball"
+              gh release upload ${{ github.ref_name }} "$tarball"
+            fi
+          done
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
