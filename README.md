@@ -1,7 +1,7 @@
 # NEAR Protocol TypeScript RPC Client
 
-[![CI](https://github.com/your-org/near-rpc-typescript/actions/workflows/ci.yml/badge.svg)](https://github.com/your-org/near-rpc-typescript/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/your-org/near-rpc-typescript/branch/main/graph/badge.svg)](https://codecov.io/gh/your-org/near-rpc-typescript)
+[![CI](https://github.com/petersalomonsen/near-rpc-typescript/actions/workflows/ci.yml/badge.svg)](https://github.com/petersalomonsen/near-rpc-typescript/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/petersalomonsen/near-rpc-typescript/branch/main/graph/badge.svg)](https://codecov.io/gh/petersalomonsen/near-rpc-typescript)
 
 An automated, type-safe TypeScript client for NEAR Protocol's JSON-RPC API, generated from the official OpenAPI specification.
 
@@ -14,13 +14,27 @@ This monorepo contains two packages:
 
 ## 🚀 Quick Start
 
+### Installation
+
+Since these packages are distributed via GitHub releases, install them directly from the release tarballs:
+
 ```bash
-npm install @near-js/jsonrpc-client
-# or
-pnpm add @near-js/jsonrpc-client
-# or
-yarn add @near-js/jsonrpc-client
+npm install https://github.com/petersalomonsen/near-rpc-typescript/releases/download/jsonrpc-types-v0.1.0/near-js-jsonrpc-types-0.1.0.tgz
+npm install https://github.com/petersalomonsen/near-rpc-typescript/releases/download/jsonrpc-types-v0.1.0/near-js-jsonrpc-client-0.1.0.tgz
 ```
+
+Or add to your `package.json`:
+
+```json
+{
+  "dependencies": {
+    "@near-js/jsonrpc-types": "https://github.com/petersalomonsen/near-rpc-typescript/releases/download/jsonrpc-types-v0.1.0/near-js-jsonrpc-types-0.1.0.tgz",
+    "@near-js/jsonrpc-client": "https://github.com/petersalomonsen/near-rpc-typescript/releases/download/jsonrpc-types-v0.1.0/near-js-jsonrpc-client-0.1.0.tgz"
+  }
+}
+```
+
+> **Note**: Check the [releases page](https://github.com/petersalomonsen/near-rpc-typescript/releases) for the latest version and update the URLs accordingly.
 
 ```typescript
 import { NearRpcClient } from '@near-js/jsonrpc-client';
