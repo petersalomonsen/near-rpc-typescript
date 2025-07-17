@@ -37,11 +37,11 @@
   },
   "publishConfig": {
     "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com/@petersalomonsen"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-org/near-rpc-typescript.git",
+    "url": "https://github.com/petersalomonsen/near-rpc-typescript.git",
     "directory": "packages/jsonrpc-types"
   },
   "keywords": [
