@@ -10,6 +10,9 @@ permissions:
   contents: write
   pull-requests: write
   issues: write
+  packages: write
+  attestations: write
+  id-token: write
 
 jobs:
   release-please:
