@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v0.1.0...jsonrpc-client-v0.2.0) (2025-07-17)
+
+
+### Features
+
+* add comprehensive Zod validation performance tests ([#12](https://github.com/petersalomonsen/near-rpc-typescript/issues/12)) ([a978102](https://github.com/petersalomonsen/near-rpc-typescript/commit/a978102aa2cd4fcd81b020df0d153363f04d794b))
+
 ## [0.1.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v0.0.1...jsonrpc-client-v0.1.0) (2025-07-17)
 
 
