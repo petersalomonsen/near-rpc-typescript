@@ -50,13 +50,13 @@ importers:
 
   examples:
     dependencies:
-      '@psalomo/near-jsonrpc-client':
+      '@near-js/jsonrpc-client':
         specifier: workspace:*
         version: link:../packages/jsonrpc-client
 
   packages/jsonrpc-client:
     dependencies:
-      '@psalomo/near-jsonrpc-types':
+      '@near-js/jsonrpc-types':
         specifier: workspace:*
         version: link:../jsonrpc-types
       cross-fetch:

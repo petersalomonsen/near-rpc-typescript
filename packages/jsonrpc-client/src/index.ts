@@ -9,10 +9,10 @@ export type {
   JsonRpcRequestSchema,
   JsonRpcResponseSchema,
   JsonRpcErrorSchema,
-} from '@psalomo/near-jsonrpc-types';
+} from '@near-js/jsonrpc-types';
 
 // Re-export RPC methods
-export { RPC_METHODS } from '@psalomo/near-jsonrpc-types';
+export { RPC_METHODS } from '@near-js/jsonrpc-types';
 
 // Default export for convenience
 export { NearRpcClient as default } from './client';

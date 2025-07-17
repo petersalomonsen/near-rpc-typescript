@@ -4,7 +4,7 @@ import {
   JsonRpcResponseSchema,
   JsonRpcErrorSchema,
   RPC_METHODS,
-} from '@psalomo/near-jsonrpc-types';
+} from '@near-js/jsonrpc-types';
 import { z } from 'zod';
 
 // Define RpcMethod type locally

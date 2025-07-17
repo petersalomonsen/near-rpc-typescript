@@ -1,7 +1,6 @@
 {
-  "_comment": "TEMPORARY: Using @psalomo scope for bounty submission. Will change to @near-js if accepted by NEAR Protocol.",
   "type": "module",
   "dependencies": {
-    "@psalomo/near-jsonrpc-client": "workspace:*"
+    "@near-js/jsonrpc-client": "workspace:*"
   }
 }

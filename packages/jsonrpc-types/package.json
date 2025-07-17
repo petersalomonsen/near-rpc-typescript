@@ -1,6 +1,5 @@
 {
-  "_comment": "TEMPORARY: Using @psalomo scope for bounty submission. Will change to @near-js if accepted by NEAR Protocol.",
-  "name": "@psalomo/near-jsonrpc-types",
+  "name": "@near-js/jsonrpc-types",
   "version": "0.1.0",
   "description": "TypeScript types and Zod schemas for NEAR Protocol JSON-RPC API",
   "main": "./dist/index.js",
@@ -36,7 +35,8 @@
     "vitest": "^1.2.2"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com"
   },
   "repository": {
     "type": "git",

@@ -1,6 +1,5 @@
 {
-  "_comment": "TEMPORARY: Using @psalomo scope for bounty submission. Will change to @near-js if accepted by NEAR Protocol.",
-  "name": "@psalomo/near-jsonrpc-client",
+  "name": "@near-js/jsonrpc-client",
   "version": "0.1.0",
   "description": "TypeScript client for NEAR Protocol JSON-RPC API",
   "main": "./dist/index.js",
@@ -26,7 +25,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@psalomo/near-jsonrpc-types": "workspace:*",
+    "@near-js/jsonrpc-types": "workspace:*",
     "cross-fetch": "^4.0.0",
     "zod": "^3.22.4"
   },
@@ -38,7 +37,8 @@
     "vitest": "^1.2.2"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com"
   },
   "repository": {
     "type": "git",
