@@ -39,11 +39,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: |
-          cd packages/jsonrpc-types && pnpm pack
-          cd ../jsonrpc-client && pnpm pack
+          pnpm pack --pack-destination . -C packages/jsonrpc-types
+          pnpm pack --pack-destination . -C packages/jsonrpc-client
       - name: Upload package tarballs to release
         run: |
-          for tarball in packages/*/near-js-*.tgz; do
+          for tarball in near-js-*.tgz; do
             if [ -f "$tarball" ]; then
               echo "Uploading $tarball"
               gh release upload ${{ github.ref_name }} "$tarball"
