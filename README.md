@@ -44,7 +44,7 @@ const account = await client.viewAccount({ accountId: 'example.near' });
 
 ## 🏗️ Development
 
-This project uses pnpm workspaces and requires Node.js 18+.
+This project uses pnpm workspaces and requires Node.js 20+.
 
 ```bash
 # Install dependencies
