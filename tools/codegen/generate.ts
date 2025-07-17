@@ -277,7 +277,7 @@ function generateZodSchema(
     case 'object':
       if (!schema.properties) {
         if (schema.additionalProperties === true) {
-          return 'z.record(z.unknown())';
+          return 'z.record(z.string(), z.unknown())';
         } else if (
           schema.additionalProperties &&
           typeof schema.additionalProperties === 'object'
@@ -287,9 +287,9 @@ function generateZodSchema(
             schemas,
             depth + 1
           );
-          return `z.record(${valueSchema})`;
+          return `z.record(z.string(), ${valueSchema})`;
         }
-        return 'z.record(z.unknown())';
+        return 'z.record(z.string(), z.unknown())';
       }
 
       const properties = Object.entries(schema.properties).map(
@@ -334,37 +334,28 @@ export async function generateTypes() {
     const outputDir = join(process.cwd(), '../../packages/jsonrpc-types/src');
     const { schemas } = spec.components;
 
-    // Generate TypeScript types
-    console.log('🔧 Generating TypeScript types...');
+    // Generate TypeScript types using z.infer
+    console.log('🔧 Generating TypeScript types using z.infer...');
     const typeExports: string[] = [];
     const typeDefinitions: string[] = [];
 
-    // Generate types for each schema
+    // Generate types for each schema using z.infer
     Object.entries(schemas).forEach(([schemaName, schema]) => {
       const typeName = pascalCase(schemaName);
-      const typeDefinition = generateTypeScriptType(schema, schemas);
+      const schemaTypeName = `${typeName}Schema`;
 
       // Add description as JSDoc if available
       const description = formatComment(schema.description || '');
 
-      // Determine if this should be an interface or type alias
-      const isComplex = isComplexType(schema);
-      const hasUnion = typeDefinition.includes(' | ');
-
-      if (isComplex && !hasUnion && typeDefinition.startsWith('{')) {
-        typeDefinitions.push(
-          `${description}export interface ${typeName} ${typeDefinition}`
-        );
-      } else {
-        typeDefinitions.push(
-          `${description}export type ${typeName} = ${typeDefinition};`
-        );
-      }
+      // Generate z.infer type
+      typeDefinitions.push(
+        `${description}export type ${typeName} = z.infer<typeof schemas.${schemaTypeName}>;`
+      );
 
       typeExports.push(typeName);
     });
 
-    // Generate method parameter and response types
+    // Generate method parameter and response types using z.infer
     const methodTypes: string[] = [];
     Object.entries(spec.paths).forEach(([path, pathSpec]) => {
       const methodName = PATH_TO_METHOD_MAP[path];
@@ -375,30 +366,27 @@ export async function generateTypes() {
 
       const methodNamePascal = pascalCase(methodName);
 
-      // Generate request type
+      // Generate request type using z.infer
       if (post.requestBody?.content?.['application/json']?.schema) {
-        const requestSchema =
-          post.requestBody.content['application/json'].schema;
-        const requestType = generateTypeScriptType(requestSchema, schemas);
         methodTypes.push(
-          `export type ${methodNamePascal}Request = ${requestType};`
+          `export type ${methodNamePascal}Request = z.infer<typeof schemas.${methodNamePascal}RequestSchema>;`
         );
       }
 
-      // Generate response type
+      // Generate response type using z.infer
       if (post.responses?.['200']?.content?.['application/json']?.schema) {
-        const responseSchema =
-          post.responses['200'].content['application/json'].schema;
-        const responseType = generateTypeScriptType(responseSchema, schemas);
         methodTypes.push(
-          `export type ${methodNamePascal}Response = ${responseType};`
+          `export type ${methodNamePascal}Response = z.infer<typeof schemas.${methodNamePascal}ResponseSchema>;`
         );
       }
     });
 
-    const typesContent = `// Auto-generated TypeScript types from NEAR OpenAPI spec
+    const typesContent = `// Auto-generated TypeScript types from NEAR OpenAPI spec using z.infer
 // Generated on: ${new Date().toISOString()}
 // Do not edit manually - run 'pnpm generate' to regenerate
+
+import { z } from 'zod/v4';
+import * as schemas from './schemas';
 
 ${typeDefinitions.join('\n\n')}
 
@@ -472,7 +460,7 @@ export * from './schemas';
 // Generated on: ${new Date().toISOString()}
 // Do not edit manually - run 'pnpm generate' to regenerate
 
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 ${schemaDefinitions.join('\n\n')}
 

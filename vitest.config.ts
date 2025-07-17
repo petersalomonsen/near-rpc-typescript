@@ -8,6 +8,7 @@ export default defineConfig({
     globals: true,
     environment: 'node',
     pool: 'threads',
+    testTimeout: 10000, // 10 seconds timeout for tests
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

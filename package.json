@@ -2,6 +2,7 @@
   "name": "near-rpc-typescript",
   "version": "0.1.0",
   "description": "Automated TypeScript RPC client for NEAR Protocol",
+  "type": "module",
   "private": true,
   "workspaces": [
     "packages/*"
