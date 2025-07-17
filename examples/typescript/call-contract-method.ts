@@ -14,11 +14,11 @@ const provider = new NearRpcClient({
 });
 
 const result = await provider.query({
-  request_type: 'call_function',
+  requestType: 'call_function',
   finality: 'final',
-  account_id: 'intents.near',
-  method_name: 'mt_tokens_for_owner',
-  args_base64: Buffer.from(
+  accountId: 'intents.near',
+  methodName: 'mt_tokens_for_owner',
+  argsBase64: Buffer.from(
     JSON.stringify({ account_id: 'webassemblymusic-treasury.sputnik-dao.near' })
   ).toString('base64'),
 });
