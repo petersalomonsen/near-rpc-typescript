@@ -21,12 +21,13 @@
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "lint": "prettier --check src/**/*.ts",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "generate": "tsx ../../tools/codegen/generate.ts"
   },
   "dependencies": {
-    "zod": "^3.22.4"
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

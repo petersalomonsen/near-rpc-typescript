@@ -85,8 +85,8 @@ importers:
   packages/jsonrpc-types:
     dependencies:
       zod:
-        specifier: ^3.22.4
-        version: 3.25.67
+        specifier: ^4.0.0
+        version: 4.0.5
     devDependencies:
       prettier:
         specifier: ^3.2.5
@@ -3144,4 +3144,8 @@ packages:
 
   /zod@3.25.67:
     resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
+    dev: false
+
+  /zod@4.0.5:
+    resolution: {integrity: sha512-/5UuuRPStvHXu7RS+gmvRf4NXrNxpSllGwDnCBcJZtQsKrviYXm54yDGV2KYNLT5kq0lHGcl7lqWJLgSaG+tgA==}
     dev: false
