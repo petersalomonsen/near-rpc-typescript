@@ -10,7 +10,10 @@ import {
 class PerformanceBenchmark {
   private results: number[] = [];
 
-  async measure(fn: () => Promise<void> | void, iterations: number = 1000): Promise<{
+  async measure(
+    fn: () => Promise<void> | void,
+    iterations: number = 1000
+  ): Promise<{
     avg: number;
     min: number;
     max: number;
@@ -18,7 +21,7 @@ class PerformanceBenchmark {
     total: number;
   }> {
     this.results = [];
-    
+
     for (let i = 0; i < iterations; i++) {
       const start = performance.now();
       await fn();
@@ -28,7 +31,7 @@ class PerformanceBenchmark {
 
     const sorted = this.results.slice().sort((a, b) => a - b);
     const total = this.results.reduce((sum, time) => sum + time, 0);
-    
+
     return {
       avg: total / iterations,
       min: sorted[0],
@@ -40,7 +43,9 @@ class PerformanceBenchmark {
 }
 
 // Mock data generators
-const createMockBlockResponse = (complexity: 'simple' | 'complex' = 'simple') => {
+const createMockBlockResponse = (
+  complexity: 'simple' | 'complex' = 'simple'
+) => {
   const baseResponse = {
     jsonrpc: '2.0' as const,
     id: 'test-id',
@@ -200,7 +205,7 @@ describe('Zod Validation Performance Tests', () => {
 
       console.log('Parse performance:', parseResults);
       console.log('SafeParse performance:', safeParseResults);
-      
+
       // safeParse may be slightly slower but more robust, but timing can vary
       // Focus on the fact that both work and are reasonably fast
       expect(safeParseResults.avg).toBeLessThan(1); // Should be under 1ms
@@ -250,7 +255,7 @@ describe('Zod Validation Performance Tests', () => {
         ok: true,
         json: async () => mockResponse,
       });
-      
+
       vi.stubGlobal('fetch', mockFetch);
 
       const clientWithValidation = new NearRpcClient({
@@ -276,7 +281,7 @@ describe('Zod Validation Performance Tests', () => {
 
       const overhead = withValidationResults.avg - withoutValidationResults.avg;
       console.log('Validation overhead:', overhead, 'ms');
-      
+
       expect(overhead).toBeLessThan(20); // Overhead should be under 20ms
       expect(overhead).toBeGreaterThan(0); // There should be some overhead
     });
@@ -287,7 +292,7 @@ describe('Zod Validation Performance Tests', () => {
         ok: true,
         json: async () => mockResponse,
       });
-      
+
       vi.stubGlobal('fetch', mockFetch);
 
       const clientWithValidation = new NearRpcClient({
@@ -325,7 +330,7 @@ describe('Zod Validation Performance Tests', () => {
         ok: true,
         json: async () => mockResponse,
       });
-      
+
       vi.stubGlobal('fetch', mockFetch);
 
       const clientWithValidation = new NearRpcClient({
@@ -338,15 +343,19 @@ describe('Zod Validation Performance Tests', () => {
       // Verify complex nested structure is preserved (note: camelCase conversion)
       expect(response.chunks).toHaveLength(10);
       expect(response.chunks[0].transactions).toHaveLength(100);
-      expect(response.chunks[0].transactions[0].transaction.signerId).toBe('signer_0.near');
-      expect(response.chunks[0].transactions[0].outcome.executorId).toBe('executor_0.near');
-      
+      expect(response.chunks[0].transactions[0].transaction.signerId).toBe(
+        'signer_0.near'
+      );
+      expect(response.chunks[0].transactions[0].outcome.executorId).toBe(
+        'executor_0.near'
+      );
+
       // Verify all chunks have expected structure
       response.chunks.forEach((chunk, chunkIndex) => {
         expect(chunk.chunkHash).toBe(`chunk_${chunkIndex}`);
         expect(chunk.shardId).toBe(chunkIndex % 4);
         expect(chunk.transactions).toHaveLength(100);
-        
+
         chunk.transactions.forEach((tx, txIndex) => {
           expect(tx.transaction.signerId).toBe(`signer_${txIndex}.near`);
           expect(tx.outcome.executorId).toBe(`executor_${txIndex}.near`);
@@ -358,19 +367,19 @@ describe('Zod Validation Performance Tests', () => {
   describe('Memory Usage Tests', () => {
     it('should measure memory usage during validation', async () => {
       const mockResponse = createMockBlockResponse('complex');
-      
+
       const initialMemory = process.memoryUsage();
-      
+
       // Perform multiple validations
       for (let i = 0; i < 1000; i++) {
         JsonRpcResponseSchema.parse(mockResponse);
       }
-      
+
       const finalMemory = process.memoryUsage();
-      
+
       const heapUsedDiff = finalMemory.heapUsed - initialMemory.heapUsed;
       console.log('Memory usage difference:', heapUsedDiff, 'bytes');
-      
+
       // Memory usage should be reasonable
       expect(heapUsedDiff).toBeLessThan(50 * 1024 * 1024); // Under 50MB
     });
@@ -395,24 +404,28 @@ describe('Zod Validation Performance Tests', () => {
   describe('Data Integrity Tests', () => {
     it('should verify response data integrity with validation', async () => {
       const mockResponse = createMockBlockResponse('complex');
-      
+
       const validatedData = JsonRpcResponseSchema.parse(mockResponse);
-      
+
       // Verify the parsed data contains all expected fields
       expect(validatedData.jsonrpc).toBe('2.0');
       expect(validatedData.id).toBe('test-id');
       expect(validatedData.result).toBeTruthy();
       expect(validatedData.error).toBeUndefined();
-      
+
       // Verify the result structure
       const result = validatedData.result as any;
       expect(result.author).toBe('test.near');
       expect(result.header).toBeTruthy();
       expect(result.chunks).toHaveLength(10);
-      
+
       // Verify deep nested data preservation (raw response, no camelCase conversion)
-      expect(result.chunks[0].transactions[0].transaction.signer_id).toBe('signer_0.near');
-      expect(result.chunks[0].transactions[0].outcome.tokens_burnt).toBe('42455506250000000000');
+      expect(result.chunks[0].transactions[0].transaction.signer_id).toBe(
+        'signer_0.near'
+      );
+      expect(result.chunks[0].transactions[0].outcome.tokens_burnt).toBe(
+        '42455506250000000000'
+      );
     });
 
     it('should handle error responses correctly', async () => {
@@ -427,7 +440,7 @@ describe('Zod Validation Performance Tests', () => {
       };
 
       const validatedData = JsonRpcResponseSchema.parse(mockErrorResponse);
-      
+
       expect(validatedData.jsonrpc).toBe('2.0');
       expect(validatedData.id).toBe('test-id');
       expect(validatedData.result).toBeUndefined();
@@ -439,15 +452,15 @@ describe('Zod Validation Performance Tests', () => {
 
     it('should verify validators response data integrity', async () => {
       const mockResponse = createMockValidatorsResponse();
-      
+
       const validatedData = JsonRpcResponseSchema.parse(mockResponse);
       const result = validatedData.result as any;
-      
+
       // Verify structure
       expect(result.current_validators).toHaveLength(100);
       expect(result.next_validators).toHaveLength(100);
       expect(result.current_proposals).toHaveLength(50);
-      
+
       // Verify first validator data (raw response, no camelCase conversion)
       const firstValidator = result.current_validators[0];
       expect(firstValidator.account_id).toBe('validator_0.near');
@@ -457,7 +470,7 @@ describe('Zod Validation Performance Tests', () => {
       expect(firstValidator.shards).toEqual([0]);
       expect(firstValidator.num_produced_blocks).toBe(100);
       expect(firstValidator.num_expected_blocks).toBe(100);
-      
+
       // Verify last validator has correct index
       const lastValidator = result.current_validators[99];
       expect(lastValidator.account_id).toBe('validator_99.near');
@@ -466,19 +479,19 @@ describe('Zod Validation Performance Tests', () => {
 
     it('should preserve numeric precision and string formats', async () => {
       const mockResponse = createMockBlockResponse('complex');
-      
+
       const validatedData = JsonRpcResponseSchema.parse(mockResponse);
       const result = validatedData.result as any;
-      
+
       // Verify numeric precision is preserved
       expect(result.header.height).toBe(12345);
       expect(result.header.timestamp).toBe(1234567890);
       expect(result.header.timestamp_nanosec).toBe('1234567890000000000');
-      
+
       // Verify string formats are preserved
       expect(result.header.gas_price).toBe('1000000000');
       expect(result.header.total_supply).toBe('1000000000000000000000000000');
-      
+
       // Verify transaction data precision (raw response, no camelCase conversion)
       const tx = result.chunks[0].transactions[0];
       expect(tx.transaction.nonce).toBe(0);
