@@ -53,7 +53,7 @@ jobs:
           find . -name "*.tgz" -type f
       - name: Upload package tarballs to release
         run: |
-          for tarball in near-js-*.tgz; do
+          for tarball in packages/*/near-js-*.tgz; do
             if [ -f "$tarball" ]; then
               echo "Uploading $tarball"
               gh release upload ${{ github.ref_name }} "$tarball"
