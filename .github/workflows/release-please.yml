@@ -41,6 +41,16 @@ jobs:
       - run: |
           pnpm pack --pack-destination . -C packages/jsonrpc-types
           pnpm pack --pack-destination . -C packages/jsonrpc-client
+      - name: Debug - List files
+        run: |
+          echo "Files in root directory:"
+          ls -la *.tgz || echo "No .tgz files in root"
+          echo "Files in packages/jsonrpc-types:"
+          ls -la packages/jsonrpc-types/*.tgz || echo "No .tgz files in packages/jsonrpc-types"
+          echo "Files in packages/jsonrpc-client:"
+          ls -la packages/jsonrpc-client/*.tgz || echo "No .tgz files in packages/jsonrpc-client"
+          echo "All .tgz files in project:"
+          find . -name "*.tgz" -type f
       - name: Upload package tarballs to release
         run: |
           for tarball in near-js-*.tgz; do
