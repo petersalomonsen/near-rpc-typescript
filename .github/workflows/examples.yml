@@ -35,14 +35,32 @@ jobs:
       - name: Build packages
         run: pnpm build
 
-      - name: Run basic-usage example
-        run: pnpm tsx examples/basic-usage.ts
+      # TypeScript examples
+      - name: Run TypeScript basic-usage example
+        run: pnpm tsx examples/typescript/basic-usage.ts
 
-      - name: Run get-latest-block example
-        run: pnpm tsx examples/get-latest-block.ts
+      - name: Run TypeScript get-latest-block example
+        run: pnpm tsx examples/typescript/get-latest-block.ts
 
-      - name: Run call-contract-method-view-function example
-        run: pnpm tsx examples/call-contract-method-view-function.ts
+      - name: Run TypeScript call-contract-method-view-function example
+        run: pnpm tsx examples/typescript/call-contract-method-view-function.ts
 
-      - name: Run call-contract-method example
-        run: pnpm tsx examples/call-contract-method.ts
+      - name: Run TypeScript call-contract-method example
+        run: pnpm tsx examples/typescript/call-contract-method.ts
+
+      - name: Run TypeScript status-and-account-demo example
+        run: pnpm tsx examples/typescript/status-and-account-demo.ts
+
+      # ESM JavaScript examples
+      - name: Run ESM basic-usage example
+        run: node examples/javascript-esm/basic-usage.js
+
+      - name: Run ESM status-and-account-demo example
+        run: node examples/javascript-esm/status-and-account-demo.js
+
+      # CommonJS JavaScript examples
+      - name: Run CJS basic-usage example
+        run: node examples/javascript-cjs/basic-usage.js
+
+      - name: Run CJS status-and-account-demo example
+        run: node examples/javascript-cjs/status-and-account-demo.js

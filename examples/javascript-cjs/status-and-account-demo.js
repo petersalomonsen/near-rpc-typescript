@@ -1,11 +1,19 @@
-// Simple test script for the NEAR RPC client
-const { NearRpcClient } = require('./packages/jsonrpc-client/dist/index.js');
+/**
+ * Demo showing status, block, health, and account viewing methods.
+ *
+ * To run this example:
+ * 1. Make sure you have pnpm installed (https://pnpm.io/installation).
+ * 2. Run `pnpm install` from the root of the repository.
+ * 3. Run `node examples/javascript-cjs/status-and-account-demo.js` from the root of the repository.
+ */
+
+const { NearRpcClient } = require('@near-js/jsonrpc-client');
 
 async function testClient() {
   console.log('🚀 Testing NEAR RPC Client...\n');
 
   // Create client instance
-  const client = new NearRpcClient('https://rpc.testnet.near.org');
+  const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.near.org' });
   console.log('✅ Client created for testnet');
 
   try {
@@ -13,15 +21,15 @@ async function testClient() {
     console.log('\n📊 Testing status() method...');
     const status = await client.status();
     console.log(
-      `✅ Node status: ${status.chainId} (${status.version?.version})`
+      `✅ Node status: ${status.chainId} (${status.version?.version || 'unknown'})`
     );
-    console.log(`   Block height: ${status.syncInfo?.latestBlockHeight}`);
+    console.log(`   Block height: ${status.syncInfo?.latestBlockHeight || 'unknown'}`);
 
     // Test 2: Get latest block
     console.log('\n🧱 Testing block() method...');
     const block = await client.block({ finality: 'final' });
-    console.log(`✅ Latest block: ${block.header?.height}`);
-    console.log(`   Hash: ${block.header?.hash?.substring(0, 16)}...`);
+    console.log(`✅ Latest block: ${block.header?.height || 'unknown'}`);
+    console.log(`   Hash: ${block.header?.hash?.substring(0, 16) || 'unknown'}...`);
 
     // Test 3: Skip gas price for now (needs array params)
     console.log('\n⛽ Skipping gasPrice() - needs parameter format fix');
