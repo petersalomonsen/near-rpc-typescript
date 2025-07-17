@@ -38,7 +38,9 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - run: pnpm -r pack
+      - run: |
+          cd packages/jsonrpc-types && pnpm pack
+          cd ../jsonrpc-client && pnpm pack
       - name: Upload package tarballs to release
         run: |
           for tarball in packages/*/near-js-*.tgz; do
