@@ -39,7 +39,8 @@ test.describe('NEAR RPC Client Browser Tests', () => {
     expect(result).toHaveProperty('timestamp');
     expect(typeof result.height).toBe('number');
     expect(typeof result.hash).toBe('string');
-    expect(result.hash).toHaveLength(44); // NEAR block hashes are 44 characters
+    // NEAR block hashes are base58-encoded 32-byte values (43-44 chars)
+    expect(result.hash).toMatch(/^[1-9A-HJ-NP-Za-km-z]{43,44}$/);
   });
 
   test('should successfully view account', async ({ page }) => {

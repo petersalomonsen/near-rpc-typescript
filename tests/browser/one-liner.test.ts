@@ -28,7 +28,8 @@ test.describe('NEAR RPC One-Liner Browser Tests', () => {
     expect(typeof result.height).toBe('number');
     expect(typeof result.hash).toBe('string');
     expect(result.height).toBeGreaterThan(0);
-    expect(result.hash).toHaveLength(44); // NEAR block hashes are 44 characters
+    // NEAR block hashes are base58-encoded 32-byte values (43-44 chars)
+    expect(result.hash).toMatch(/^[1-9A-HJ-NP-Za-km-z]{43,44}$/);
   });
 
   test('should work with local bundle via data URL', async ({ page }) => {
