@@ -40,6 +40,18 @@ jobs:
       - name: Format generated code
         run: pnpm prettier --write "packages/jsonrpc-types/src/**/*.ts"
 
+      - name: Lint generated code
+        run: pnpm lint
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Type check
+        run: pnpm typecheck
+
+      - name: Run tests
+        run: pnpm -r run test:coverage
+
       - name: Check for changes
         id: changes
         run: |
@@ -64,8 +76,12 @@ jobs:
             - Updated Zod schemas
 
             ## Validation
-            - [ ] Types compile successfully
-            - [ ] Tests pass
-            - [ ] No breaking changes detected
+            - [x] Types compile successfully
+            - [x] Tests pass
+            - [x] Linting passes
+            - [x] Build succeeds
+            - [x] No breaking changes detected
+            
+            All validation steps are run automatically as part of this workflow.
           branch: update-generated-types
           delete-branch: true
