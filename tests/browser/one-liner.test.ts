@@ -12,7 +12,7 @@ test.describe('NEAR RPC One-Liner Browser Tests', () => {
       const { NearRpcClient } = await import(
         'https://unpkg.com/@psalomo/jsonrpc-client@0.1.0/dist/browser-standalone.js'
       );
-      const client = new NearRpcClient('https://rpc.testnet.near.org');
+      const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
       const block = await client.block({ finality: 'final' });
       return {
         height: block.header.height,
@@ -48,7 +48,7 @@ test.describe('NEAR RPC One-Liner Browser Tests', () => {
     // Execute using the data URL (simulates the one-liner but with local bundle)
     const result = await page.evaluate(async bundleDataUrl => {
       const { NearRpcClient } = await import(bundleDataUrl);
-      const client = new NearRpcClient('https://rpc.testnet.near.org');
+      const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
       const block = await client.block({ finality: 'final' });
       return {
         height: block.header.height,
@@ -82,7 +82,7 @@ test.describe('NEAR RPC One-Liner Browser Tests', () => {
       const { NearRpcClient } = await import(
         'https://unpkg.com/@psalomo/jsonrpc-client@0.1.0/dist/browser-standalone.js'
       );
-      const client = new NearRpcClient('https://rpc.testnet.near.org');
+      const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
 
       // Test multiple RPC calls to ensure robustness
       const [block, status, gasPrice] = await Promise.all([
@@ -147,7 +147,7 @@ test.describe('NEAR RPC One-Liner Browser Tests', () => {
       const { NearRpcClient } = await import(
         'https://unpkg.com/@psalomo/jsonrpc-client@0.1.0/dist/browser-standalone.js'
       );
-      const client = new NearRpcClient('https://rpc.testnet.near.org');
+      const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
 
       // Get latest block for height
       const latestBlock = await client.block({ finality: 'final' });

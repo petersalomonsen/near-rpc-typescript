@@ -27,7 +27,7 @@ npm install @psalomo/jsonrpc-client
 ```javascript
 import { NearRpcClient } from '@psalomo/jsonrpc-client';
 
-const client = new NearRpcClient('https://rpc.testnet.near.org');
+const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
 const block = await client.block({ finality: 'final' });
 console.log('Latest block height:', block.header.height);
 ```
@@ -60,7 +60,7 @@ console.log('Latest block height:', block.header.height);
 Paste this directly into any browser's developer console on any webpage:
 
 ```javascript
-const { NearRpcClient } = await import('https://unpkg.com/@psalomo/jsonrpc-client@0.1.0/dist/browser-standalone.js'); const client = new NearRpcClient('https://rpc.testnet.near.org'); const block = await client.block({ finality: 'final' }); console.log('Latest block height:', block.header.height);
+const { NearRpcClient } = await import('https://unpkg.com/@psalomo/jsonrpc-client@0.1.0/dist/browser-standalone.js'); const client = new NearRpcClient('https://rpc.testnet.fastnear.com'); const block = await client.block({ finality: 'final' }); console.log('Latest block height:', block.header.height);
 ```
 
 > **Note**: Currently published under `@psalomo` scope temporarily. If chosen for the [NEAR DevHub bounty](https://nearn.io/devhub/13/), packages will be republished under the official `@near-js` namespace.

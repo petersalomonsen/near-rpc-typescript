@@ -9,7 +9,9 @@
 
 import { NearRpcClient } from '@near-js/jsonrpc-client';
 
-const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.near.org' });
+const client = new NearRpcClient({
+  endpoint: 'https://rpc.testnet.fastnear.com',
+});
 
 console.log('Getting latest block...');
 const latestBlock = await client.block({ finality: 'final' });

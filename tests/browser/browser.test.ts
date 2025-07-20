@@ -179,7 +179,7 @@ test.describe('NEAR RPC Client Browser Tests', () => {
     await page.goto('/');
 
     // Test error handling by mocking network failure
-    await page.route('https://rpc.testnet.near.org', route => {
+    await page.route('https://rpc.testnet.fastnear.com', route => {
       route.abort('failed');
     });
 

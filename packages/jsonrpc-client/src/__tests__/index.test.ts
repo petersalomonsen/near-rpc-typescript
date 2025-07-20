@@ -33,7 +33,7 @@ describe('@near-js/jsonrpc-client exports', () => {
   it('should allow creating client instance', async () => {
     const { default: NearRpcClient } = await import('../index');
 
-    const client = new NearRpcClient('https://rpc.testnet.near.org');
+    const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
     expect(client).toBeInstanceOf(NearRpcClient);
   });
 });

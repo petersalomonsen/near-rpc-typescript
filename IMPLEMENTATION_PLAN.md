@@ -235,7 +235,7 @@ jobs:
 import { NearRpcClient } from '@near-js/jsonrpc-client';
 import type { BlockQuery } from '@near-js/jsonrpc-types';
 
-const client = new NearRpcClient('https://rpc.testnet.near.org');
+const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
 
 // Get latest block
 const latestBlock = await client.block({ finality: 'final' });

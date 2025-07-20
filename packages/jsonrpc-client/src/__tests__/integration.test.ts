@@ -10,7 +10,7 @@ describe('Integration Tests', () => {
   let client: NearRpcClient;
 
   beforeEach(() => {
-    client = new NearRpcClient('https://rpc.testnet.near.org');
+    client = new NearRpcClient('https://rpc.testnet.fastnear.com');
     mockFetch.mockClear();
   });
 
@@ -87,7 +87,7 @@ describe('Integration Tests', () => {
 
       // Verify the request was made correctly
       expect(mockFetch).toHaveBeenCalledWith(
-        'https://rpc.testnet.near.org',
+        'https://rpc.testnet.fastnear.com',
         expect.objectContaining({
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

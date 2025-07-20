@@ -18,13 +18,15 @@ describe('NearRpcClient', () => {
 
   describe('constructor', () => {
     it('should create client with endpoint string', () => {
-      const stringClient = new NearRpcClient('https://rpc.testnet.near.org');
+      const stringClient = new NearRpcClient(
+        'https://rpc.testnet.fastnear.com'
+      );
       expect(stringClient).toBeInstanceOf(NearRpcClient);
     });
 
     it('should create client with config object', () => {
       const config: ClientConfig = {
-        endpoint: 'https://rpc.testnet.near.org',
+        endpoint: 'https://rpc.testnet.fastnear.com',
         timeout: 10000,
         retries: 3,
         headers: { 'Custom-Header': 'value' },

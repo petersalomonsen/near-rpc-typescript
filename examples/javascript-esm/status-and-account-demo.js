@@ -12,7 +12,9 @@ import { NearRpcClient } from '@near-js/jsonrpc-client';
 console.log('🚀 Testing NEAR RPC Client...\n');
 
 // Create client instance
-const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.near.org' });
+const client = new NearRpcClient({
+  endpoint: 'https://rpc.testnet.fastnear.com',
+});
 console.log('✅ Client created for testnet');
 
 try {
