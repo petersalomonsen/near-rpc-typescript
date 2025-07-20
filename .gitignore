@@ -115,3 +115,6 @@ coverage-ts
 # Playwright reports
 playwright-report/
 test-results/
+
+# Tmp publishing to other scopes
+temp-publish

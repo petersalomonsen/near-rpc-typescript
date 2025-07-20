@@ -52,12 +52,22 @@ const account = await client.viewAccount({ accountId: 'example.near' });
 
 ```html
 <script type="module">
-const { NearRpcClient } = await import('https://github.com/petersalomonsen/near-rpc-typescript/releases/download/jsonrpc-types-v0.1.0/browser-standalone.js');
+const { NearRpcClient } = await import('https://unpkg.com/@psalomo/jsonrpc-client@0.1.0/dist/browser-standalone.js');
 const client = new NearRpcClient('https://rpc.mainnet.near.org');
 const block = await client.block({ finality: 'final' });
 console.log('Latest block height:', block.header.height);
 </script>
 ```
+
+### Browser Console (One-liner)
+
+Paste this directly into any browser's developer console on any webpage:
+
+```javascript
+const { NearRpcClient } = await import('https://unpkg.com/@psalomo/jsonrpc-client@0.1.0/dist/browser-standalone.js'); const client = new NearRpcClient('https://rpc.testnet.near.org'); const block = await client.block({ finality: 'final' }); console.log('Latest block height:', block.header.height);
+```
+
+> **Note**: Currently published under `@psalomo` scope for testing. Once access to `@near-js` scope is available, packages will be republished under the official namespace.
 
 ## ✨ Features
 
@@ -67,6 +77,8 @@ console.log('Latest block height:', block.header.height);
 - **🔄 Automatic updates** via GitHub Actions
 - **🌳 Tree-shakable** for optimal bundle size
 - **🚀 Modern** fetch-based HTTP client
+- **🌐 Browser compatible** with standalone bundle
+- **📦 CDN ready** for instant usage anywhere
 - **🧪 Well tested** with 80%+ coverage
 
 ## 🏗️ Development

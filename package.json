@@ -17,7 +17,8 @@
     "generate": "pnpm --filter @near-js/jsonrpc-types generate",
     "typecheck": "pnpm -r typecheck",
     "type-coverage": "typescript-coverage-report",
-    "dev": "pnpm -r --parallel dev"
+    "dev": "pnpm -r --parallel dev",
+    "publish:temp": "node scripts/publish-temp.js"
   },
   "devDependencies": {
     "@types/node": "^24.0.14",
