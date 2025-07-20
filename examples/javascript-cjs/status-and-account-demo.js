@@ -13,7 +13,9 @@ async function testClient() {
   console.log('🚀 Testing NEAR RPC Client...\n');
 
   // Create client instance
-  const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.near.org' });
+  const client = new NearRpcClient({
+    endpoint: 'https://rpc.testnet.fastnear.com',
+  });
   console.log('✅ Client created for testnet');
 
   try {
@@ -23,13 +25,17 @@ async function testClient() {
     console.log(
       `✅ Node status: ${status.chainId} (${status.version?.version || 'unknown'})`
     );
-    console.log(`   Block height: ${status.syncInfo?.latestBlockHeight || 'unknown'}`);
+    console.log(
+      `   Block height: ${status.syncInfo?.latestBlockHeight || 'unknown'}`
+    );
 
     // Test 2: Get latest block
     console.log('\n🧱 Testing block() method...');
     const block = await client.block({ finality: 'final' });
     console.log(`✅ Latest block: ${block.header?.height || 'unknown'}`);
-    console.log(`   Hash: ${block.header?.hash?.substring(0, 16) || 'unknown'}...`);
+    console.log(
+      `   Hash: ${block.header?.hash?.substring(0, 16) || 'unknown'}...`
+    );
 
     // Test 3: Skip gas price for now (needs array params)
     console.log('\n⛽ Skipping gasPrice() - needs parameter format fix');

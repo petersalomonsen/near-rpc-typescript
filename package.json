@@ -11,20 +11,25 @@
   "scripts": {
     "build": "pnpm -r build",
     "test": "pnpm -r test",
-    "lint": "pnpm -r lint",
+    "test:browser": "playwright test",
+    "lint": "prettier --check '*.{ts,js}' 'tools/**/*.{ts,js}' 'tests/**/*.{ts,js}' 'examples/**/*.{ts,js}' 'scripts/**/*.{ts,js}' && pnpm -r lint",
+    "format": "prettier --write '*.{ts,js}' 'tools/**/*.{ts,js}' 'tests/**/*.{ts,js}' 'examples/**/*.{ts,js}' 'scripts/**/*.{ts,js}' && pnpm -r format",
     "clean": "pnpm -r clean",
     "generate": "pnpm --filter @near-js/jsonrpc-types generate",
     "typecheck": "pnpm -r typecheck",
     "type-coverage": "typescript-coverage-report",
-    "dev": "pnpm -r --parallel dev"
+    "dev": "pnpm -r --parallel dev",
+    "publish:temp": "node scripts/publish-temp.js"
   },
   "devDependencies": {
     "@types/node": "^24.0.14",
+    "@playwright/test": "^1.54.1",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "@vitest/coverage-v8": "^1.2.2",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
+    "playwright": "^1.54.1",
     "prettier": "^3.2.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

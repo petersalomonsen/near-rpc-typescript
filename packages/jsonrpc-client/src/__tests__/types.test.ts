@@ -8,15 +8,15 @@ describe('Client Types', () => {
   describe('ClientConfig', () => {
     it('should allow minimal configuration', () => {
       const config: ClientConfig = {
-        endpoint: 'https://rpc.testnet.near.org',
+        endpoint: 'https://rpc.testnet.fastnear.com',
       };
 
-      expect(config.endpoint).toBe('https://rpc.testnet.near.org');
+      expect(config.endpoint).toBe('https://rpc.testnet.fastnear.com');
     });
 
     it('should allow full configuration', () => {
       const config: ClientConfig = {
-        endpoint: 'https://rpc.testnet.near.org',
+        endpoint: 'https://rpc.testnet.fastnear.com',
         headers: {
           Authorization: 'Bearer token',
           'Custom-Header': 'value',
@@ -26,7 +26,7 @@ describe('Client Types', () => {
         validateResponses: false,
       };
 
-      expect(config.endpoint).toBe('https://rpc.testnet.near.org');
+      expect(config.endpoint).toBe('https://rpc.testnet.fastnear.com');
       expect(config.headers).toEqual({
         Authorization: 'Bearer token',
         'Custom-Header': 'value',
@@ -38,14 +38,14 @@ describe('Client Types', () => {
 
     it('should allow optional fields to be undefined', () => {
       const config: ClientConfig = {
-        endpoint: 'https://rpc.testnet.near.org',
+        endpoint: 'https://rpc.testnet.fastnear.com',
         headers: undefined,
         timeout: undefined,
         retries: undefined,
         validateResponses: undefined,
       };
 
-      expect(config.endpoint).toBe('https://rpc.testnet.near.org');
+      expect(config.endpoint).toBe('https://rpc.testnet.fastnear.com');
       expect(config.headers).toBeUndefined();
       expect(config.timeout).toBeUndefined();
       expect(config.retries).toBeUndefined();

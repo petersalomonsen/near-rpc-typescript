@@ -32,11 +32,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Test generate script
-        run: pnpm generate
-
       - name: Lint
         run: pnpm lint
+
+      # need to test generate script after lint check, since the output from generate also would need to be linted
+      - name: Test generate script
+        run: pnpm generate
 
       - name: Build
         run: pnpm build
@@ -46,3 +47,45 @@ jobs:
 
       - name: Test & Generate Coverage
         run: pnpm -r run test:coverage
+
+  browser_tests:
+    name: Browser Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run Playwright Browser Tests
+        run: pnpm test:browser
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

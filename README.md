@@ -16,25 +16,23 @@ This monorepo contains two packages:
 
 ### Installation
 
-Since these packages are distributed via GitHub releases, install them directly from the release tarballs:
-
 ```bash
-npm install https://github.com/petersalomonsen/near-rpc-typescript/releases/download/jsonrpc-types-v0.1.0/near-js-jsonrpc-types-0.1.0.tgz
-npm install https://github.com/petersalomonsen/near-rpc-typescript/releases/download/jsonrpc-types-v0.1.0/near-js-jsonrpc-client-0.1.0.tgz
+npm install @psalomo/jsonrpc-client
 ```
 
-Or add to your `package.json`:
+> **Note**: Currently published under `@psalomo` scope temporarily. If chosen for the [NEAR DevHub bounty](https://nearn.io/devhub/13/), packages will be republished under the official `@near-js` namespace.
 
-```json
-{
-  "dependencies": {
-    "@near-js/jsonrpc-types": "https://github.com/petersalomonsen/near-rpc-typescript/releases/download/jsonrpc-types-v0.1.0/near-js-jsonrpc-types-0.1.0.tgz",
-    "@near-js/jsonrpc-client": "https://github.com/petersalomonsen/near-rpc-typescript/releases/download/jsonrpc-types-v0.1.0/near-js-jsonrpc-client-0.1.0.tgz"
-  }
-}
+### Node.js (Vanilla)
+
+```javascript
+import { NearRpcClient } from '@psalomo/jsonrpc-client';
+
+const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
+const block = await client.block({ finality: 'final' });
+console.log('Latest block height:', block.header.height);
 ```
 
-> **Note**: Check the [releases page](https://github.com/petersalomonsen/near-rpc-typescript/releases) for the latest version and update the URLs accordingly.
+### Bundlers (React, Vue, Angular, etc.)
 
 ```typescript
 import { NearRpcClient } from '@near-js/jsonrpc-client';
@@ -46,6 +44,27 @@ const block = await client.block({ finality: 'final' });
 const account = await client.viewAccount({ accountId: 'example.near' });
 ```
 
+### Browser (Vanilla HTML)
+
+```html
+<script type="module">
+const { NearRpcClient } = await import('https://unpkg.com/@psalomo/jsonrpc-client@0.1.0/dist/browser-standalone.js');
+const client = new NearRpcClient('https://rpc.mainnet.near.org');
+const block = await client.block({ finality: 'final' });
+console.log('Latest block height:', block.header.height);
+</script>
+```
+
+### Browser Console (One-liner)
+
+Paste this directly into any browser's developer console on any webpage:
+
+```javascript
+const { NearRpcClient } = await import('https://unpkg.com/@psalomo/jsonrpc-client@0.1.0/dist/browser-standalone.js'); const client = new NearRpcClient('https://rpc.testnet.fastnear.com'); const block = await client.block({ finality: 'final' }); console.log('Latest block height:', block.header.height);
+```
+
+> **Note**: Currently published under `@psalomo` scope temporarily. If chosen for the [NEAR DevHub bounty](https://nearn.io/devhub/13/), packages will be republished under the official `@near-js` namespace.
+
 ## ✨ Features
 
 - **🔧 Auto-generated** from NEAR's official OpenAPI specification
@@ -54,6 +73,8 @@ const account = await client.viewAccount({ accountId: 'example.near' });
 - **🔄 Automatic updates** via GitHub Actions
 - **🌳 Tree-shakable** for optimal bundle size
 - **🚀 Modern** fetch-based HTTP client
+- **🌐 Browser compatible** with standalone bundle
+- **📦 CDN ready** for instant usage anywhere
 - **🧪 Well tested** with 80%+ coverage
 
 ## 🏗️ Development
