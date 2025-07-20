@@ -30,36 +30,22 @@ interface Schema {
   format?: string;
 }
 
-// Path to method mapping based on SPEC_ANALYSIS.md findings
-const PATH_TO_METHOD_MAP: Record<string, string> = {
-  '/block': 'block',
-  '/chunk': 'chunk',
-  '/gas_price': 'gas_price',
-  '/status': 'status',
-  '/health': 'health',
-  '/network_info': 'network_info',
-  '/validators': 'validators',
-  '/client_config': 'client_config',
-  '/broadcast_tx_async': 'broadcast_tx_async',
-  '/broadcast_tx_commit': 'broadcast_tx_commit',
-  '/send_tx': 'send_tx',
-  '/tx': 'tx',
-  '/query': 'query',
-  '/light_client_proof': 'light_client_proof',
-  '/EXPERIMENTAL_changes': 'EXPERIMENTAL_changes',
-  '/EXPERIMENTAL_changes_in_block': 'EXPERIMENTAL_changes_in_block',
-  '/EXPERIMENTAL_validators_ordered': 'EXPERIMENTAL_validators_ordered',
-  '/EXPERIMENTAL_protocol_config': 'EXPERIMENTAL_protocol_config',
-  '/EXPERIMENTAL_genesis_config': 'EXPERIMENTAL_genesis_config',
-  '/EXPERIMENTAL_light_client_proof': 'EXPERIMENTAL_light_client_proof',
-  '/EXPERIMENTAL_light_client_block_proof':
-    'EXPERIMENTAL_light_client_block_proof',
-  '/EXPERIMENTAL_receipt': 'EXPERIMENTAL_receipt',
-  '/EXPERIMENTAL_tx_status': 'EXPERIMENTAL_tx_status',
-  '/EXPERIMENTAL_split_storage_info': 'EXPERIMENTAL_split_storage_info',
-  '/EXPERIMENTAL_congestion_level': 'EXPERIMENTAL_congestion_level',
-  '/EXPERIMENTAL_maintenance_windows': 'EXPERIMENTAL_maintenance_windows',
-};
+// Extract path to method mapping dynamically from OpenAPI spec
+function extractPathToMethodMap(spec: OpenAPISpec): Record<string, string> {
+  const map: Record<string, string> = {};
+  
+  Object.entries(spec.paths).forEach(([path, pathSpec]) => {
+    // The operationId is the JSON-RPC method name
+    const operationId = pathSpec.post?.operationId;
+    if (operationId) {
+      map[path] = operationId;
+    } else {
+      console.warn(`⚠️  Path ${path} has no operationId, skipping...`);
+    }
+  });
+  
+  return map;
+}
 
 // Case conversion utilities
 function snakeToCamel(str: string): string {
@@ -333,6 +319,10 @@ export async function generateTypes() {
 
     const outputDir = join(process.cwd(), '../../packages/jsonrpc-types/src');
     const { schemas } = spec.components;
+    
+    // Extract path to method mapping from the OpenAPI spec
+    const PATH_TO_METHOD_MAP = extractPathToMethodMap(spec);
+    console.log(`📋 Extracted ${Object.keys(PATH_TO_METHOD_MAP).length} method mappings from OpenAPI spec`);
 
     // Generate TypeScript types using z.infer
     console.log('🔧 Generating TypeScript types using z.infer...');
