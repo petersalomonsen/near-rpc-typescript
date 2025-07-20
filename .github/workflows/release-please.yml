@@ -43,14 +43,26 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: |
-          pnpm pack --pack-destination . -C packages/jsonrpc-types
-          pnpm pack --pack-destination . -C packages/jsonrpc-client
-      - name: Upload package tarballs to release
+          (cd packages/jsonrpc-types && pnpm pack)
+          (cd packages/jsonrpc-client && pnpm pack)
+      - name: Upload package tarballs to releases
         run: |
-          for tarball in packages/*/near-js-*.tgz; do
+          # Upload each tarball to its corresponding release
+          for tarball in packages/jsonrpc-types/near-js-jsonrpc-types-*.tgz; do
             if [ -f "$tarball" ]; then
-              echo "Uploading $tarball"
-              gh release upload ${{ needs.release-please.outputs.tag_name }} "$tarball"
+              version=$(basename "$tarball" | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
+              tag="jsonrpc-types-v$version"
+              echo "Uploading $tarball to release $tag"
+              gh release upload "$tag" "$tarball" 2>/dev/null || echo "Release $tag not found, skipping"
+            fi
+          done
+          
+          for tarball in packages/jsonrpc-client/near-js-jsonrpc-client-*.tgz; do
+            if [ -f "$tarball" ]; then
+              version=$(basename "$tarball" | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
+              tag="jsonrpc-client-v$version"
+              echo "Uploading $tarball to release $tag"
+              gh release upload "$tag" "$tarball" 2>/dev/null || echo "Release $tag not found, skipping"
             fi
           done
         env:
