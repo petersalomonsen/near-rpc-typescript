@@ -11,12 +11,15 @@ const mimeTypes = {
   '.js': 'text/javascript',
   '.mjs': 'text/javascript',
   '.css': 'text/css',
-  '.json': 'application/json'
+  '.json': 'application/json',
 };
 
 async function copyBundle() {
   try {
-    const sourcePath = join(__dirname, '../../packages/jsonrpc-client/dist/browser-standalone.js');
+    const sourcePath = join(
+      __dirname,
+      '../../packages/jsonrpc-client/dist/browser-standalone.js'
+    );
     const destPath = join(__dirname, 'near-rpc-client.js');
     await copyFile(sourcePath, destPath);
     console.log('Bundle copied to tests/browser/near-rpc-client.js');
@@ -36,7 +39,7 @@ async function serveFile(filePath, res) {
 
     const ext = extname(filePath);
     const mimeType = mimeTypes[ext] || 'text/plain';
-    
+
     const content = await readFile(filePath);
     res.writeHead(200, { 'Content-Type': mimeType });
     res.end(content);

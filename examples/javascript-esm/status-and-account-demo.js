@@ -19,9 +19,7 @@ try {
   // Test 1: Get node status
   console.log('\n📊 Testing status() method...');
   const status = await client.status();
-  console.log(
-    `✅ Node status: ${status.chainId} (${status.version?.version})`
-  );
+  console.log(`✅ Node status: ${status.chainId} (${status.version?.version})`);
   console.log(`   Block height: ${status.syncInfo?.latestBlockHeight}`);
 
   // Test 2: Get latest block
@@ -36,9 +34,7 @@ try {
   // Test 4: Test health endpoint
   console.log('\n🏥 Testing health() method...');
   const health = await client.health();
-  console.log(
-    `✅ Health check: ${health === null ? 'OK' : 'Issues detected'}`
-  );
+  console.log(`✅ Health check: ${health === null ? 'OK' : 'Issues detected'}`);
 
   // Test 5: Test a view account call
   console.log('\n👤 Testing viewAccount() method...');

@@ -13,7 +13,9 @@ async function testClient() {
   console.log('🚀 Testing NEAR RPC Client...\n');
 
   // Create client instance
-  const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.near.org' });
+  const client = new NearRpcClient({
+    endpoint: 'https://rpc.testnet.near.org',
+  });
   console.log('✅ Client created for testnet');
 
   try {

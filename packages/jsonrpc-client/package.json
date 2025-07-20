@@ -20,7 +20,8 @@
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "lint": "prettier --check src/**/*.ts",
+    "lint": "prettier --check 'src/**/*.{ts,js}' '*.{ts,js}'",
+    "format": "prettier --write 'src/**/*.{ts,js}' '*.{ts,js}'",
     "test": "vitest",
     "test:coverage": "vitest run --coverage"
   },

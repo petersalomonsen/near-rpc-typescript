@@ -1,6 +1,13 @@
 #!/usr/bin/env node
 
-import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, readdirSync } from 'fs';
+import {
+  readFileSync,
+  writeFileSync,
+  mkdirSync,
+  cpSync,
+  rmSync,
+  readdirSync,
+} from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
@@ -32,12 +39,17 @@ try {
 mkdirSync(tempDir, { recursive: true });
 
 // Function to recursively replace text in all files
-function replaceInFiles(dir, searchText, replaceText, extensions = ['.js', '.mjs', '.d.ts', '.json']) {
+function replaceInFiles(
+  dir,
+  searchText,
+  replaceText,
+  extensions = ['.js', '.mjs', '.d.ts', '.json']
+) {
   const items = readdirSync(dir, { withFileTypes: true });
-  
+
   for (const item of items) {
     const fullPath = join(dir, item.name);
-    
+
     if (item.isDirectory()) {
       replaceInFiles(fullPath, searchText, replaceText, extensions);
     } else if (item.isFile()) {
@@ -66,7 +78,7 @@ const typesSource = join(rootDir, 'packages/jsonrpc-types');
 const typesDest = join(tempDir, 'jsonrpc-types');
 cpSync(typesSource, typesDest, { recursive: true });
 
-// Copy jsonrpc-client package  
+// Copy jsonrpc-client package
 const clientSource = join(rootDir, 'packages/jsonrpc-client');
 const clientDest = join(tempDir, 'jsonrpc-client');
 cpSync(clientSource, clientDest, { recursive: true });
@@ -80,23 +92,30 @@ replaceInFiles(clientDest, '@near-js/', '@psalomo/');
 console.log('\n📝 Updating package.json files...');
 
 // Update types package.json
-const typesPackageJson = JSON.parse(readFileSync(join(typesDest, 'package.json'), 'utf8'));
+const typesPackageJson = JSON.parse(
+  readFileSync(join(typesDest, 'package.json'), 'utf8')
+);
 typesPackageJson.name = '@psalomo/jsonrpc-types';
 typesPackageJson.repository = {
   type: 'git',
   url: 'https://github.com/petersalomonsen/near-rpc-typescript.git',
-  directory: 'temp-packages/jsonrpc-types'
+  directory: 'temp-packages/jsonrpc-types',
 };
-writeFileSync(join(typesDest, 'package.json'), JSON.stringify(typesPackageJson, null, 2));
+writeFileSync(
+  join(typesDest, 'package.json'),
+  JSON.stringify(typesPackageJson, null, 2)
+);
 console.log('✅ Updated @psalomo/jsonrpc-types package.json');
 
 // Update client package.json
-const clientPackageJson = JSON.parse(readFileSync(join(clientDest, 'package.json'), 'utf8'));
+const clientPackageJson = JSON.parse(
+  readFileSync(join(clientDest, 'package.json'), 'utf8')
+);
 clientPackageJson.name = '@psalomo/jsonrpc-client';
 clientPackageJson.repository = {
   type: 'git',
   url: 'https://github.com/petersalomonsen/near-rpc-typescript.git',
-  directory: 'temp-packages/jsonrpc-client'
+  directory: 'temp-packages/jsonrpc-client',
 };
 
 // Fix dependencies
@@ -108,7 +127,10 @@ if (clientPackageJson.dependencies) {
   }
 }
 
-writeFileSync(join(clientDest, 'package.json'), JSON.stringify(clientPackageJson, null, 2));
+writeFileSync(
+  join(clientDest, 'package.json'),
+  JSON.stringify(clientPackageJson, null, 2)
+);
 console.log('✅ Updated @psalomo/jsonrpc-client package.json');
 
 console.log('\n✅ Temporary packages ready for publishing!');
@@ -116,8 +138,12 @@ console.log('\n📤 To publish to npm:');
 console.log(`cd ${typesDest} && npm publish --access public`);
 console.log(`cd ${clientDest} && npm publish --access public`);
 
-console.log('\n🌐 After publishing, the browser standalone bundle will be available at:');
-console.log('https://unpkg.com/@psalomo/jsonrpc-client@latest/dist/browser-standalone.js');
+console.log(
+  '\n🌐 After publishing, the browser standalone bundle will be available at:'
+);
+console.log(
+  'https://unpkg.com/@psalomo/jsonrpc-client@latest/dist/browser-standalone.js'
+);
 
 console.log('\n🧪 To test locally:');
 console.log(`cd ${clientDest} && python3 -m http.server 8000`);
