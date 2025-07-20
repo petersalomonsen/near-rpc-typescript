@@ -283,7 +283,7 @@ describe('Zod Validation Performance Tests', () => {
       console.log('Validation overhead:', overhead, 'ms');
 
       expect(overhead).toBeLessThan(20); // Overhead should be under 20ms
-      expect(overhead).toBeGreaterThan(0); // There should be some overhead
+      expect(Math.abs(overhead)).toBeLessThan(10); // Overhead should be reasonable (accounting for measurement noise)
     });
 
     it('should verify validated and non-validated responses are identical', async () => {

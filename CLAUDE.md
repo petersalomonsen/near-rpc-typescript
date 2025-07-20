@@ -22,3 +22,8 @@ This file contains important notes and reminders for Claude when working on this
 - The `PATH_TO_METHOD_MAP` is now dynamically extracted from the OpenAPI spec
 - Run `pnpm generate` to regenerate types and schemas from the latest NEAR OpenAPI spec
 - The generator extracts method names from the `operationId` field in each path
+
+## Git Workflow
+
+- **Main branch is protected** - all changes must go through PRs, cannot push directly to main
+- Create feature branches and submit PRs for any fixes or changes
