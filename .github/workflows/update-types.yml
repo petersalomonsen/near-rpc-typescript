@@ -66,8 +66,10 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'chore: update generated types from OpenAPI spec'
-          title: 'chore: update generated types from OpenAPI spec'
+          commit-message: 'feat: update generated types from OpenAPI spec'
+          committer: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'
+          author: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'
+          title: 'feat: update generated types from OpenAPI spec'
           body: |
             This PR contains auto-generated updates from the NEAR Protocol OpenAPI specification.
 
