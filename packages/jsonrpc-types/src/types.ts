@@ -1,5 +1,5 @@
 // Auto-generated TypeScript types from NEAR OpenAPI spec using z.infer
-// Generated on: 2025-07-17T13:15:48.996Z
+// Generated on: 2025-07-20T12:24:26.816Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/v4';
@@ -19,8 +19,10 @@ export type AccessKeyCreationConfigView = z.infer<
   typeof schemas.AccessKeyCreationConfigViewSchema
 >;
 
+/** Describes information about an access key including the public key. */
 export type AccessKeyInfoView = z.infer<typeof schemas.AccessKeyInfoViewSchema>;
 
+/** Lists access keys */
 export type AccessKeyList = z.infer<typeof schemas.AccessKeyListSchema>;
 
 /** Defines permissions for AccessKey */
@@ -28,10 +30,15 @@ export type AccessKeyPermission = z.infer<
   typeof schemas.AccessKeyPermissionSchema
 >;
 
+/**
+ * Describes the permission scope for an access key. Whether it is a function
+ * call or a full access key.
+ */
 export type AccessKeyPermissionView = z.infer<
   typeof schemas.AccessKeyPermissionViewSchema
 >;
 
+/** Describes access key permission scope and nonce. */
 export type AccessKeyView = z.infer<typeof schemas.AccessKeyViewSchema>;
 
 /** The structure describes configuration for creation of new accounts. */
@@ -39,6 +46,17 @@ export type AccountCreationConfigView = z.infer<
   typeof schemas.AccountCreationConfigViewSchema
 >;
 
+/**
+ * AccountData is a piece of global state that a validator signs and
+ * broadcasts to the network. It is essentially the data that a validator
+ * wants to share with the network. All the nodes in the network are
+ * collecting the account data broadcasted by the validators. Since the number
+ * of the validators is bounded and their identity is known (and the maximal
+ * size of allowed AccountData is bounded) the global state that is
+ * distributed in the form of AccountData is bounded as well. Find more
+ * information in the docs
+ * [here](https://github.com/near/nearcore/blob/560f7fc8f4b3106e0d5d46050688610b1f104ac6/chain/client/src/client.rs#L2232)
+ */
 export type AccountDataView = z.infer<typeof schemas.AccountDataViewSchema>;
 
 /**
@@ -62,6 +80,7 @@ export type AccountInfo = z.infer<typeof schemas.AccountInfoSchema>;
 /** A view of the account */
 export type AccountView = z.infer<typeof schemas.AccountViewSchema>;
 
+/** Account ID with its public key. */
 export type AccountWithPublicKey = z.infer<
   typeof schemas.AccountWithPublicKeySchema
 >;
@@ -88,6 +107,7 @@ export type ActionsValidationError = z.infer<
   typeof schemas.ActionsValidationErrorSchema
 >;
 
+/** An action that adds key with public key associated */
 export type AddKeyAction = z.infer<typeof schemas.AddKeyActionSchema>;
 
 /**
@@ -113,22 +133,35 @@ export type BandwidthRequestBitmap = z.infer<
  */
 export type BandwidthRequests = z.infer<typeof schemas.BandwidthRequestsSchema>;
 
+/** Version 1 of [`BandwidthRequest`]. */
 export type BandwidthRequestsV1 = z.infer<
   typeof schemas.BandwidthRequestsV1Schema
 >;
 
+/**
+ * A part of a state for the current head of a light client. More info
+ * [here](https://nomicon.io/ChainSpec/LightClient).
+ */
 export type BlockHeaderInnerLiteView = z.infer<
   typeof schemas.BlockHeaderInnerLiteViewSchema
 >;
 
+/** Contains main info about the block. */
 export type BlockHeaderView = z.infer<typeof schemas.BlockHeaderViewSchema>;
 
 export type BlockId = z.infer<typeof schemas.BlockIdSchema>;
 
+/** Height and hash of a block */
 export type BlockStatusView = z.infer<typeof schemas.BlockStatusViewSchema>;
 
+/** A result returned by contract method */
 export type CallResult = z.infer<typeof schemas.CallResultSchema>;
 
+/**
+ * Status of the
+ * [catchup](https://near.github.io/nearcore/architecture/how/sync.html#catchup)
+ * process
+ */
 export type CatchupStatusView = z.infer<typeof schemas.CatchupStatusViewSchema>;
 
 /**
@@ -146,14 +179,23 @@ export type ChunkDistributionUris = z.infer<
   typeof schemas.ChunkDistributionUrisSchema
 >;
 
+/** Contains main info about the chunk. */
 export type ChunkHeaderView = z.infer<typeof schemas.ChunkHeaderViewSchema>;
 
 export type CompilationError = z.infer<typeof schemas.CompilationErrorSchema>;
 
+/**
+ * The configuration for congestion control. More info about congestion
+ * [here](https://near.github.io/nearcore/architecture/how/receipt-congestion.html?highlight=congestion#receipt-congestion)
+ */
 export type CongestionControlConfigView = z.infer<
   typeof schemas.CongestionControlConfigViewSchema
 >;
 
+/**
+ * Stores the congestion level of a shard. More info about congestion
+ * [here](https://near.github.io/nearcore/architecture/how/receipt-congestion.html?highlight=congestion#receipt-congestion)
+ */
 export type CongestionInfoView = z.infer<
   typeof schemas.CongestionInfoViewSchema
 >;
@@ -161,6 +203,10 @@ export type CongestionInfoView = z.infer<
 /** A view of the contract code. */
 export type ContractCodeView = z.infer<typeof schemas.ContractCodeViewSchema>;
 
+/**
+ * Shows gas profile. More info
+ * [here](https://near.github.io/nearcore/architecture/gas/gas_profile.html?highlight=WASM_HOST_COST#example-transaction-gas-profile).
+ */
 export type CostGasUsed = z.infer<typeof schemas.CostGasUsedSchema>;
 
 /** Create account action */
@@ -170,10 +216,12 @@ export type CreateAccountAction = z.infer<
 
 export type CryptoHash = z.infer<typeof schemas.CryptoHashSchema>;
 
+/** Describes information about the current epoch validator */
 export type CurrentEpochValidatorInfo = z.infer<
   typeof schemas.CurrentEpochValidatorInfoSchema
 >;
 
+/** The fees settings for a data receipt creation */
 export type DataReceiptCreationConfigView = z.infer<
   typeof schemas.DataReceiptCreationConfigViewSchema
 >;
@@ -283,6 +331,14 @@ export type FinalExecutionStatus = z.infer<
 
 /** Different types of finality. */
 export type Finality = z.infer<typeof schemas.FinalitySchema>;
+
+/**
+ * This type is used to mark function arguments. NOTE: The main reason for
+ * this to exist (except the type-safety) is that the value is transparently
+ * serialized and deserialized as a base64-encoded string when serde is used
+ * (serde_json).
+ */
+export type FunctionArgs = z.infer<typeof schemas.FunctionArgsSchema>;
 
 export type FunctionCallAction = z.infer<
   typeof schemas.FunctionCallActionSchema
@@ -685,6 +741,10 @@ export type RpcLightClientNextBlockRequest = z.infer<
   typeof schemas.RpcLightClientNextBlockRequestSchema
 >;
 
+/**
+ * A state for the current head of a light client. More info
+ * [here](https://nomicon.io/ChainSpec/LightClient).
+ */
 export type RpcLightClientNextBlockResponse = z.infer<
   typeof schemas.RpcLightClientNextBlockResponseSchema
 >;
@@ -787,6 +847,7 @@ export type RpcValidatorsOrderedRequest = z.infer<
 /** View that preserves JSON format of the runtime config. */
 export type RuntimeConfigView = z.infer<typeof schemas.RuntimeConfigViewSchema>;
 
+/** Describes different fees for the runtime */
 export type RuntimeFeesConfigView = z.infer<
   typeof schemas.RuntimeFeesConfigViewSchema
 >;
@@ -905,6 +966,22 @@ export type StorageUsageConfigView = z.infer<
   typeof schemas.StorageUsageConfigViewSchema
 >;
 
+/**
+ * This type is used to mark keys (arrays of bytes) that are queried from
+ * store. NOTE: Currently, this type is only used in the view_client and RPC
+ * to be able to transparently pretty-serialize the bytes arrays as
+ * base64-encoded strings (see `serialize.rs`).
+ */
+export type StoreKey = z.infer<typeof schemas.StoreKeySchema>;
+
+/**
+ * This type is used to mark values returned from store (arrays of bytes).
+ * NOTE: Currently, this type is only used in the view_client and RPC to be
+ * able to transparently pretty-serialize the bytes arrays as base64-encoded
+ * strings (see `serialize.rs`).
+ */
+export type StoreValue = z.infer<typeof schemas.StoreValueSchema>;
+
 export type SyncCheckpoint = z.infer<typeof schemas.SyncCheckpointSchema>;
 
 export type SyncConcurrency = z.infer<typeof schemas.SyncConcurrencySchema>;
@@ -961,6 +1038,7 @@ export type ValidatorStakeViewV1 = z.infer<
 /** Data structure for semver version and github tag or commit. */
 export type Version = z.infer<typeof schemas.VersionSchema>;
 
+/** Resulting state values for a view state query request */
 export type ViewStateResult = z.infer<typeof schemas.ViewStateResultSchema>;
 
 /** A kind of a trap happened during execution of a binary */
