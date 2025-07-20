@@ -1,0 +1,24 @@
+# Claude Assistant Notes
+
+This file contains important notes and reminders for Claude when working on this project.
+
+## Testing
+
+- **Always run tests with `--run` flag** to avoid watch mode:
+  - Use `pnpm test --run` instead of `pnpm test`
+  - Use `vitest run` instead of `vitest`
+  - Watch mode causes tests to hang waiting for file changes, leading to timeouts
+
+## Project Structure
+
+- This is a monorepo using pnpm workspaces
+- Main packages:
+  - `packages/jsonrpc-types`: TypeScript types and Zod schemas
+  - `packages/jsonrpc-client`: RPC client implementation
+  - `tools/codegen`: Code generation from OpenAPI spec
+
+## Code Generation
+
+- The `PATH_TO_METHOD_MAP` is now dynamically extracted from the OpenAPI spec
+- Run `pnpm generate` to regenerate types and schemas from the latest NEAR OpenAPI spec
+- The generator extracts method names from the `operationId` field in each path

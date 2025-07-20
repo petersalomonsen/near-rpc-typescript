@@ -108,10 +108,10 @@ To run all tests for both packages, use the following command from the root of t
 
 ```bash
 # Run all tests in watch mode
-pnpm -r test
+pnpm -r run test:watch
 
 # Run all tests once
-pnpm -r test -- run
+pnpm -r test
 ```
 
 _Note: The root `pnpm test` command is an alias for `pnpm -r test`._
