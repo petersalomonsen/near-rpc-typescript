@@ -32,11 +32,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Test generate script
-        run: pnpm generate
-
       - name: Lint
         run: pnpm lint
+
+      # need to test generate script after lint check, since the output from generate also would need to be linted
+      - name: Test generate script
+        run: pnpm generate
 
       - name: Build
         run: pnpm build
