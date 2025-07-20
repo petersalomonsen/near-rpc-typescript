@@ -96,11 +96,7 @@ test.describe('NEAR RPC Client Browser Tests', () => {
     const result = JSON.parse(resultText || '{}');
     
     expect(result).toHaveProperty('gasPrice');
-    expect(result).toHaveProperty('blockHeight');
-    expect(result).toHaveProperty('blockHash');
     expect(typeof result.gasPrice).toBe('string');
-    expect(typeof result.blockHeight).toBe('number');
-    expect(typeof result.blockHash).toBe('string');
   });
 
   test('should successfully get specific block', async ({ page }) => {

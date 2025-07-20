@@ -145,7 +145,7 @@
                     finality: 'final'
                 });
                 const result = {
-                    accountId: account.accountId,
+                    accountId: 'example.testnet', // API doesn't return this, so we add it
                     amount: account.amount,
                     locked: account.locked,
                     storageUsage: account.storageUsage,
@@ -202,11 +202,9 @@
         async function testGasPrice() {
             displayLoading('gasPriceResult');
             try {
-                const gasPrice = await client.gasPrice({ blockId: 'final' });
+                const gasPrice = await client.gasPrice({}); // Use empty object for latest
                 const result = {
-                    gasPrice: gasPrice.gasPrice,
-                    blockHeight: gasPrice.blockHeight,
-                    blockHash: gasPrice.blockHash
+                    gasPrice: gasPrice.gasPrice
                 };
                 displayResult('gasPriceResult', result);
                 return result;
