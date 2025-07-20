@@ -36,6 +36,8 @@ Or add to your `package.json`:
 
 > **Note**: Check the [releases page](https://github.com/petersalomonsen/near-rpc-typescript/releases) for the latest version and update the URLs accordingly.
 
+### Node.js / Bundlers (React, Vue, Angular, etc.)
+
 ```typescript
 import { NearRpcClient } from '@near-js/jsonrpc-client';
 
@@ -44,6 +46,17 @@ const client = new NearRpcClient('https://rpc.mainnet.near.org');
 // Fully typed method calls
 const block = await client.block({ finality: 'final' });
 const account = await client.viewAccount({ accountId: 'example.near' });
+```
+
+### Browser (Vanilla HTML)
+
+```html
+<script type="module">
+const { NearRpcClient } = await import('https://github.com/petersalomonsen/near-rpc-typescript/releases/download/jsonrpc-types-v0.1.0/browser-standalone.js');
+const client = new NearRpcClient('https://rpc.mainnet.near.org');
+const block = await client.block({ finality: 'final' });
+console.log('Latest block height:', block.header.height);
+</script>
 ```
 
 ## ✨ Features

@@ -111,3 +111,7 @@ Thumbs.db
 
 # Type Coverage
 coverage-ts
+
+# Playwright reports
+playwright-report/
+test-results/
