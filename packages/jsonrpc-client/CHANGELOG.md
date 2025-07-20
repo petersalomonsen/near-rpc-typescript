@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v0.1.0...jsonrpc-client-v0.2.0) (2025-07-20)
+
+
+### Features
+
+* add browser support with Playwright tests and temporary [@psalomo](https://github.com/psalomo) publishing ([#14](https://github.com/petersalomonsen/near-rpc-typescript/issues/14)) ([6abd7bb](https://github.com/petersalomonsen/near-rpc-typescript/commit/6abd7bb01b75f431cb3eeaa48aced2f6e7658a34))
+* add comprehensive Zod validation performance tests ([#12](https://github.com/petersalomonsen/near-rpc-typescript/issues/12)) ([a978102](https://github.com/petersalomonsen/near-rpc-typescript/commit/a978102aa2cd4fcd81b020df0d153363f04d794b))
+
 ## [0.1.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v0.0.1...jsonrpc-client-v0.1.0) (2025-07-17)
 
 
