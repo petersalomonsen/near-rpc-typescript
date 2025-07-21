@@ -27,3 +27,10 @@ This file contains important notes and reminders for Claude when working on this
 
 - **Main branch is protected** - all changes must go through PRs, cannot push directly to main
 - Create feature branches and submit PRs for any fixes or changes
+
+## Release Management
+
+- Uses Release Please to automate releases based on conventional commits
+- Release Please only considers "user facing" commits for releases
+- Automated commits from bots may not trigger releases by default
+- Type generation updates should use `feat:` prefix to trigger releases

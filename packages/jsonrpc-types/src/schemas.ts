@@ -1,5 +1,5 @@
 // Auto-generated Zod schemas from NEAR OpenAPI spec
-// Generated on: 2025-07-20T21:11:24.925Z
+// Generated on: 2025-07-20T12:24:26.820Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/v4';
@@ -3552,14 +3552,6 @@ export const BroadcastTxCommitResponseSchema = z.lazy(
   () => JsonRpcResponseFor_RpcTransactionResponseAnd_RpcErrorSchema
 );
 
-export const ChangesRequestSchema = z.lazy(
-  () => JsonRpcRequestForChangesSchema
-);
-
-export const ChangesResponseSchema = z.lazy(
-  () => JsonRpcResponseFor_RpcStateChangesInBlockResponseAnd_RpcErrorSchema
-);
-
 export const ChunkRequestSchema = z.lazy(() => JsonRpcRequestForChunkSchema);
 
 export const ChunkResponseSchema = z.lazy(
@@ -3603,14 +3595,6 @@ export const NetworkInfoRequestSchema = z.lazy(
 
 export const NetworkInfoResponseSchema = z.lazy(
   () => JsonRpcResponseFor_RpcNetworkInfoResponseAnd_RpcErrorSchema
-);
-
-export const NextLightClientBlockRequestSchema = z.lazy(
-  () => JsonRpcRequestForNextLightClientBlockSchema
-);
-
-export const NextLightClientBlockResponseSchema = z.lazy(
-  () => JsonRpcResponseFor_RpcLightClientNextBlockResponseAnd_RpcErrorSchema
 );
 
 export const QueryRequestSchema = z.lazy(() => JsonRpcRequestForQuerySchema);

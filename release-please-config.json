@@ -1,6 +1,15 @@
 {
   "packages": {
-    "packages/jsonrpc-client": {},
-    "packages/jsonrpc-types": {}
-  }
+    "packages/jsonrpc-client": {
+      "release-type": "node"
+    },
+    "packages/jsonrpc-types": {
+      "release-type": "node"
+    }
+  },
+  "changelog-sections": [
+    {"type": "feat", "section": "Features"},
+    {"type": "fix", "section": "Bug Fixes"},
+    {"type": "chore", "section": "Miscellaneous", "hidden": false}
+  ]
 }
