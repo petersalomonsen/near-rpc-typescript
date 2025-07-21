@@ -1,5 +1,5 @@
 // Auto-generated TypeScript types from NEAR OpenAPI spec using z.infer
-// Generated on: 2025-07-20T12:24:26.816Z
+// Generated on: 2025-07-21T06:05:44.305Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/v4';
@@ -1164,6 +1164,10 @@ export type BroadcastTxCommitResponse = z.infer<
   typeof schemas.BroadcastTxCommitResponseSchema
 >;
 
+export type ChangesRequest = z.infer<typeof schemas.ChangesRequestSchema>;
+
+export type ChangesResponse = z.infer<typeof schemas.ChangesResponseSchema>;
+
 export type ChunkRequest = z.infer<typeof schemas.ChunkRequestSchema>;
 
 export type ChunkResponse = z.infer<typeof schemas.ChunkResponseSchema>;
@@ -1198,6 +1202,14 @@ export type NetworkInfoRequest = z.infer<
 
 export type NetworkInfoResponse = z.infer<
   typeof schemas.NetworkInfoResponseSchema
+>;
+
+export type NextLightClientBlockRequest = z.infer<
+  typeof schemas.NextLightClientBlockRequestSchema
+>;
+
+export type NextLightClientBlockResponse = z.infer<
+  typeof schemas.NextLightClientBlockResponseSchema
 >;
 
 export type QueryRequest = z.infer<typeof schemas.QueryRequestSchema>;
