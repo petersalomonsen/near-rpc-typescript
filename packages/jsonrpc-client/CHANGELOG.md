@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v0.3.0...jsonrpc-client-v0.4.0) (2025-07-21)
+
+
+### Features
+
+* implement dynamic RPC client with proper TypeScript types ([#25](https://github.com/petersalomonsen/near-rpc-typescript/issues/25)) ([e0c2094](https://github.com/petersalomonsen/near-rpc-typescript/commit/e0c2094640646b2586c584a5e787322eac175d92))
+
 ## [0.3.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v0.2.0...jsonrpc-client-v0.3.0) (2025-07-21)
 
 

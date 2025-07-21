@@ -1,4 +1,4 @@
 {
-  "packages/jsonrpc-client": "0.3.0",
-  "packages/jsonrpc-types": "0.3.0"
+  "packages/jsonrpc-client": "0.4.0",
+  "packages/jsonrpc-types": "0.4.0"
 }
