@@ -2,7 +2,6 @@
 import {
   JsonRpcRequestSchema,
   JsonRpcResponseSchema,
-  JsonRpcErrorSchema,
   RPC_METHODS,
 } from '@near-js/jsonrpc-types';
 
@@ -312,15 +311,10 @@ NearRpcClient.prototype.viewAccessKey = function(params: {
   });
 };
 
+// Import generated interfaces for truly dynamic typing
+import type { DynamicRpcMethods, ConvenienceMethods } from './generated-types';
+
 // Type augmentation to add all dynamic methods
 declare module './client' {
   interface NearRpcClient extends DynamicRpcMethods, ConvenienceMethods {}
-}
-
-// Import generated interfaces for truly dynamic typing
-import { DynamicRpcMethods, ConvenienceMethods } from './generated-types';
-
-// Interface for the base client without dynamic methods
-interface INearRpcClient {
-  call<TParams = unknown, TResult = unknown>(method: RpcMethod, params?: TParams): Promise<TResult>;
 }
