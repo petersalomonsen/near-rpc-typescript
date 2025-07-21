@@ -249,33 +249,36 @@ export class NearRpcClient {
       lastError!
     );
   }
-
 }
 
 // Dynamic method generation using prototype extension
-RPC_METHODS.forEach((method) => {
+RPC_METHODS.forEach(method => {
   let methodName = method;
-  
+
   // Convert method name to camelCase
   if (methodName.startsWith('EXPERIMENTAL_')) {
     // Handle experimental methods: EXPERIMENTAL_changes -> experimentalChanges
-    methodName = 'experimental' + methodName
-      .substring(13) // Remove 'EXPERIMENTAL_'
-      .replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
-      .replace(/^([a-z])/, (_, letter) => letter.toUpperCase()); // Capitalize first letter after 'experimental'
+    methodName =
+      'experimental' +
+      methodName
+        .substring(13) // Remove 'EXPERIMENTAL_'
+        .replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
+        .replace(/^([a-z])/, (_, letter) => letter.toUpperCase()); // Capitalize first letter after 'experimental'
   } else {
     // Handle regular methods: gas_price -> gasPrice
-    methodName = methodName.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+    methodName = methodName.replace(/_([a-z])/g, (_, letter) =>
+      letter.toUpperCase()
+    );
   }
-  
+
   // Add method to prototype
-  (NearRpcClient.prototype as any)[methodName] = function(params?: unknown) {
+  (NearRpcClient.prototype as any)[methodName] = function (params?: unknown) {
     return this.call(method, params);
   };
 });
 
 // Add convenience methods
-(NearRpcClient.prototype as any).viewAccount = function(params: {
+(NearRpcClient.prototype as any).viewAccount = function (params: {
   accountId: string;
   finality?: 'final' | 'near-final' | 'optimistic';
   blockId?: string | number;
@@ -286,7 +289,7 @@ RPC_METHODS.forEach((method) => {
   });
 };
 
-(NearRpcClient.prototype as any).viewFunction = function(params: {
+(NearRpcClient.prototype as any).viewFunction = function (params: {
   accountId: string;
   methodName: string;
   argsBase64?: string;
@@ -299,7 +302,7 @@ RPC_METHODS.forEach((method) => {
   });
 };
 
-(NearRpcClient.prototype as any).viewAccessKey = function(params: {
+(NearRpcClient.prototype as any).viewAccessKey = function (params: {
   accountId: string;
   publicKey: string;
   finality?: 'final' | 'near-final' | 'optimistic';

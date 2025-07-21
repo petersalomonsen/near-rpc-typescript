@@ -23,16 +23,19 @@ interface GeneratedInterface {
 function rpcMethodToCamelCase(method: string): string {
   if (method.startsWith('EXPERIMENTAL_')) {
     const suffix = method.substring(13); // Remove 'EXPERIMENTAL_'
-    return 'experimental' + suffix
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join('');
+    return (
+      'experimental' +
+      suffix
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join('')
+    );
   } else {
     return method
       .split('_')
-      .map((word, index) => 
-        index === 0 
-          ? word.toLowerCase() 
+      .map((word, index) =>
+        index === 0
+          ? word.toLowerCase()
           : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
       )
       .join('');
@@ -44,30 +47,40 @@ async function getAvailableTypes(): Promise<Set<string>> {
   try {
     // Import from the built TypeScript definitions which contain all type exports
     const { execSync } = await import('child_process');
-    
+
     // First, ensure the types package is built
     console.log('🔧 Building jsonrpc-types to get latest type definitions...');
-    execSync('pnpm build', { 
-      cwd: join(dirname(fileURLToPath(import.meta.url)), '../../packages/jsonrpc-types'),
-      stdio: 'inherit'
+    execSync('pnpm build', {
+      cwd: join(
+        dirname(fileURLToPath(import.meta.url)),
+        '../../packages/jsonrpc-types'
+      ),
+      stdio: 'inherit',
     });
-    
+
     // Read the TypeScript definition file
-    const dtsPath = join(dirname(fileURLToPath(import.meta.url)), '../../packages/jsonrpc-types/dist/index.d.ts');
+    const dtsPath = join(
+      dirname(fileURLToPath(import.meta.url)),
+      '../../packages/jsonrpc-types/dist/index.d.ts'
+    );
     const dtsContent = await fs.readFile(dtsPath, 'utf8');
-    
+
     // Extract all type declarations from the .d.ts file
     const typeExportRegex = /^type (\w+)/gm;
     const availableTypes = new Set<string>();
-    
+
     let match: RegExpExecArray | null;
     while ((match = typeExportRegex.exec(dtsContent)) !== null) {
       availableTypes.add(match[1]);
     }
-    
-    console.log(`📦 Found ${availableTypes.size} TypeScript types from built definitions`);
-    console.log(`📋 Sample types: ${Array.from(availableTypes).slice(0, 10).join(', ')}`);
-    
+
+    console.log(
+      `📦 Found ${availableTypes.size} TypeScript types from built definitions`
+    );
+    console.log(
+      `📋 Sample types: ${Array.from(availableTypes).slice(0, 10).join(', ')}`
+    );
+
     return availableTypes;
   } catch (error) {
     console.warn('⚠️  Could not read types from built definitions:', error);
@@ -82,24 +95,33 @@ async function extractParameterTypesFromSchemas(
   availableTypes?: Set<string>
 ): Promise<Record<string, string>> {
   const methodToParamType: Record<string, string> = {};
-  
+
   if (openApiSpec) {
     console.log('🔍 Analyzing OpenAPI schema to extract parameter types...');
-    
+
     // Parse each method's schema to find the actual params type
     for (const [path, method] of Object.entries(pathToMethodMap)) {
-      const paramType = await extractParamsTypeFromSchema(path, method, openApiSpec, availableTypes);
+      const paramType = await extractParamsTypeFromSchema(
+        path,
+        method,
+        openApiSpec,
+        availableTypes
+      );
       if (paramType) {
         methodToParamType[method] = paramType;
         console.log(`  ${method} -> ${paramType} (from schema)`);
       } else {
-        console.warn(`  ⚠️  Could not extract parameter type for ${method} from schema`);
+        console.warn(
+          `  ⚠️  Could not extract parameter type for ${method} from schema`
+        );
       }
     }
   } else {
-    console.warn('⚠️  No OpenAPI spec provided - cannot extract parameter types');
+    console.warn(
+      '⚠️  No OpenAPI spec provided - cannot extract parameter types'
+    );
   }
-  
+
   return methodToParamType;
 }
 
@@ -110,78 +132,94 @@ async function extractResponseTypesFromSchemas(
   availableTypes?: Set<string>
 ): Promise<Record<string, string>> {
   const methodToResponseType: Record<string, string> = {};
-  
+
   if (openApiSpec) {
     console.log('🔍 Analyzing OpenAPI schema to extract response types...');
-    
+
     // Parse each method's schema to find the actual result type
     for (const [path, method] of Object.entries(pathToMethodMap)) {
-      const responseType = await extractResultTypeFromSchema(path, method, openApiSpec, availableTypes);
+      const responseType = await extractResultTypeFromSchema(
+        path,
+        method,
+        openApiSpec,
+        availableTypes
+      );
       if (responseType) {
         methodToResponseType[method] = responseType;
         console.log(`  ${method} -> ${responseType} (from schema)`);
       } else {
-        console.warn(`  ⚠️  Could not extract response type for ${method} from schema`);
+        console.warn(
+          `  ⚠️  Could not extract response type for ${method} from schema`
+        );
       }
     }
   } else {
-    console.warn('⚠️  No OpenAPI spec provided - cannot extract response types');
+    console.warn(
+      '⚠️  No OpenAPI spec provided - cannot extract response types'
+    );
   }
-  
+
   return methodToResponseType;
 }
 
 // Extract the actual params type from OpenAPI schema
 async function extractParamsTypeFromSchema(
-  path: string, 
-  method: string, 
+  path: string,
+  method: string,
   openApiSpec: any,
   availableTypes?: Set<string>
 ): Promise<string | null> {
   try {
     const pathSpec = openApiSpec.paths[path];
     const postSpec = pathSpec?.post;
-    
+
     if (!postSpec) return null;
-    
+
     // Look for the params schema in the request body
-    const requestBodySchema = postSpec.requestBody?.content?.['application/json']?.schema;
+    const requestBodySchema =
+      postSpec.requestBody?.content?.['application/json']?.schema;
     if (!requestBodySchema) return null;
-    
+
     // If it's a reference, extract the schema name
     if (requestBodySchema.$ref) {
       const refPath = requestBodySchema.$ref; // e.g., "#/components/schemas/JsonRpcRequestForBlock"
       const schemaName = refPath.split('/').pop();
-      
+
       // Get the actual schema definition
       const actualSchema = openApiSpec.components?.schemas?.[schemaName];
       if (actualSchema?.properties?.params) {
         const paramsSchema = actualSchema.properties.params;
-        
+
         // Extract the params type from the schema reference
         if (paramsSchema.$ref) {
           const paramsRefPath = paramsSchema.$ref;
           const paramsSchemaName = paramsRefPath.split('/').pop();
-          
+
           // Convert schema name to TypeScript type name
-          const paramTypeName = await schemaNameToTypeName(paramsSchemaName, availableTypes);
+          const paramTypeName = await schemaNameToTypeName(
+            paramsSchemaName,
+            availableTypes
+          );
           return paramTypeName;
         }
-        
+
         // Handle lazy references
         if (paramsSchema.properties?.lazy?.anyOf) {
           for (const option of paramsSchema.properties.lazy.anyOf) {
             if (option.$ref) {
               const paramsRefPath = option.$ref;
               const paramsSchemaName = paramsRefPath.split('/').pop();
-              const paramTypeName = await schemaNameToTypeName(paramsSchemaName, availableTypes);
+              const paramTypeName = await schemaNameToTypeName(
+                paramsSchemaName,
+                availableTypes
+              );
               return paramTypeName;
             }
           }
         }
       }
     }
-    
+
     return null;
   } catch (error) {
     console.warn(`  ⚠️  Could not extract params type for ${method}:`, error);
@@ -191,67 +229,82 @@ async function extractParamsTypeFromSchema(
 
 // Extract the actual result type from OpenAPI response schema
 async function extractResultTypeFromSchema(
-  path: string, 
-  method: string, 
+  path: string,
+  method: string,
   openApiSpec: any,
   availableTypes?: Set<string>
 ): Promise<string | null> {
   try {
     const pathSpec = openApiSpec.paths[path];
     const postSpec = pathSpec?.post;
-    
+
     if (!postSpec) return null;
-    
+
     // Look for the response schema
-    const responseSchema = postSpec.responses?.['200']?.content?.['application/json']?.schema;
+    const responseSchema =
+      postSpec.responses?.['200']?.content?.['application/json']?.schema;
     if (!responseSchema) return null;
-    
+
     // If it's a reference, extract the schema name
     if (responseSchema.$ref) {
       const refPath = responseSchema.$ref; // e.g., "#/components/schemas/JsonRpcResponseFor_RpcBlockResponseAnd_RpcError"
       const schemaName = refPath.split('/').pop();
-      
+
       // Get the actual schema definition
       const actualSchema = openApiSpec.components?.schemas?.[schemaName];
-      
+
       // JSON-RPC responses are typically unions of success (result) and error
-      if (actualSchema?.oneOf || actualSchema?.anyOf || (Array.isArray(actualSchema) && actualSchema.length > 0)) {
-        const schemas = actualSchema.oneOf || actualSchema.anyOf || actualSchema;
-        
+      if (
+        actualSchema?.oneOf ||
+        actualSchema?.anyOf ||
+        (Array.isArray(actualSchema) && actualSchema.length > 0)
+      ) {
+        const schemas =
+          actualSchema.oneOf || actualSchema.anyOf || actualSchema;
+
         // Find the success case (the one with 'result' property)
         for (const option of schemas) {
           if (option.properties?.result) {
             const resultSchema = option.properties.result;
-            
+
             // Extract the result type from the schema reference
             if (resultSchema.$ref) {
               const resultRefPath = resultSchema.$ref;
               const resultSchemaName = resultRefPath.split('/').pop();
-              
+
               // Convert schema name to TypeScript type name
-              const resultTypeName = await schemaNameToTypeName(resultSchemaName, availableTypes);
+              const resultTypeName = await schemaNameToTypeName(
+                resultSchemaName,
+                availableTypes
+              );
               return resultTypeName;
             }
-            
+
             // Handle anyOf (like health endpoint where result can be RpcHealthResponse | null)
             if (resultSchema.anyOf) {
               for (const option of resultSchema.anyOf) {
                 if (option.$ref) {
                   const resultRefPath = option.$ref;
                   const resultSchemaName = resultRefPath.split('/').pop();
-                  const resultTypeName = await schemaNameToTypeName(resultSchemaName, availableTypes);
+                  const resultTypeName = await schemaNameToTypeName(
+                    resultSchemaName,
+                    availableTypes
+                  );
                   return resultTypeName;
                 }
               }
             }
-            
+
             // Handle lazy references
             if (resultSchema.properties?.lazy?.anyOf) {
               for (const lazyOption of resultSchema.properties.lazy.anyOf) {
                 if (lazyOption.$ref) {
                   const resultRefPath = lazyOption.$ref;
                   const resultSchemaName = resultRefPath.split('/').pop();
-                  const resultTypeName = await schemaNameToTypeName(resultSchemaName, availableTypes);
+                  const resultTypeName = await schemaNameToTypeName(
+                    resultSchemaName,
+                    availableTypes
+                  );
                   return resultTypeName;
                 }
               }
@@ -260,7 +313,7 @@ async function extractResultTypeFromSchema(
         }
       }
     }
-    
+
     return null;
   } catch (error) {
     console.warn(`  ⚠️  Could not extract result type for ${method}:`, error);
@@ -269,47 +322,51 @@ async function extractResultTypeFromSchema(
 }
 
 // Convert schema name to TypeScript type name with validation
-async function schemaNameToTypeName(schemaName: string, availableTypes?: Set<string>): Promise<string> {
+async function schemaNameToTypeName(
+  schemaName: string,
+  availableTypes?: Set<string>
+): Promise<string> {
   // Remove Schema suffix if present
-  let typeName = schemaName.endsWith('Schema') ? schemaName.replace(/Schema$/, '') : schemaName;
-  
+  let typeName = schemaName.endsWith('Schema')
+    ? schemaName.replace(/Schema$/, '')
+    : schemaName;
+
   // If we have the available types, check what actually exists
   if (availableTypes) {
     // Try the exact name first
     if (availableTypes.has(typeName)) {
       return typeName;
     }
-    
+
     // Try without Rpc prefix
     const withoutRpc = typeName.replace(/^Rpc/, '');
     if (availableTypes.has(withoutRpc)) {
       return withoutRpc;
     }
-    
+
     // Try with Rpc prefix
     const withRpc = `Rpc${typeName}`;
     if (availableTypes.has(withRpc)) {
       return withRpc;
     }
   }
-  
+
   // Use heuristic naming when type not found in introspection
-  
+
   if (typeName.startsWith('Rpc')) {
     return typeName;
   }
-  
+
   // Don't add Rpc prefix to EXPERIMENTAL types
   if (typeName.startsWith('EXPERIMENTAL')) {
     return typeName;
   }
-  
+
   // Default: try with Rpc prefix
   return `Rpc${typeName}`;
 }
 
 // Note: Inference logic removed - now relies entirely on schema extraction
-
 
 // Convert snake_case to PascalCase
 function pascalCase(str: string): string {
@@ -346,37 +403,52 @@ function createTypeNameResolver(
   methodToParamType: Record<string, string>,
   methodToResponseType: Record<string, string>
 ) {
-  return function(method: string, suffix: 'Request' | 'Response'): string {
+  return function (method: string, suffix: 'Request' | 'Response'): string {
     if (suffix === 'Request') {
       // Use the dynamically discovered parameter type
       return methodToParamType[method] || generateFallbackRequestType(method);
     } else {
       // Use the dynamically discovered response type
-      return methodToResponseType[method] || generateFallbackResponseType(method);
+      return (
+        methodToResponseType[method] || generateFallbackResponseType(method)
+      );
     }
   };
 }
 
 // Generate method mappings from RPC_METHODS array
 async function generateMethodMappings(
-  rpcMethods: readonly string[], 
+  rpcMethods: readonly string[],
   pathToMethodMap?: Record<string, string>,
   openApiSpec?: any
 ): Promise<MethodMapping[]> {
   // Get parameter and response type mappings from OpenAPI schema
   if (!pathToMethodMap || !openApiSpec) {
-    throw new Error('OpenAPI spec and path mappings are required for type generation');
+    throw new Error(
+      'OpenAPI spec and path mappings are required for type generation'
+    );
   }
-  
+
   // Load available types from the jsonrpc-types package
   const availableTypes = await getAvailableTypes();
-  
-  const methodToParamType = await extractParameterTypesFromSchemas(pathToMethodMap, openApiSpec, availableTypes);
-  const methodToResponseType = await extractResponseTypesFromSchemas(pathToMethodMap, openApiSpec, availableTypes);
-  
+
+  const methodToParamType = await extractParameterTypesFromSchemas(
+    pathToMethodMap,
+    openApiSpec,
+    availableTypes
+  );
+  const methodToResponseType = await extractResponseTypesFromSchemas(
+    pathToMethodMap,
+    openApiSpec,
+    availableTypes
+  );
+
   // Create type name resolver with discovered mappings
-  const rpcMethodToTypeName = createTypeNameResolver(methodToParamType, methodToResponseType);
-  
+  const rpcMethodToTypeName = createTypeNameResolver(
+    methodToParamType,
+    methodToResponseType
+  );
+
   return rpcMethods.map(rpcMethod => ({
     rpcMethod,
     clientMethodName: rpcMethodToCamelCase(rpcMethod),
@@ -386,9 +458,11 @@ async function generateMethodMappings(
 }
 
 // Generate the TypeScript interface with proper types
-function generateInterfaceContent(mappings: MethodMapping[]): GeneratedInterface {
+function generateInterfaceContent(
+  mappings: MethodMapping[]
+): GeneratedInterface {
   const timestamp = new Date().toISOString();
-  
+
   // Generate method signatures with proper types
   const methodSignatures = mappings.map(mapping => {
     return `  ${mapping.clientMethodName}(params?: ${mapping.requestType}): Promise<${mapping.responseType}>;`;
@@ -398,8 +472,16 @@ function generateInterfaceContent(mappings: MethodMapping[]): GeneratedInterface
   const requestTypes = [...new Set(mappings.map(m => m.requestType))].sort();
   const responseTypes = [...new Set(mappings.map(m => m.responseType))].sort();
   // Add specific result types for convenience methods (use Set to avoid duplicates)
-  const allTypes = [...new Set([...requestTypes, ...responseTypes, 'AccountView', 'CallResult', 'AccessKeyView'])].sort();
-  
+  const allTypes = [
+    ...new Set([
+      ...requestTypes,
+      ...responseTypes,
+      'AccountView',
+      'CallResult',
+      'AccessKeyView',
+    ]),
+  ].sort();
+
   const importStatement = `import type {\n  ${allTypes.join(',\n  ')}\n} from '@near-js/jsonrpc-types';`;
 
   const content = `// Auto-generated TypeScript interface for NEAR RPC client
@@ -465,24 +547,28 @@ export async function generateClientInterface(
   openApiSpec?: any
 ): Promise<GeneratedInterface> {
   console.log('🔧 Generating TypeScript client interface...');
-  
+
   // Generate method mappings
-  const mappings = await generateMethodMappings(rpcMethods, pathToMethodMap, openApiSpec);
+  const mappings = await generateMethodMappings(
+    rpcMethods,
+    pathToMethodMap,
+    openApiSpec
+  );
   console.log(`   Found ${mappings.length} RPC methods to generate`);
-  
+
   // Generate the interface
   const generated = generateInterfaceContent(mappings);
-  
+
   // Ensure output directory exists
   await fs.mkdir(dirname(outputPath), { recursive: true });
-  
+
   // Write the generated interface
   await fs.writeFile(outputPath, generated.content, 'utf8');
-  
+
   console.log(`✅ Generated client interface at ${outputPath}`);
   console.log(`   Methods: ${generated.methodCount}`);
   console.log(`   Timestamp: ${generated.timestamp}`);
-  
+
   return generated;
 }
 
@@ -491,20 +577,28 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   async function main() {
     try {
       // Import RPC_METHODS from the types package
-      const { RPC_METHODS } = await import('../../packages/jsonrpc-types/dist/index.mjs');
-      
+      const { RPC_METHODS } = await import(
+        '../../packages/jsonrpc-types/dist/index.mjs'
+      );
+
       // Output path - resolve relative to the project root, not codegen directory
-      const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '../..');
-      const outputPath = join(projectRoot, 'packages/jsonrpc-client/src/generated-types.ts');
-      
+      const projectRoot = join(
+        dirname(fileURLToPath(import.meta.url)),
+        '../..'
+      );
+      const outputPath = join(
+        projectRoot,
+        'packages/jsonrpc-client/src/generated-types.ts'
+      );
+
       await generateClientInterface(RPC_METHODS, outputPath);
-      
+
       console.log('🎉 Client interface generation complete!');
     } catch (error) {
       console.error('❌ Failed to generate client interface:', error);
       process.exit(1);
     }
   }
-  
+
   main();
 }
