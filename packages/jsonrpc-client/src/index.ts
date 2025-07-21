@@ -3,12 +3,12 @@
 
 export * from './client';
 export * from './types';
+export * from './generated-types';
 
 // Re-export commonly used types from the types package
-export type {
+export {
   JsonRpcRequestSchema,
   JsonRpcResponseSchema,
-  JsonRpcErrorSchema,
 } from '@near-js/jsonrpc-types';
 
 // Re-export RPC methods

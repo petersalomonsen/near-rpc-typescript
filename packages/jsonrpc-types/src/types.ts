@@ -1,5 +1,5 @@
 // Auto-generated TypeScript types from NEAR OpenAPI spec using z.infer
-// Generated on: 2025-07-21T06:05:44.305Z
+// Generated on: 2025-07-21T19:17:58.560Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/v4';

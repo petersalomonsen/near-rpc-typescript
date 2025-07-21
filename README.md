@@ -37,11 +37,16 @@ console.log('Latest block height:', block.header.height);
 ```typescript
 import { NearRpcClient } from '@near-js/jsonrpc-client';
 
-const client = new NearRpcClient('https://rpc.mainnet.near.org');
+const client = new NearRpcClient({
+  endpoint: 'https://rpc.mainnet.near.org'
+});
 
 // Fully typed method calls
 const block = await client.block({ finality: 'final' });
-const account = await client.viewAccount({ accountId: 'example.near' });
+const account = await client.viewAccount({ 
+  accountId: 'example.near',
+  finality: 'final' 
+});
 ```
 
 ### Browser (Vanilla HTML)
