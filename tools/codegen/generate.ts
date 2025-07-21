@@ -3,6 +3,7 @@
 
 import { promises as fs } from 'fs';
 import { join } from 'path';
+import { generateClientInterface } from './generate-client-interface.js';
 
 // OpenAPI spec types
 interface OpenAPISpec {
@@ -516,6 +517,12 @@ export type RpcMethod = typeof RPC_METHODS[number];
     console.log(
       `  - packages/jsonrpc-types/src/methods.ts (${Object.keys(PATH_TO_METHOD_MAP).length} methods)`
     );
+
+    // Generate client interface with proper types
+    console.log('\n🔧 Generating client interface...');
+    const clientInterfacePath = join(process.cwd(), 'packages/jsonrpc-client/src/generated-types.ts');
+    await generateClientInterface(Object.values(PATH_TO_METHOD_MAP), clientInterfacePath);
+    console.log('  - packages/jsonrpc-client/src/generated-types.ts (client interface)');
   } catch (error) {
     console.error('❌ Generation failed:', error);
     throw error;
