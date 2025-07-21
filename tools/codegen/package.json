@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "generate": "tsx generate.ts"
+    "generate": "tsx generate.ts",
+    "test": "vitest run",
+    "generate:client-interface": "tsx generate-client-interface.ts"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
@@ -14,6 +16,8 @@
   "devDependencies": {
     "@types/node": "^20.11.19",
     "tsx": "^4.7.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.2",
+    "yaml": "^2.8.0"
   }
 }
