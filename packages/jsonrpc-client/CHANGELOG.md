@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v0.2.0...jsonrpc-client-v0.3.0) (2025-07-21)
+
+
+### Features
+
+* implement dynamic PATH_TO_METHOD_MAP extraction ([#17](https://github.com/petersalomonsen/near-rpc-typescript/issues/17)) ([532c1de](https://github.com/petersalomonsen/near-rpc-typescript/commit/532c1de3fa26ffcbcb1366a7927ccc926a50e780))
+
+
+### Bug Fixes
+
+* resolve flaky performance test that fails on negative validation overhead ([#19](https://github.com/petersalomonsen/near-rpc-typescript/issues/19)) ([05dbec5](https://github.com/petersalomonsen/near-rpc-typescript/commit/05dbec5880f309b455849fd4154d8c9bf41aa5f0))
+
 ## [0.2.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v0.1.0...jsonrpc-client-v0.2.0) (2025-07-20)
 
 
