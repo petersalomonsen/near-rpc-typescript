@@ -1,5 +1,5 @@
 // Auto-generated Zod schemas from NEAR OpenAPI spec
-// Generated on: 2025-07-21T17:19:07.716Z
+// Generated on: 2025-07-21T17:45:23.939Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/v4';

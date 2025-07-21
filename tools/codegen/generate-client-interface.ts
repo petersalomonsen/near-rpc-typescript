@@ -397,8 +397,8 @@ function generateInterfaceContent(mappings: MethodMapping[]): GeneratedInterface
   // Generate type imports
   const requestTypes = [...new Set(mappings.map(m => m.requestType))].sort();
   const responseTypes = [...new Set(mappings.map(m => m.responseType))].sort();
-  // Add QueryResponse for convenience methods (use Set to avoid duplicates)
-  const allTypes = [...new Set([...requestTypes, ...responseTypes, 'QueryResponse'])].sort();
+  // Add specific result types for convenience methods (use Set to avoid duplicates)
+  const allTypes = [...new Set([...requestTypes, ...responseTypes, 'AccountView', 'CallResult', 'AccessKeyView'])].sort();
   
   const importStatement = `import type {\n  ${allTypes.join(',\n  ')}\n} from '@near-js/jsonrpc-types';`;
 
@@ -422,7 +422,7 @@ export interface ConvenienceMethods {
     accountId: string;
     finality?: 'final' | 'near-final' | 'optimistic';
     blockId?: string | number;
-  }): Promise<QueryResponse>;
+  }): Promise<AccountView>;
   
   viewFunction(params: {
     accountId: string;
@@ -430,14 +430,14 @@ export interface ConvenienceMethods {
     argsBase64?: string;
     finality?: 'final' | 'near-final' | 'optimistic';
     blockId?: string | number;
-  }): Promise<QueryResponse>;
+  }): Promise<CallResult>;
   
   viewAccessKey(params: {
     accountId: string;
     publicKey: string;
     finality?: 'final' | 'near-final' | 'optimistic';
     blockId?: string | number;
-  }): Promise<QueryResponse>;
+  }): Promise<AccessKeyView>;
 }
 
 // Combined interface for the complete client
