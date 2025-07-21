@@ -2,7 +2,8 @@
 // This will fetch the NEAR OpenAPI spec and generate TypeScript types and Zod schemas
 
 import { promises as fs } from 'fs';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { generateClientInterface } from './generate-client-interface.js';
 
 // OpenAPI spec types
@@ -520,7 +521,9 @@ export type RpcMethod = typeof RPC_METHODS[number];
 
     // Generate client interface with proper types
     console.log('\n🔧 Generating client interface...');
-    const clientInterfacePath = join(process.cwd(), 'packages/jsonrpc-client/src/generated-types.ts');
+    const currentDir = dirname(fileURLToPath(import.meta.url));
+    const projectRoot = join(currentDir, '../..');
+    const clientInterfacePath = join(projectRoot, 'packages/jsonrpc-client/src/generated-types.ts');
     await generateClientInterface(Object.values(PATH_TO_METHOD_MAP), clientInterfacePath);
     console.log('  - packages/jsonrpc-client/src/generated-types.ts (client interface)');
   } catch (error) {
