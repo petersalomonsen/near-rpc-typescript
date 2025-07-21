@@ -524,7 +524,7 @@ export type RpcMethod = typeof RPC_METHODS[number];
     const currentDir = dirname(fileURLToPath(import.meta.url));
     const projectRoot = join(currentDir, '../..');
     const clientInterfacePath = join(projectRoot, 'packages/jsonrpc-client/src/generated-types.ts');
-    await generateClientInterface(Object.values(PATH_TO_METHOD_MAP), clientInterfacePath);
+    await generateClientInterface(Object.values(PATH_TO_METHOD_MAP), clientInterfacePath, PATH_TO_METHOD_MAP, spec);
     console.log('  - packages/jsonrpc-client/src/generated-types.ts (client interface)');
   } catch (error) {
     console.error('❌ Generation failed:', error);

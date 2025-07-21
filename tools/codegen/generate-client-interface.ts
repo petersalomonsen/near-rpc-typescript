@@ -39,24 +39,164 @@ function rpcMethodToCamelCase(method: string): string {
   }
 }
 
-// Convert RPC method name to TypeScript type name
-function rpcMethodToTypeName(method: string, suffix: 'Request' | 'Response'): string {
-  if (method.startsWith('EXPERIMENTAL_')) {
-    const baseName = method.substring(13); // Remove 'EXPERIMENTAL_'
-    return `EXPERIMENTAL${baseName
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join('')}${suffix}`;
+// Extract parameter types by parsing schema definitions directly
+function extractParameterTypesFromSchemas(
+  pathToMethodMap: Record<string, string>,
+  openApiSpec?: any
+): Record<string, string> {
+  const methodToParamType: Record<string, string> = {};
+  
+  if (openApiSpec) {
+    console.log('🔍 Analyzing OpenAPI schema to extract parameter types...');
+    
+    // Parse each method's schema to find the actual params type
+    for (const [path, method] of Object.entries(pathToMethodMap)) {
+      const paramType = extractParamsTypeFromSchema(path, method, openApiSpec);
+      if (paramType) {
+        methodToParamType[method] = paramType;
+        console.log(`  ${method} -> ${paramType} (from schema)`);
+      } else {
+        console.warn(`  ⚠️  Could not extract parameter type for ${method} from schema`);
+      }
+    }
   } else {
-    return `${method
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join('')}${suffix}`;
+    console.warn('⚠️  No OpenAPI spec provided - cannot extract parameter types');
+  }
+  
+  return methodToParamType;
+}
+
+// Extract the actual params type from OpenAPI schema
+function extractParamsTypeFromSchema(path: string, method: string, openApiSpec: any): string | null {
+  try {
+    const pathSpec = openApiSpec.paths[path];
+    const postSpec = pathSpec?.post;
+    
+    if (!postSpec) return null;
+    
+    // Look for the params schema in the request body
+    const requestBodySchema = postSpec.requestBody?.content?.['application/json']?.schema;
+    if (!requestBodySchema) return null;
+    
+    // If it's a reference, extract the schema name
+    if (requestBodySchema.$ref) {
+      const refPath = requestBodySchema.$ref; // e.g., "#/components/schemas/JsonRpcRequestForBlock"
+      const schemaName = refPath.split('/').pop();
+      
+      // Get the actual schema definition
+      const actualSchema = openApiSpec.components?.schemas?.[schemaName];
+      if (actualSchema?.properties?.params) {
+        const paramsSchema = actualSchema.properties.params;
+        
+        // Extract the params type from the schema reference
+        if (paramsSchema.$ref) {
+          const paramsRefPath = paramsSchema.$ref;
+          const paramsSchemaName = paramsRefPath.split('/').pop();
+          
+          // Convert schema name to TypeScript type name
+          const paramTypeName = schemaNameToTypeName(paramsSchemaName);
+          return paramTypeName;
+        }
+        
+        // Handle lazy references
+        if (paramsSchema.properties?.lazy?.anyOf) {
+          for (const option of paramsSchema.properties.lazy.anyOf) {
+            if (option.$ref) {
+              const paramsRefPath = option.$ref;
+              const paramsSchemaName = paramsRefPath.split('/').pop();
+              const paramTypeName = schemaNameToTypeName(paramsSchemaName);
+              return paramTypeName;
+            }
+          }
+        }
+      }
+    }
+    
+    return null;
+  } catch (error) {
+    console.warn(`  ⚠️  Could not extract params type for ${method}:`, error);
+    return null;
   }
 }
 
+// Convert schema name to TypeScript type name
+function schemaNameToTypeName(schemaName: string): string {
+  // Handle different schema naming patterns
+  if (schemaName.startsWith('Rpc') && schemaName.endsWith('Schema')) {
+    // RpcBlockRequestSchema -> RpcBlockRequest
+    return schemaName.replace(/Schema$/, '');
+  }
+  
+  // Special cases that should NOT get Rpc prefix
+  const noPrefixTypes = ['GenesisConfigRequest'];
+  if (noPrefixTypes.includes(schemaName)) {
+    return schemaName;
+  }
+  
+  // Add Rpc prefix if not present and convert to request type
+  if (!schemaName.startsWith('Rpc') && !schemaName.startsWith('EXPERIMENTAL')) {
+    return `Rpc${schemaName}`;
+  }
+  
+  return schemaName;
+}
+
+// Note: Inference logic removed - now relies entirely on schema extraction
+
+
+// Convert snake_case to PascalCase
+function pascalCase(str: string): string {
+  return str
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join('');
+}
+
+// Generate fallback request type name (the old approach)
+function generateFallbackRequestType(method: string): string {
+  if (method.startsWith('EXPERIMENTAL_')) {
+    const baseName = method.substring(13);
+    return `EXPERIMENTAL${pascalCase(baseName)}Request`;
+  } else {
+    return `${pascalCase(method)}Request`;
+  }
+}
+
+// Note: Basic mapping removed - generator now requires OpenAPI spec for proper type extraction
+
+// Convert RPC method name to TypeScript type name using dynamic mapping
+function createTypeNameResolver(methodToParamType: Record<string, string>) {
+  return function(method: string, suffix: 'Request' | 'Response'): string {
+    if (suffix === 'Request') {
+      // Use the dynamically discovered parameter type
+      return methodToParamType[method] || generateFallbackRequestType(method);
+    } else {
+      // For response types, use the standard naming convention
+      if (method.startsWith('EXPERIMENTAL_')) {
+        const baseName = method.substring(13);
+        return `EXPERIMENTAL${pascalCase(baseName)}${suffix}`;
+      } else {
+        return `${pascalCase(method)}${suffix}`;
+      }
+    }
+  };
+}
+
 // Generate method mappings from RPC_METHODS array
-function generateMethodMappings(rpcMethods: readonly string[]): MethodMapping[] {
+function generateMethodMappings(
+  rpcMethods: readonly string[], 
+  pathToMethodMap?: Record<string, string>,
+  openApiSpec?: any
+): MethodMapping[] {
+  // Get parameter type mappings from OpenAPI schema
+  if (!pathToMethodMap || !openApiSpec) {
+    throw new Error('OpenAPI spec and path mappings are required for type generation');
+  }
+  const methodToParamType = extractParameterTypesFromSchemas(pathToMethodMap, openApiSpec);
+  
+  // Create type name resolver with discovered mappings
+  const rpcMethodToTypeName = createTypeNameResolver(methodToParamType);
+  
   return rpcMethods.map(rpcMethod => ({
     rpcMethod,
     clientMethodName: rpcMethodToCamelCase(rpcMethod),
@@ -140,12 +280,14 @@ export interface CompleteClientInterface extends DynamicRpcMethods, ConvenienceM
 // Main generator function
 export async function generateClientInterface(
   rpcMethods: readonly string[],
-  outputPath: string
+  outputPath: string,
+  pathToMethodMap?: Record<string, string>,
+  openApiSpec?: any
 ): Promise<GeneratedInterface> {
   console.log('🔧 Generating TypeScript client interface...');
   
   // Generate method mappings
-  const mappings = generateMethodMappings(rpcMethods);
+  const mappings = generateMethodMappings(rpcMethods, pathToMethodMap, openApiSpec);
   console.log(`   Found ${mappings.length} RPC methods to generate`);
   
   // Generate the interface

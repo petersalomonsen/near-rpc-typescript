@@ -275,7 +275,7 @@ RPC_METHODS.forEach((method) => {
 });
 
 // Add convenience methods
-NearRpcClient.prototype.viewAccount = function(params: {
+(NearRpcClient.prototype as any).viewAccount = function(params: {
   accountId: string;
   finality?: 'final' | 'near-final' | 'optimistic';
   blockId?: string | number;
@@ -286,7 +286,7 @@ NearRpcClient.prototype.viewAccount = function(params: {
   });
 };
 
-NearRpcClient.prototype.viewFunction = function(params: {
+(NearRpcClient.prototype as any).viewFunction = function(params: {
   accountId: string;
   methodName: string;
   argsBase64?: string;
@@ -299,7 +299,7 @@ NearRpcClient.prototype.viewFunction = function(params: {
   });
 };
 
-NearRpcClient.prototype.viewAccessKey = function(params: {
+(NearRpcClient.prototype as any).viewAccessKey = function(params: {
   accountId: string;
   publicKey: string;
   finality?: 'final' | 'near-final' | 'optimistic';
@@ -314,7 +314,5 @@ NearRpcClient.prototype.viewAccessKey = function(params: {
 // Import generated interfaces for truly dynamic typing
 import type { DynamicRpcMethods, ConvenienceMethods } from './generated-types';
 
-// Type augmentation to add all dynamic methods
-declare module './client' {
-  interface NearRpcClient extends DynamicRpcMethods, ConvenienceMethods {}
-}
+// Use declaration merging to add dynamic methods to the NearRpcClient class
+export interface NearRpcClient extends DynamicRpcMethods, ConvenienceMethods {}
