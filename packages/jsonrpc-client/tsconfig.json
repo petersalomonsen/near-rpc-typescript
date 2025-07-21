@@ -7,10 +7,5 @@
     "incremental": false
   },
   "include": ["src/**/*"],
-  "exclude": ["dist", "**/*.test.ts", "**/*.spec.ts"],
-  "references": [
-    {
-      "path": "../jsonrpc-types"
-    }
-  ]
+  "exclude": ["dist", "**/*.test.ts", "**/*.spec.ts"]
 }
