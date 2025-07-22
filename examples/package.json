@@ -1,6 +1,7 @@
 {
   "type": "module",
   "dependencies": {
-    "@near-js/jsonrpc-client": "workspace:*"
+    "@near-js/jsonrpc-client": "workspace:*",
+    "@near-js/jsonrpc-types": "workspace:*"
   }
 }
