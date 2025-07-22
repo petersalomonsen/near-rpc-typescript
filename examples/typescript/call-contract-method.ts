@@ -1,6 +1,6 @@
 /**
  * This example demonstrates two approaches for calling smart contract methods on NEAR.
- * 
+ *
  * It shows both the convenience method and the generic query method with type guards,
  * highlighting the improved developer experience of the dynamic client implementation.
  *
@@ -11,10 +11,7 @@
  */
 
 import { NearRpcClient } from '@near-js/jsonrpc-client';
-
-// Type imports - in a real project these would come from '@near-js/jsonrpc-types'
-// For this example, we define the shape inline to avoid module resolution issues
-type CallResult = { logs: string[]; result: number[] };
+import { CallResult } from '@near-js/jsonrpc-types';
 
 const provider = new NearRpcClient({
   endpoint: 'https://rpc.mainnet.fastnear.com',
@@ -25,7 +22,9 @@ const methodName = 'mt_tokens_for_owner';
 const args = { account_id: 'webassemblymusic-treasury.sputnik-dao.near' };
 const argsBase64 = Buffer.from(JSON.stringify(args)).toString('base64');
 
-console.log('🔧 Calling smart contract method using two different approaches...\n');
+console.log(
+  '🔧 Calling smart contract method using two different approaches...\n'
+);
 
 // ===== APPROACH 1: Convenience Method (Recommended) =====
 console.log('📦 Approach 1: Using convenience method viewFunction()');
@@ -57,18 +56,6 @@ const result2 = await provider.query({
   argsBase64: argsBase64,
 });
 
-// Type guard to safely narrow the union type to CallResult
-// Note: Due to complex union types, we need runtime validation + type assertion
-function isCallResult(result: any): result is CallResult {
-  return result && typeof result === 'object' &&
-         'logs' in result && 'result' in result &&
-         Array.isArray(result.logs) && Array.isArray(result.result);
-}
-
-if (!isCallResult(result2)) {
-  throw new Error('Expected CallResult from call_function query');
-}
-
 // After runtime validation, we can safely cast to CallResult
 // TypeScript's type narrowing with complex unions requires explicit casting
 const callResult = result2 as CallResult;
@@ -78,4 +65,6 @@ console.log('Logs:', callResult.logs);
 console.log();
 
 console.log('🎉 Both approaches return the same data!');
-console.log('💡 The convenience method provides better developer experience with automatic type safety.');
+console.log(
+  '💡 The convenience method provides better developer experience with automatic type safety.'
+);

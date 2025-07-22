@@ -62,6 +62,9 @@ importers:
       '@near-js/jsonrpc-client':
         specifier: workspace:*
         version: link:../packages/jsonrpc-client
+      '@near-js/jsonrpc-types':
+        specifier: workspace:*
+        version: link:../packages/jsonrpc-types
 
   packages/jsonrpc-client:
     dependencies:
