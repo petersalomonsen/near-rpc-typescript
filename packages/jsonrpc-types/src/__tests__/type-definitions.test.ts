@@ -13,7 +13,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 describe('TypeScript Type Definitions', () => {
   let typeDefinitions: string;
-  
+
   beforeAll(() => {
     // Read the source types file to inspect the type definitions
     const sourcePath = join(__dirname, '../types.ts');
@@ -24,7 +24,7 @@ describe('TypeScript Type Definitions', () => {
     it('should be defined as explicit named union, not z.infer', () => {
       // Check that RpcQueryResponse is defined with explicit union
       expect(typeDefinitions).toMatch(/export type RpcQueryResponse.*=/);
-      
+
       // Should contain the individual type names in the union
       expect(typeDefinitions).toMatch(/AccountView/);
       expect(typeDefinitions).toMatch(/CallResult/);
@@ -36,8 +36,10 @@ describe('TypeScript Type Definitions', () => {
 
     it('should be defined using z.infer for proper union handling', () => {
       // RpcQueryResponse should use z.infer - this is the correct approach
-      const queryResponseMatch = typeDefinitions.match(/export type RpcQueryResponse.*?;/s);
-      
+      const queryResponseMatch = typeDefinitions.match(
+        /export type RpcQueryResponse.*?;/s
+      );
+
       if (queryResponseMatch) {
         const queryResponseDef = queryResponseMatch[0];
         expect(queryResponseDef).toContain('z.infer');
@@ -61,11 +63,11 @@ describe('TypeScript Type Definitions', () => {
       // Verify all the component types of RpcQueryResponse are exported
       const expectedTypes = [
         'AccountView',
-        'CallResult', 
+        'CallResult',
         'AccessKeyView',
         'ContractCodeView',
         'ViewStateResult',
-        'AccessKeyList'
+        'AccessKeyList',
       ];
 
       for (const typeName of expectedTypes) {
@@ -77,7 +79,7 @@ describe('TypeScript Type Definitions', () => {
       // The actual union structure is in the schema definition
       // The type uses z.infer to extract the TypeScript type from the schema
       expect(typeDefinitions).toMatch(/RpcQueryResponseSchema/);
-      
+
       // The individual types that make up the union should be defined
       expect(typeDefinitions).toMatch(/AccountView/);
       expect(typeDefinitions).toMatch(/CallResult/);
@@ -92,13 +94,15 @@ describe('TypeScript Type Definitions', () => {
     it('should maintain consistency between schemas and types', () => {
       // The types file should import schemas even though RpcQueryResponse is manual
       expect(typeDefinitions).toMatch(/import.*schemas/);
-      
+
       // Individual types should still reference their schemas for most types
       expect(typeDefinitions).toMatch(/AccountViewSchema/);
       expect(typeDefinitions).toMatch(/CallResultSchema/);
-      
+
       // RpcQueryResponse correctly uses z.infer to get the union type
-      const queryResponseMatch = typeDefinitions.match(/export type RpcQueryResponse.*?;/s);
+      const queryResponseMatch = typeDefinitions.match(
+        /export type RpcQueryResponse.*?;/s
+      );
       if (queryResponseMatch) {
         const queryResponseDef = queryResponseMatch[0];
         expect(queryResponseDef).toContain('z.infer');
@@ -108,39 +112,39 @@ describe('TypeScript Type Definitions', () => {
   });
 });
 
-// Compile-time verification test  
+// Compile-time verification test
 describe('Type Import Test', () => {
   it('should be able to import and use the union types', () => {
     // The fact that this file compiles with the imports at the top is the test
     // This proves the types are properly exported and defined
-    
+
     expect(() => {
       function testTypes() {
         let response: RpcQueryResponse;
         let account: AccountView;
         let call: CallResult;
-        
+
         // These assignments should work if types are properly defined
         // Using mock objects to avoid undefined assignment
         account = {
           amount: '0',
           codeHash: 'test',
-          locked: '0', 
-          storageUsage: 0
+          locked: '0',
+          storageUsage: 0,
         };
-        
+
         call = {
           logs: [],
-          result: []
+          result: [],
         };
-        
+
         // Union assignment should work
         response = account;
         response = call;
-        
+
         return { response, account, call };
       }
-      
+
       const result = testTypes();
       expect(result).toBeDefined();
     }).not.toThrow();
