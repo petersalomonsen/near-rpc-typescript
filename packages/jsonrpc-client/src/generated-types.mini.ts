@@ -1,4 +1,4 @@
-// Auto-generated TypeScript interface for NEAR RPC client
+// Auto-generated TypeScript interface for NEAR RPC client (zod/mini version)
 // Generated at: 2025-07-23T19:21:37.289Z
 // Total methods: 28
 // 
@@ -55,7 +55,7 @@ import type {
   RpcValidatorRequest,
   RpcValidatorResponse,
   RpcValidatorsOrderedRequest
-} from '@near-js/jsonrpc-types';
+} from '@near-js/jsonrpc-types/mini';
 
 // Dynamic RPC methods interface with proper typing
 export interface DynamicRpcMethods {

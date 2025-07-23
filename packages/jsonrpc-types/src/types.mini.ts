@@ -1,9 +1,9 @@
-// Auto-generated TypeScript types from NEAR OpenAPI spec using z.infer
-// Generated on: 2025-07-23T19:21:33.557Z
+// Auto-generated TypeScript types from NEAR OpenAPI spec using z.infer (zod/mini version)
+// Generated on: 2025-07-23T19:21:33.558Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
-import { z } from 'zod/v4';
-import * as schemas from './schemas';
+import { z } from 'zod/mini';
+import * as schemas from './schemas.mini';
 
 /**
  * Access key provides limited access to an account. Each access key belongs
@@ -875,4 +875,4 @@ export type ValidatorsRequest = z.infer<typeof schemas.ValidatorsRequestSchema>;
 export type ValidatorsResponse = z.infer<typeof schemas.ValidatorsResponseSchema>;
 
 // Re-exports for convenience
-export * from './schemas';
+export * from './schemas.mini';
