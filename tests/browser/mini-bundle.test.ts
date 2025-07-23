@@ -194,7 +194,7 @@ test.describe('Mini Bundle Browser Tests', () => {
     await page.goto('/mini.html');
 
     // Test error handling by mocking network failure
-    await page.route('https://rpc.testnet.near.org', route => {
+    await page.route('https://rpc.testnet.fastnear.com', route => {
       route.abort('failed');
     });
 
@@ -255,11 +255,11 @@ test.describe('Mini Bundle Browser Tests', () => {
       `Difference: ${((miniSize - regularSize) / 1024).toFixed(1)}KB`
     );
 
-    // Verify both bundles exist and have reasonable sizes
-    expect(regularSize).toBeGreaterThan(200 * 1024); // > 200KB
-    expect(miniSize).toBeGreaterThan(200 * 1024); // > 200KB
-    expect(regularSize).toBeLessThan(1024 * 1024); // < 1MB
-    expect(miniSize).toBeLessThan(1024 * 1024); // < 1MB
+    // Verify both bundles exist and have reasonable sizes (updated for rollup bundles)
+    expect(regularSize).toBeGreaterThan(50 * 1024); // > 50KB
+    expect(miniSize).toBeGreaterThan(30 * 1024); // > 30KB
+    expect(regularSize).toBeLessThan(200 * 1024); // < 200KB
+    expect(miniSize).toBeLessThan(150 * 1024); // < 150KB
 
     // Mini bundle should be smaller than regular bundle
     expect(miniSize).toBeLessThan(regularSize);

@@ -192,7 +192,7 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
         'http://localhost:3000/browser-standalone-mini.min.js'
       );
       const client = new NearRpcClient({
-        endpoint: 'https://rpc.testnet.near.org',
+        endpoint: 'https://rpc.testnet.fastnear.com',
       });
       const block = await client.block({ finality: 'final' });
       return {
@@ -231,7 +231,7 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
     const result = await page.evaluate(async bundleDataUrl => {
       const { NearRpcClient } = await import(bundleDataUrl);
       const client = new NearRpcClient({
-        endpoint: 'https://rpc.testnet.near.org',
+        endpoint: 'https://rpc.testnet.fastnear.com',
       });
       const block = await client.block({ finality: 'final' });
       return {
@@ -269,7 +269,7 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
         'http://localhost:3000/browser-standalone-mini.min.js'
       );
       const client = new NearRpcClient({
-        endpoint: 'https://rpc.testnet.near.org',
+        endpoint: 'https://rpc.testnet.fastnear.com',
       });
 
       // Test multiple RPC calls to ensure robustness
@@ -338,7 +338,7 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
         'http://localhost:3000/browser-standalone-mini.min.js'
       );
       const client = new NearRpcClient({
-        endpoint: 'https://rpc.testnet.near.org',
+        endpoint: 'https://rpc.testnet.fastnear.com',
       });
 
       // Get latest block for height

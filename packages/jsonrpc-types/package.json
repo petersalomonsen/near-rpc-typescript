@@ -33,7 +33,7 @@
     "generate": "tsx ../../tools/codegen/generate.ts"
   },
   "dependencies": {
-    "zod": "^4.0.0"
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

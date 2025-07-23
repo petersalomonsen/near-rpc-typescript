@@ -22,7 +22,9 @@
   ],
   "scripts": {
     "prebuild": "cd ../../tools/codegen && npx tsx generate-client-interface.ts",
-    "build": "tsup",
+    "build": "tsup && rollup -c",
+    "build:node": "tsup",
+    "build:browser": "rollup -c",
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
@@ -33,15 +35,17 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@near-js/jsonrpc-types": "workspace:*",
-    "cross-fetch": "^4.0.0",
-    "zod": "^3.22.4"
+    "@near-js/jsonrpc-types": "workspace:*"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "@types/node": "^20.11.0",
     "prettier": "^3.2.5",
+    "rollup": "^4.45.1",
     "tsup": "^8.0.2",
     "typescript": "^5.3.3",
-    "@types/node": "^20.11.0",
     "vitest": "^1.2.2"
   },
   "publishConfig": {
