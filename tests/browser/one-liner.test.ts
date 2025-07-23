@@ -191,7 +191,9 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
       const { NearRpcClient } = await import(
         'http://localhost:3000/browser-standalone-mini.min.js'
       );
-      const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.near.org' });
+      const client = new NearRpcClient({
+        endpoint: 'https://rpc.testnet.near.org',
+      });
       const block = await client.block({ finality: 'final' });
       return {
         height: block.header.height,
@@ -228,7 +230,9 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
     // Execute using the data URL (simulates the one-liner but with local mini bundle)
     const result = await page.evaluate(async bundleDataUrl => {
       const { NearRpcClient } = await import(bundleDataUrl);
-      const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.near.org' });
+      const client = new NearRpcClient({
+        endpoint: 'https://rpc.testnet.near.org',
+      });
       const block = await client.block({ finality: 'final' });
       return {
         height: block.header.height,
@@ -249,7 +253,9 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
     expect(result.height).toBeGreaterThan(0);
   });
 
-  test('should work when pasted into any website console with mini bundle', async ({ page }) => {
+  test('should work when pasted into any website console with mini bundle', async ({
+    page,
+  }) => {
     // Go to a real website to simulate real-world usage
     await page.goto('https://example.com');
 
@@ -262,7 +268,9 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
       const { NearRpcClient } = await import(
         'http://localhost:3000/browser-standalone-mini.min.js'
       );
-      const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.near.org' });
+      const client = new NearRpcClient({
+        endpoint: 'https://rpc.testnet.near.org',
+      });
 
       // Test multiple RPC calls to ensure robustness
       const [block, status, gasPrice] = await Promise.all([
@@ -288,7 +296,9 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
     expect(typeof result.gasPrice).toBe('string');
   });
 
-  test('should handle errors gracefully in mini bundle one-liner', async ({ page }) => {
+  test('should handle errors gracefully in mini bundle one-liner', async ({
+    page,
+  }) => {
     await page.goto('about:blank');
 
     // Test error handling with invalid endpoint
@@ -298,7 +308,7 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
           'http://localhost:3000/browser-standalone-mini.min.js'
         );
         const client = new NearRpcClient({
-          endpoint: 'https://invalid-endpoint.example.com'
+          endpoint: 'https://invalid-endpoint.example.com',
         });
         await client.block({ finality: 'final' });
         return { success: false, error: 'Should have thrown' };
@@ -327,7 +337,9 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
       const { NearRpcClient } = await import(
         'http://localhost:3000/browser-standalone-mini.min.js'
       );
-      const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.near.org' });
+      const client = new NearRpcClient({
+        endpoint: 'https://rpc.testnet.near.org',
+      });
 
       // Get latest block for height
       const latestBlock = await client.block({ finality: 'final' });
@@ -357,38 +369,41 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
     expect(result).toHaveProperty('allSuccessful', true);
   });
 
-  test('should compare mini vs regular bundle schemas in one-liner', async ({ page }) => {
+  test('should compare mini vs regular bundle schemas in one-liner', async ({
+    page,
+  }) => {
     await page.goto('about:blank');
 
     // Test that both bundles provide identical schema functionality
     const result = await page.evaluate(async () => {
       const [regular, mini] = await Promise.all([
         import('http://localhost:3000/browser-standalone.js'),
-        import('http://localhost:3000/browser-standalone-mini.min.js')
+        import('http://localhost:3000/browser-standalone-mini.min.js'),
       ]);
 
       // Test that both can validate the same request
       const testRequest = {
         jsonrpc: '2.0' as const,
         id: 'test-123',
-        method: 'status'
+        method: 'status',
       };
 
       try {
-        const regularValidated = regular.JsonRpcRequestSchema.parse(testRequest);
+        const regularValidated =
+          regular.JsonRpcRequestSchema.parse(testRequest);
         const miniValidated = mini.JsonRpcRequestSchema.parse(testRequest);
-        
+
         return {
           regularWorks: regularValidated.jsonrpc === '2.0',
           miniWorks: miniValidated.jsonrpc === '2.0',
           bothWork: true,
           regularClient: typeof regular.NearRpcClient === 'function',
-          miniClient: typeof mini.NearRpcClient === 'function'
+          miniClient: typeof mini.NearRpcClient === 'function',
         };
       } catch (error) {
         return {
           error: error.message,
-          bothWork: false
+          bothWork: false,
         };
       }
     });

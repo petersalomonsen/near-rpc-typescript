@@ -16,10 +16,22 @@ const mimeTypes = {
 
 // Bundle paths - serve directly from dist folder
 const BUNDLE_PATHS = {
-  'browser-standalone.js': join(__dirname, '../../packages/jsonrpc-client/dist/browser-standalone.js'),
-  'browser-standalone.min.js': join(__dirname, '../../packages/jsonrpc-client/dist/browser-standalone.min.js'),
-  'browser-standalone-mini.js': join(__dirname, '../../packages/jsonrpc-client/dist/browser-standalone-mini.js'),
-  'browser-standalone-mini.min.js': join(__dirname, '../../packages/jsonrpc-client/dist/browser-standalone-mini.min.js'),
+  'browser-standalone.js': join(
+    __dirname,
+    '../../packages/jsonrpc-client/dist/browser-standalone.js'
+  ),
+  'browser-standalone.min.js': join(
+    __dirname,
+    '../../packages/jsonrpc-client/dist/browser-standalone.min.js'
+  ),
+  'browser-standalone-mini.js': join(
+    __dirname,
+    '../../packages/jsonrpc-client/dist/browser-standalone-mini.js'
+  ),
+  'browser-standalone-mini.min.js': join(
+    __dirname,
+    '../../packages/jsonrpc-client/dist/browser-standalone-mini.min.js'
+  ),
 };
 
 async function serveFile(filePath, res) {

@@ -286,7 +286,12 @@ function generateZodSchema(
         ([key, prop]) => {
           const isOptional = !schema.required?.includes(key);
           const camelKey = snakeToCamel(key);
-          const zodSchema = generateZodSchema(prop, schemas, depth + 1, useMini);
+          const zodSchema = generateZodSchema(
+            prop,
+            schemas,
+            depth + 1,
+            useMini
+          );
           if (useMini && isOptional) {
             return `  ${camelKey}: z.optional(${zodSchema})`;
           }
@@ -301,7 +306,10 @@ function generateZodSchema(
 }
 
 // Add explicit types for problematic schemas
-function getSchemaExplicitType(schemaName: string, useMini = false): string | null {
+function getSchemaExplicitType(
+  schemaName: string,
+  useMini = false
+): string | null {
   const circularSchemas = [
     'Action',
     'DelegateAction',
@@ -465,7 +473,12 @@ export * from './schemas.mini';
         const requestSchema =
           post.requestBody.content['application/json'].schema;
         const zodSchema = generateZodSchema(requestSchema, schemas, 0, false);
-        const zodMiniSchema = generateZodSchema(requestSchema, schemas, 0, true);
+        const zodMiniSchema = generateZodSchema(
+          requestSchema,
+          schemas,
+          0,
+          true
+        );
         methodSchemas.push(
           `export const ${methodNamePascal}RequestSchema = ${zodSchema};`
         );
@@ -479,7 +492,12 @@ export * from './schemas.mini';
         const responseSchema =
           post.responses['200'].content['application/json'].schema;
         const zodSchema = generateZodSchema(responseSchema, schemas, 0, false);
-        const zodMiniSchema = generateZodSchema(responseSchema, schemas, 0, true);
+        const zodMiniSchema = generateZodSchema(
+          responseSchema,
+          schemas,
+          0,
+          true
+        );
         methodSchemas.push(
           `export const ${methodNamePascal}ResponseSchema = ${zodSchema};`
         );

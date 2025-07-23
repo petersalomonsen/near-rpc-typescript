@@ -21,7 +21,9 @@ test.describe('Mini Bundle Browser Tests', () => {
     await expect(page.locator('#runAllTests')).toBeVisible();
   });
 
-  test('should successfully get latest block with mini bundle', async ({ page }) => {
+  test('should successfully get latest block with mini bundle', async ({
+    page,
+  }) => {
     await page.goto('/mini.html');
 
     // Click the latest block test button
@@ -45,7 +47,9 @@ test.describe('Mini Bundle Browser Tests', () => {
     expect(result.hash).toMatch(/^[1-9A-HJ-NP-Za-km-z]{43,44}$/);
   });
 
-  test('should successfully view account with mini bundle', async ({ page }) => {
+  test('should successfully view account with mini bundle', async ({
+    page,
+  }) => {
     await page.goto('/mini.html');
 
     // Click the account view test button
@@ -69,7 +73,9 @@ test.describe('Mini Bundle Browser Tests', () => {
     expect(typeof result.blockHeight).toBe('number');
   });
 
-  test('should successfully get network status with mini bundle', async ({ page }) => {
+  test('should successfully get network status with mini bundle', async ({
+    page,
+  }) => {
     await page.goto('/mini.html');
 
     // Click the network status test button
@@ -93,7 +99,9 @@ test.describe('Mini Bundle Browser Tests', () => {
     expect(typeof result.syncing).toBe('boolean');
   });
 
-  test('should successfully get gas price with mini bundle', async ({ page }) => {
+  test('should successfully get gas price with mini bundle', async ({
+    page,
+  }) => {
     await page.goto('/mini.html');
 
     // Click the gas price test button
@@ -112,7 +120,9 @@ test.describe('Mini Bundle Browser Tests', () => {
     expect(typeof result.gasPrice).toBe('string');
   });
 
-  test('should successfully get specific block with mini bundle', async ({ page }) => {
+  test('should successfully get specific block with mini bundle', async ({
+    page,
+  }) => {
     await page.goto('/mini.html');
 
     // First get latest block to establish a baseline
@@ -143,7 +153,9 @@ test.describe('Mini Bundle Browser Tests', () => {
     expect(typeof result.chunksCount).toBe('number');
   });
 
-  test('should run all tests successfully with mini bundle', async ({ page }) => {
+  test('should run all tests successfully with mini bundle', async ({
+    page,
+  }) => {
     await page.goto('/mini.html');
 
     // Click run all tests button
@@ -225,22 +237,30 @@ test.describe('Mini Bundle Browser Tests', () => {
   });
 
   test('should compare bundle sizes', async ({ page }) => {
-    const regularBundlePath = join(process.cwd(), 'packages/jsonrpc-client/dist/browser-standalone.min.js');
-    const miniBundlePath = join(process.cwd(), 'packages/jsonrpc-client/dist/browser-standalone-mini.min.js');
-    
+    const regularBundlePath = join(
+      process.cwd(),
+      'packages/jsonrpc-client/dist/browser-standalone.min.js'
+    );
+    const miniBundlePath = join(
+      process.cwd(),
+      'packages/jsonrpc-client/dist/browser-standalone-mini.min.js'
+    );
+
     const regularSize = readFileSync(regularBundlePath).length;
     const miniSize = readFileSync(miniBundlePath).length;
-    
+
     console.log(`Regular bundle: ${(regularSize / 1024).toFixed(1)}KB`);
     console.log(`Mini bundle: ${(miniSize / 1024).toFixed(1)}KB`);
-    console.log(`Difference: ${((miniSize - regularSize) / 1024).toFixed(1)}KB`);
-    
+    console.log(
+      `Difference: ${((miniSize - regularSize) / 1024).toFixed(1)}KB`
+    );
+
     // Verify both bundles exist and have reasonable sizes
     expect(regularSize).toBeGreaterThan(200 * 1024); // > 200KB
     expect(miniSize).toBeGreaterThan(200 * 1024); // > 200KB
     expect(regularSize).toBeLessThan(1024 * 1024); // < 1MB
     expect(miniSize).toBeLessThan(1024 * 1024); // < 1MB
-    
+
     // Mini bundle should be smaller than regular bundle
     expect(miniSize).toBeLessThan(regularSize);
   });

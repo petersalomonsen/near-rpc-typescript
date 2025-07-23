@@ -15,7 +15,7 @@ describe('Mini Version Tests', () => {
   it('should export JsonRpc schemas from both versions', () => {
     expect(typeof regular.JsonRpcRequestSchema).toBe('object');
     expect(typeof mini.JsonRpcRequestSchema).toBe('object');
-    
+
     // Both should have parse methods
     expect(typeof regular.JsonRpcRequestSchema.parse).toBe('function');
     expect(typeof mini.JsonRpcRequestSchema.parse).toBe('function');
@@ -26,7 +26,11 @@ describe('Mini Version Tests', () => {
       jsonrpc: '2.0' as const,
       id: 'test-123',
       method: 'query',
-      params: { request_type: 'view_account', finality: 'final', account_id: 'test.near' }
+      params: {
+        request_type: 'view_account',
+        finality: 'final',
+        account_id: 'test.near',
+      },
     };
 
     // Both should successfully validate the same data
@@ -41,17 +45,17 @@ describe('Mini Version Tests', () => {
 
   it('should create working client instances from both versions', async () => {
     const regularClient = new regular.NearRpcClient({
-      endpoint: 'https://rpc.testnet.near.org'
-    });
-    
-    const miniClient = new mini.NearRpcClient({
-      endpoint: 'https://rpc.testnet.near.org'
+      endpoint: 'https://rpc.testnet.near.org',
     });
 
-    // Both should be instances of their respective classes  
+    const miniClient = new mini.NearRpcClient({
+      endpoint: 'https://rpc.testnet.near.org',
+    });
+
+    // Both should be instances of their respective classes
     expect(regularClient).toBeInstanceOf(regular.NearRpcClient);
     expect(miniClient).toBeInstanceOf(mini.NearRpcClient);
-    
+
     // Both should have the same methods available
     expect(typeof regularClient.status).toBe('function');
     expect(typeof miniClient.status).toBe('function');

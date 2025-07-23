@@ -315,7 +315,10 @@ RPC_METHODS.forEach(method => {
 };
 
 // Import generated interfaces for truly dynamic typing
-import type { DynamicRpcMethods, ConvenienceMethods } from './generated-types.mini';
+import type {
+  DynamicRpcMethods,
+  ConvenienceMethods,
+} from './generated-types.mini';
 
 // Use declaration merging to add dynamic methods to the NearRpcClient class
 export interface NearRpcClient extends DynamicRpcMethods, ConvenienceMethods {}

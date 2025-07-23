@@ -1,18 +1,18 @@
-// Integration test comparing regular vs mini in real scenarios  
+// Integration test comparing regular vs mini in real scenarios
 import { describe, it, expect } from 'vitest';
 import * as regular from '../index';
 import * as mini from '../index.mini';
 
 describe('Mini Integration Tests', () => {
   const testnetUrl = 'https://rpc.testnet.near.org';
-  
+
   it('should get network status with both versions', async () => {
     const regularClient = new regular.NearRpcClient({ endpoint: testnetUrl });
     const miniClient = new mini.NearRpcClient({ endpoint: testnetUrl });
 
     const [regularResult, miniResult] = await Promise.all([
       regularClient.status(),
-      miniClient.status()
+      miniClient.status(),
     ]);
 
     // Results should have the same structure
@@ -27,7 +27,7 @@ describe('Mini Integration Tests', () => {
 
     const [regularBlock, miniBlock] = await Promise.all([
       regularClient.block({ finality: 'final' }),
-      miniClient.block({ finality: 'final' })
+      miniClient.block({ finality: 'final' }),
     ]);
 
     // Both should return block data with same structure
@@ -45,8 +45,14 @@ describe('Mini Integration Tests', () => {
 
     // Check that all major RPC methods exist on both clients
     const rpcMethods = [
-      'status', 'block', 'chunk', 'gasPrice', 'query', 
-      'networkInfo', 'validators', 'health'
+      'status',
+      'block',
+      'chunk',
+      'gasPrice',
+      'query',
+      'networkInfo',
+      'validators',
+      'health',
     ];
 
     rpcMethods.forEach(method => {
@@ -61,12 +67,12 @@ describe('Mini Integration Tests', () => {
     expect(typeof mini.JsonRpcRequestSchema).toBe('object');
     expect(typeof regular.JsonRpcResponseSchema).toBe('object');
     expect(typeof mini.JsonRpcResponseSchema).toBe('object');
-    
+
     // Test data
     const testRequest = {
       jsonrpc: '2.0' as const,
       id: 'test-123',
-      method: 'status'
+      method: 'status',
     };
 
     // Both should validate the same data successfully
@@ -82,7 +88,7 @@ describe('Mini Integration Tests', () => {
     expect(typeof regular.default).toBe('function');
     expect(typeof mini.default).toBe('function');
   });
-  
+
   it('should have same RPC methods list', () => {
     expect(regular.RPC_METHODS).toEqual(mini.RPC_METHODS);
     expect(regular.RPC_METHODS.length).toBeGreaterThan(20);
