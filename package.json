@@ -23,8 +23,8 @@
     "publish:temp": "node scripts/publish-temp.js"
   },
   "devDependencies": {
-    "@types/node": "^24.0.14",
     "@playwright/test": "^1.54.1",
+    "@types/node": "^24.0.14",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "@vitest/coverage-v8": "^1.2.2",
@@ -36,7 +36,7 @@
     "react-dom": "^18.3.1",
     "semantic-ui-react": "^2.1.5",
     "tsx": "^4.7.1",
-    "typescript": "^5.3.3",
+    "typescript": "^5.8.3",
     "typescript-coverage-report": "^1.1.1",
     "vitest": "^1.2.2"
   },
