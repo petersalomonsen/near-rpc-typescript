@@ -113,10 +113,10 @@ To run all tests for both packages, use the following command from the root of t
 
 ```bash
 # Run all tests in watch mode
-pnpm -r run test:watch
+pnpm -r test:watch
 
-# Run all tests once
-pnpm -r test
+# Run all tests once (avoiding watch mode)
+pnpm test
 ```
 
 _Note: The root `pnpm test` command is an alias for `pnpm -r test`._
@@ -126,11 +126,11 @@ _Note: The root `pnpm test` command is an alias for `pnpm -r test`._
 To run tests for a specific package, use the `--filter` flag with the package name:
 
 ```bash
-# Run tests for the types package in watch mode
+# Run tests for the types package once
 pnpm --filter @near-js/jsonrpc-types test
 
-# Run tests for the client package once
-pnpm --filter @near-js/jsonrpc-client test -- run
+# Run tests for the client package in watch mode
+pnpm --filter @near-js/jsonrpc-client test:watch
 ```
 
 ### Coverage
@@ -139,10 +139,10 @@ To generate a coverage report, add the `--coverage` flag to the test command:
 
 ```bash
 # Generate coverage for all packages
-pnpm -r test -- run --coverage
+pnpm -r test:coverage
 
 # Generate coverage for a specific package
-pnpm --filter @near-js/jsonrpc-client test -- run --coverage
+pnpm --filter @near-js/jsonrpc-client test:coverage
 ```
 
 ## 🤖 Automation
