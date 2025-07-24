@@ -14,11 +14,11 @@ describe('Mini Version Tests', () => {
 
   it('should export JsonRpc schemas from both versions', () => {
     expect(typeof regular.JsonRpcRequestSchema).toBe('object');
-    expect(typeof mini.JsonRpcRequestSchema).toBe('object');
+    expect(typeof mini.JsonRpcRequestSchema).toBe('function');
 
     // Both should have parse methods
     expect(typeof regular.JsonRpcRequestSchema.parse).toBe('function');
-    expect(typeof mini.JsonRpcRequestSchema.parse).toBe('function');
+    expect(typeof mini.JsonRpcRequestSchema().parse).toBe('function');
   });
 
   it('should validate the same data with both schemas', () => {
@@ -35,7 +35,7 @@ describe('Mini Version Tests', () => {
 
     // Both should successfully validate the same data
     expect(() => regular.JsonRpcRequestSchema.parse(testRequest)).not.toThrow();
-    expect(() => mini.JsonRpcRequestSchema.parse(testRequest)).not.toThrow();
+    expect(() => mini.JsonRpcRequestSchema().parse(testRequest)).not.toThrow();
   });
 
   it('should have the same RPC methods available', () => {
@@ -56,8 +56,8 @@ describe('Mini Version Tests', () => {
     expect(regularClient).toBeInstanceOf(regular.NearRpcClient);
     expect(miniClient).toBeInstanceOf(mini.NearRpcClient);
 
-    // Both should have the same methods available
+    // Regular client should have method on instance, mini uses static functions
     expect(typeof regularClient.status).toBe('function');
-    expect(typeof miniClient.status).toBe('function');
+    expect(typeof mini.status).toBe('function'); // Mini uses static function
   });
 });

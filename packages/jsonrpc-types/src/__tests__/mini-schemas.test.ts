@@ -33,7 +33,7 @@ describe('Mini Schemas Compatibility', () => {
     const regularResult = regular.JsonRpcRequestSchema.parse(
       testData.validJsonRpcRequest
     );
-    const miniResult = mini.JsonRpcRequestSchema.parse(
+    const miniResult = mini.JsonRpcRequestSchema().parse(
       testData.validJsonRpcRequest
     );
 
@@ -46,13 +46,13 @@ describe('Mini Schemas Compatibility', () => {
       regular.AccountViewSchema.parse(testData.validAccount)
     ).not.toThrow();
     expect(() =>
-      mini.AccountViewSchema.parse(testData.validAccount)
+      mini.AccountViewSchema().parse(testData.validAccount)
     ).not.toThrow();
 
     const regularParsed = regular.AccountViewSchema.parse(
       testData.validAccount
     );
-    const miniParsed = mini.AccountViewSchema.parse(testData.validAccount);
+    const miniParsed = mini.AccountViewSchema().parse(testData.validAccount);
 
     expect(regularParsed).toEqual(miniParsed);
   });
@@ -65,7 +65,7 @@ describe('Mini Schemas Compatibility', () => {
 
     // Both should handle optional fields the same way
     const regularResult = regular.AccountViewSchema.parse(dataWithOptionals);
-    const miniResult = mini.AccountViewSchema.parse(dataWithOptionals);
+    const miniResult = mini.AccountViewSchema().parse(dataWithOptionals);
 
     expect(regularResult).toEqual(miniResult);
   });
@@ -79,7 +79,7 @@ describe('Mini Schemas Compatibility', () => {
 
     // Both should reject invalid data
     expect(() => regular.JsonRpcRequestSchema.parse(invalidRequest)).toThrow();
-    expect(() => mini.JsonRpcRequestSchema.parse(invalidRequest)).toThrow();
+    expect(() => mini.JsonRpcRequestSchema().parse(invalidRequest)).toThrow();
   });
 
   it('should have the same schema exports', () => {
@@ -122,7 +122,7 @@ describe('Mini Schemas Compatibility', () => {
 
     // Both should parse complex nested structures identically
     const regularResult = regular.JsonRpcResponseSchema.parse(complexData);
-    const miniResult = mini.JsonRpcResponseSchema.parse(complexData);
+    const miniResult = mini.JsonRpcResponseSchema().parse(complexData);
 
     expect(regularResult).toEqual(miniResult);
   });

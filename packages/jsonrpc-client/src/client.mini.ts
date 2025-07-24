@@ -1,6 +1,49 @@
 // Simplified JSON-RPC client for mini version (configuration only)
 import type { ValidationResult } from './validation.mini.js';
 
+// Case conversion utilities (identical to regular client)
+function camelToSnake(str: string): string {
+  return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+}
+
+function snakeToCamel(str: string): string {
+  return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+}
+
+function convertKeysToSnakeCase(obj: any): any {
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map(convertKeysToSnakeCase);
+  }
+
+  const converted: any = {};
+  for (const [key, value] of Object.entries(obj)) {
+    const snakeKey = camelToSnake(key);
+    converted[snakeKey] = convertKeysToSnakeCase(value);
+  }
+  return converted;
+}
+
+function convertKeysToCamelCase(obj: any): any {
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map(convertKeysToCamelCase);
+  }
+
+  const converted: any = {};
+  for (const [key, value] of Object.entries(obj)) {
+    const camelKey = snakeToCamel(key);
+    converted[camelKey] = convertKeysToCamelCase(value);
+  }
+  return converted;
+}
+
 // Types for mini client configuration
 export interface MiniClientConfig {
   endpoint: string;
@@ -85,11 +128,14 @@ export class NearRpcClient {
     method: string,
     params?: TParams
   ): Promise<TResult> {
+    // Convert camelCase params to snake_case for the RPC call
+    const snakeCaseParams = params ? convertKeysToSnakeCase(params) : params;
+    
     const request: JsonRpcRequest<TParams | undefined> = {
       jsonrpc: '2.0',
       id: crypto.randomUUID(),
       method,
-      params,
+      params: snakeCaseParams as TParams | undefined,
     };
 
     // Validate request if validation is enabled
@@ -138,7 +184,12 @@ export class NearRpcClient {
           );
         }
 
-        return jsonResponse.result;
+        // Convert snake_case response back to camelCase
+        const camelCaseResult = jsonResponse.result
+          ? convertKeysToCamelCase(jsonResponse.result)
+          : jsonResponse.result;
+        
+        return camelCaseResult as TResult;
       } catch (error) {
         lastError = error as Error;
         

@@ -12,10 +12,10 @@ describe('Mini Integration Tests', () => {
 
     const [regularResult, miniResult] = await Promise.all([
       regularClient.status(),
-      miniClient.status(),
+      mini.status(miniClient),
     ]);
 
-    // Results should have the same structure
+    // Results should have the same structure (both now use camelCase)
     expect(regularResult).toHaveProperty('chainId');
     expect(miniResult).toHaveProperty('chainId');
     expect(regularResult.chainId).toBe(miniResult.chainId);
@@ -27,7 +27,7 @@ describe('Mini Integration Tests', () => {
 
     const [regularBlock, miniBlock] = await Promise.all([
       regularClient.block({ finality: 'final' }),
-      miniClient.block({ finality: 'final' }),
+      mini.block(miniClient, { finality: 'final' }),
     ]);
 
     // Both should return block data with same structure
@@ -41,8 +41,7 @@ describe('Mini Integration Tests', () => {
 
   it('should validate all RPC methods are available in both versions', () => {
     const regularClient = new regular.NearRpcClient({ endpoint: testnetUrl });
-    const miniClient = new mini.NearRpcClient({ endpoint: testnetUrl });
-
+    
     // Check that all major RPC methods exist on both clients
     const rpcMethods = [
       'status',
@@ -57,16 +56,16 @@ describe('Mini Integration Tests', () => {
 
     rpcMethods.forEach(method => {
       expect(typeof regularClient[method]).toBe('function');
-      expect(typeof miniClient[method]).toBe('function');
+      expect(typeof mini[method]).toBe('function'); // Mini uses static functions
     });
   });
 
   it('should have identical schemas functionality', () => {
     // Both should export the same schema types
     expect(typeof regular.JsonRpcRequestSchema).toBe('object');
-    expect(typeof mini.JsonRpcRequestSchema).toBe('object');
+    expect(typeof mini.JsonRpcRequestSchema).toBe('function');
     expect(typeof regular.JsonRpcResponseSchema).toBe('object');
-    expect(typeof mini.JsonRpcResponseSchema).toBe('object');
+    expect(typeof mini.JsonRpcResponseSchema).toBe('function');
 
     // Test data
     const testRequest = {
@@ -77,7 +76,7 @@ describe('Mini Integration Tests', () => {
 
     // Both should validate the same data successfully
     expect(() => regular.JsonRpcRequestSchema.parse(testRequest)).not.toThrow();
-    expect(() => mini.JsonRpcRequestSchema.parse(testRequest)).not.toThrow();
+    expect(() => mini.JsonRpcRequestSchema().parse(testRequest)).not.toThrow();
   });
 
   it('should have equivalent client classes', () => {
