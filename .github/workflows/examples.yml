@@ -51,6 +51,9 @@ jobs:
       - name: Run TypeScript status-and-account-demo example
         run: pnpm tsx examples/typescript/status-and-account-demo.ts
 
+      - name: Run TypeScript mini-client-usage example
+        run: pnpm tsx examples/typescript/mini-client-usage.ts
+
       # ESM JavaScript examples
       - name: Run ESM basic-usage example
         run: node examples/javascript-esm/basic-usage.js
