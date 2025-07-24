@@ -1,7 +1,7 @@
 /**
  * This example demonstrates using the mini variant of @near-js/jsonrpc-client
  * which uses zod/mini for smaller bundle sizes (63KB vs 95KB for regular client).
- * 
+ *
  * The mini variant provides the same API but with optimized tree-shaking
  * for bundle size-sensitive applications.
  *
@@ -36,7 +36,9 @@ console.log('🔗 Fetching latest block...');
 const block = await client.block({ finality: 'final' });
 console.log(`Block height: ${block.header.height}`);
 console.log(`Block hash: ${block.header.hash}`);
-console.log(`Timestamp: ${new Date(Number(block.header.timestampNanosec) / 1000000)}`);
+console.log(
+  `Timestamp: ${new Date(Number(block.header.timestampNanosec) / 1000000)}`
+);
 console.log('');
 
 // Get gas price
