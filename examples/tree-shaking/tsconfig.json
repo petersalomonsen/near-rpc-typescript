@@ -1,0 +1,11 @@
+{
+  "extends": "../typescript/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": ".",
+    "declaration": false,
+    "declarationMap": false
+  },
+  "include": ["main.ts"],
+  "exclude": ["dist", "node_modules"]
+}

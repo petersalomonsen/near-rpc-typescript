@@ -213,7 +213,11 @@ function generateZodSchema(
 
   if (schema.$ref) {
     const refName = schema.$ref.replace('#/components/schemas/', '');
-    return `z.lazy(() => ${pascalCase(refName)}Schema)`;
+    if (useMini) {
+      return `z.lazy(() => ${pascalCase(refName)}Schema())`;
+    } else {
+      return `z.lazy(() => ${pascalCase(refName)}Schema)`;
+    }
   }
 
   if (schema.oneOf) {
@@ -346,6 +350,7 @@ export async function generateTypes() {
     console.log('🔧 Generating TypeScript types using z.infer...');
     const typeExports: string[] = [];
     const typeDefinitions: string[] = [];
+    const miniTypeDefinitions: string[] = [];
 
     // Generate types for each schema using z.infer
     Object.entries(schemas).forEach(([schemaName, schema]) => {
@@ -355,9 +360,14 @@ export async function generateTypes() {
       // Add description as JSDoc if available
       const description = formatComment(schema.description || '');
 
-      // Generate z.infer type
+      // Generate z.infer type (regular)
       typeDefinitions.push(
         `${description}export type ${typeName} = z.infer<typeof schemas.${schemaTypeName}>;`
+      );
+
+      // Generate z.infer type (mini - using ReturnType since schemas are functions)
+      miniTypeDefinitions.push(
+        `${description}export type ${typeName} = z.infer<ReturnType<typeof schemas.${schemaTypeName}>>;`
       );
 
       typeExports.push(typeName);
@@ -365,6 +375,7 @@ export async function generateTypes() {
 
     // Generate method parameter and response types using z.infer
     const methodTypes: string[] = [];
+    const miniMethodTypes: string[] = [];
     Object.entries(spec.paths).forEach(([path, pathSpec]) => {
       const methodName = PATH_TO_METHOD_MAP[path];
       if (!methodName) return;
@@ -379,12 +390,18 @@ export async function generateTypes() {
         methodTypes.push(
           `export type ${methodNamePascal}Request = z.infer<typeof schemas.${methodNamePascal}RequestSchema>;`
         );
+        miniMethodTypes.push(
+          `export type ${methodNamePascal}Request = z.infer<ReturnType<typeof schemas.${methodNamePascal}RequestSchema>>;`
+        );
       }
 
       // Generate response type using z.infer
       if (post.responses?.['200']?.content?.['application/json']?.schema) {
         methodTypes.push(
           `export type ${methodNamePascal}Response = z.infer<typeof schemas.${methodNamePascal}ResponseSchema>;`
+        );
+        miniMethodTypes.push(
+          `export type ${methodNamePascal}Response = z.infer<ReturnType<typeof schemas.${methodNamePascal}ResponseSchema>>;`
         );
       }
     });
@@ -413,10 +430,10 @@ export * from './schemas';
 import { z } from 'zod/mini';
 import * as schemas from './schemas.mini';
 
-${typeDefinitions.join('\n\n')}
+${miniTypeDefinitions.join('\n\n')}
 
 // Method-specific types
-${methodTypes.join('\n\n')}
+${miniMethodTypes.join('\n\n')}
 
 // Re-exports for convenience
 export * from './schemas.mini';
@@ -451,7 +468,7 @@ export * from './schemas.mini';
         `${description}export const ${schemaTypeName}${typeAnnotation} = ${zodSchema};`
       );
       miniSchemaDefinitions.push(
-        `${description}export const ${schemaTypeName}${typeAnnotationMini} = ${zodMiniSchema};`
+        `${description}export const ${schemaTypeName}${typeAnnotationMini} = () => ${zodMiniSchema};`
       );
       schemaExports.push(schemaTypeName);
     });
@@ -483,7 +500,7 @@ export * from './schemas.mini';
           `export const ${methodNamePascal}RequestSchema = ${zodSchema};`
         );
         miniMethodSchemas.push(
-          `export const ${methodNamePascal}RequestSchema = ${zodMiniSchema};`
+          `export const ${methodNamePascal}RequestSchema = () => ${zodMiniSchema};`
         );
       }
 
@@ -502,7 +519,7 @@ export * from './schemas.mini';
           `export const ${methodNamePascal}ResponseSchema = ${zodSchema};`
         );
         miniMethodSchemas.push(
-          `export const ${methodNamePascal}ResponseSchema = ${zodMiniSchema};`
+          `export const ${methodNamePascal}ResponseSchema = () => ${zodMiniSchema};`
         );
       }
     });
@@ -573,24 +590,24 @@ ${miniSchemaDefinitions.join('\n\n')}
 ${miniMethodSchemas.join('\n\n')}
 
 // Utility schemas
-export const JsonRpcRequestSchema = z.object({
+export const JsonRpcRequestSchema = () => z.object({
   jsonrpc: z.literal('2.0'),
   id: z.string(),
   method: z.string(),
   params: z.optional(z.unknown()),
 });
 
-export const JsonRpcErrorSchema = z.object({
+export const JsonRpcErrorSchema = () => z.object({
   code: z.number(),
   message: z.string(),
   data: z.optional(z.unknown()),
 });
 
-export const JsonRpcResponseSchema = z.object({
+export const JsonRpcResponseSchema = () => z.object({
   jsonrpc: z.literal('2.0'),
   id: z.string(),
   result: z.optional(z.unknown()),
-  error: z.optional(JsonRpcErrorSchema),
+  error: z.optional(JsonRpcErrorSchema()),
 });
 `;
 

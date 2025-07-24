@@ -1,0 +1,20 @@
+{
+  "name": "tree-shaking-example",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c rollup.config.js",
+    "analyze": "rollup -c rollup.config.js --bundleConfigAsCjs"
+  },
+  "dependencies": {
+    "@near-js/jsonrpc-types": "workspace:*",
+    "@near-js/jsonrpc-client": "workspace:*"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.3.1",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "rollup": "^4.45.1",
+    "rollup-plugin-analyzer": "^4.0.0",
+    "typescript": "^5.8.3"
+  }
+}
