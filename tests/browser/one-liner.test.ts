@@ -255,7 +255,12 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
 
   test('should work when pasted into any website console with mini bundle', async ({
     page,
+    browserName,
   }) => {
+    test.skip(
+      browserName === 'webkit',
+      'WebKit blocks cross-origin dynamic imports stricter than other browsers'
+    );
     // Go to a real website to simulate real-world usage
     await page.goto('https://example.com');
 
