@@ -12,17 +12,18 @@ The library provides two main variants:
 - **Best for:** Node.js applications, full developer experience
 
 ### Mini Client  
-- **Bundle size:** ~63KB minified (32KB smaller!)
-- **Import:** `import { NearRpcClient } from '@near-js/jsonrpc-client/mini'`
+- **Bundle size:** Optimized with tree-shaking
+- **Import:** `import { NearRpcClient, status, block } from '@near-js/jsonrpc-client/mini'`
+- **Architecture:** Static functions with client-based configuration
 - **Best for:** Bundle size-sensitive web applications
 
-Both variants provide identical APIs and functionality.
+Both variants provide identical functionality with different API approaches.
 
 ## 🚀 Examples
 
 ### TypeScript Examples
 
-- **[typescript/mini-client-usage.ts](typescript/mini-client-usage.ts)** - Mini client variant example (63KB bundle)
+- **[typescript/mini-client-usage.ts](typescript/mini-client-usage.ts)** - Mini client variant with static functions and tree-shaking
 - **[typescript/basic-usage.ts](typescript/basic-usage.ts)** - Basic client usage patterns
 - **[typescript/get-latest-block.ts](typescript/get-latest-block.ts)** - Block querying examples
 - **[typescript/status-and-account-demo.ts](typescript/status-and-account-demo.ts)** - Network status and account viewing
@@ -39,7 +40,7 @@ Both variants provide identical APIs and functionality.
 The browser examples are integrated into our test suite to ensure they remain working with every change:
 
 - **[tests/browser/index.html](../tests/browser/index.html)** - Regular client browser demo
-- **[tests/browser/mini.html](../tests/browser/mini.html)** - Mini client browser demo (63KB bundle)
+- **[tests/browser/mini.html](../tests/browser/mini.html)** - Mini client browser demo with tree-shaking
 
 These examples are:
 - ✅ Automatically tested with Playwright
@@ -108,30 +109,32 @@ node basic-usage.js
 
 | Use Case | Recommended Variant | Bundle Size | Benefits |
 |----------|-------------------|-------------|----------|
-| Web applications | Mini client | 63KB | Faster page loads, smaller bundles |
+| Web applications | Mini client | Tree-shaken | Optimal bundle size, static functions |
 | Node.js services | Regular client | N/A (not bundled) | Full developer experience |
-| Desktop/mobile apps | Mini client | 63KB | Reduced app size |
-| Development/testing | Regular client | 95KB | Better debugging experience |
+| Desktop/mobile apps | Mini client | Tree-shaken | Minimal app size |
+| Development/testing | Regular client | ~95KB | Better debugging experience |
 
 ## 🌐 Browser Usage Patterns
 
 ### One-liner Import (CDN)
 ```javascript
-const { NearRpcClient } = await import('https://unpkg.com/@near-js/jsonrpc-client/dist/browser-standalone-mini.min.js');
-const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
+const { NearRpcClient, status } = await import('https://unpkg.com/@near-js/jsonrpc-client/dist/browser-standalone-mini.min.js');
+const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
+const result = await status(client);
 ```
 
 ### Local Bundle
 ```javascript
 // After building the project
-const { NearRpcClient } = await import('./node_modules/@near-js/jsonrpc-client/dist/browser-standalone-mini.min.js');
-const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
+const { NearRpcClient, status } = await import('./node_modules/@near-js/jsonrpc-client/dist/browser-standalone-mini.min.js');
+const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
 ```
 
 ### Module Bundler (Webpack, Vite, etc.)
 ```javascript
-import { NearRpcClient } from '@near-js/jsonrpc-client/mini';
-const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
+import { NearRpcClient, status, block } from '@near-js/jsonrpc-client/mini';
+const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
+const statusResult = await status(client);
 ```
 
 ## 🔗 Available RPC Endpoints
@@ -141,7 +144,10 @@ const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
 
 ## 📚 API Documentation
 
-All examples use the same API surface. Key methods include:
+### Regular Client (Instance Methods)
+```javascript
+import { NearRpcClient } from '@near-js/jsonrpc-client';
+const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
 
 - `client.status()` - Network status
 - `client.block()` - Block information  
@@ -149,5 +155,23 @@ All examples use the same API surface. Key methods include:
 - `client.gasPrice()` - Current gas price
 - `client.query()` - Generic queries
 - `client.sendTx()` - Send transactions
+```
+
+### Mini Client (Static Functions)
+```javascript
+import { NearRpcClient, status, block, viewAccount, viewFunction, viewAccessKey } from '@near-js/jsonrpc-client/mini';
+const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
+
+- `status(client)` - Network status
+- `block(client, params)` - Block information  
+- `viewAccount(client, params)` - Account details
+- `viewFunction(client, params)` - Call view functions
+- `viewAccessKey(client, params)` - View access key details
+- `gasPrice(client, params)` - Current gas price
+- `query(client, params)` - Generic queries
+- `sendTx(client, params)` - Send transactions
+```
+
+Both variants provide identical functionality and case conversion behavior.
 
 For complete API documentation, see the main README in the project root.

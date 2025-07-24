@@ -29,3 +29,8 @@ export { sendTx } from './sendTx';
 export { status } from './status';
 export { tx } from './tx';
 export { validators } from './validators';
+
+// Convenience functions
+export { viewAccount } from './viewAccount';
+export { viewFunction } from './viewFunction';
+export { viewAccessKey } from './viewAccessKey';

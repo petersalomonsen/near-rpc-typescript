@@ -1,9 +1,12 @@
 /**
  * This example demonstrates using the mini variant of @near-js/jsonrpc-client
- * which uses zod/mini for smaller bundle sizes (63KB vs 95KB for regular client).
+ * which uses static functions with a client-based architecture for optimal tree-shaking.
  *
- * The mini variant provides the same API but with optimized tree-shaking
- * for bundle size-sensitive applications.
+ * The mini variant provides the same functionality as the regular client but with:
+ * - Static RPC functions instead of instance methods
+ * - Function-based schemas for better tree-shaking
+ * - Client object holds configuration only
+ * - Identical case conversion behavior (snake_case ↔ camelCase)
  *
  * To run this example:
  * 1. Make sure you have pnpm installed (https://pnpm.io/installation).
@@ -11,9 +14,9 @@
  * 3. Run `pnpm tsx examples/typescript/mini-client-usage.ts` from the root of the repository.
  */
 
-import { NearRpcClient } from '@near-js/jsonrpc-client/mini';
+import { NearRpcClient, status, block, gasPrice, viewAccount } from '@near-js/jsonrpc-client/mini';
 
-// Create client instance - same API as regular client
+// Create client instance - holds configuration only, no RPC methods
 const client = new NearRpcClient({
   endpoint: 'https://rpc.testnet.fastnear.com',
   timeout: 30000,
@@ -21,47 +24,47 @@ const client = new NearRpcClient({
 });
 
 console.log('🚀 NEAR RPC Mini Client Demo');
-console.log('Bundle size: ~63KB minified (vs ~95KB regular client)');
+console.log('Bundle size: optimized with tree-shaking');
 console.log('');
 
-// Get network status
+// Get network status using static function
 console.log('📡 Fetching network status...');
-const status = await client.status();
-console.log(`Network: ${status.chainId}`);
-console.log(`Latest block height: ${status.syncInfo.latestBlockHeight}`);
+const statusResult = await status(client);
+console.log(`Network: ${statusResult.chainId}`);
+console.log(`Latest block height: ${statusResult.syncInfo.latestBlockHeight}`);
 console.log('');
 
-// Get latest block
+// Get latest block using static function
 console.log('🔗 Fetching latest block...');
-const block = await client.block({ finality: 'final' });
-console.log(`Block height: ${block.header.height}`);
-console.log(`Block hash: ${block.header.hash}`);
+const blockResult = await block(client, { finality: 'final' });
+console.log(`Block height: ${blockResult.header.height}`);
+console.log(`Block hash: ${blockResult.header.hash}`);
 console.log(
-  `Timestamp: ${new Date(Number(block.header.timestampNanosec) / 1000000)}`
+  `Timestamp: ${new Date(Number(blockResult.header.timestampNanosec) / 1000000)}`
 );
 console.log('');
 
-// Get gas price
+// Get gas price using static function
 console.log('⛽ Fetching gas price...');
-const gasPrice = await client.gasPrice({ blockId: block.header.height });
-console.log(`Gas price: ${gasPrice.gasPrice} yoctoNEAR`);
+const gasPriceResult = await gasPrice(client, { blockId: blockResult.header.height });
+console.log(`Gas price: ${gasPriceResult.gasPrice} yoctoNEAR`);
 console.log('');
 
-// View account (testnet account)
+// View account (testnet account) using static function
 console.log('👤 Viewing account info...');
-const account = await client.viewAccount({
+const accountResult = await viewAccount(client, {
   accountId: 'testnet',
   finality: 'final',
 });
 console.log(`Account: testnet`);
-console.log(`Balance: ${account.amount} yoctoNEAR`);
-console.log(`Storage used: ${account.storageUsage} bytes`);
+console.log(`Balance: ${accountResult.amount} yoctoNEAR`);
+console.log(`Storage used: ${accountResult.storageUsage} bytes`);
 console.log('');
 
 console.log('✅ Mini client demo completed successfully!');
 console.log('');
 console.log('💡 Benefits of mini client:');
-console.log('  • 32KB smaller bundle size');
+console.log('  • Optimal tree-shaking with static functions');
 console.log('  • Same functionality as regular client');
-console.log('  • Optimized for bundle size-sensitive applications');
-console.log('  • Perfect for browser applications');
+console.log('  • Client-based architecture for configuration');
+console.log('  • Perfect for bundle size-sensitive applications');

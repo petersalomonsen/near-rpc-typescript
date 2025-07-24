@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "rollup -c rollup.config.js",
+    "build:validation": "rollup -c rollup.validation.config.js",
     "analyze": "rollup -c rollup.config.js --bundleConfigAsCjs"
   },
   "dependencies": {
