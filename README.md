@@ -27,7 +27,9 @@ npm install @psalomo/jsonrpc-client
 ```javascript
 import { NearRpcClient, block } from '@psalomo/jsonrpc-client';
 
-const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
+const client = new NearRpcClient({
+  endpoint: 'https://rpc.testnet.fastnear.com',
+});
 const blockResult = await block(client, { finality: 'final' });
 console.log('Latest block height:', blockResult.header.height);
 ```
@@ -38,14 +40,14 @@ console.log('Latest block height:', blockResult.header.height);
 import { NearRpcClient, block, viewAccount } from '@near-js/jsonrpc-client';
 
 const client = new NearRpcClient({
-  endpoint: 'https://rpc.mainnet.near.org'
+  endpoint: 'https://rpc.mainnet.near.org',
 });
 
 // Fully typed method calls
 const blockResult = await block(client, { finality: 'final' });
-const account = await viewAccount(client, { 
+const account = await viewAccount(client, {
   accountId: 'example.near',
-  finality: 'final' 
+  finality: 'final',
 });
 ```
 
@@ -53,10 +55,14 @@ const account = await viewAccount(client, {
 
 ```html
 <script type="module">
-const { NearRpcClient, block } = await import('https://unpkg.com/@psalomo/jsonrpc-client@0.5.0/dist/browser-standalone.min.js');
-const client = new NearRpcClient({ endpoint: 'https://rpc.mainnet.near.org' });
-const blockResult = await block(client, { finality: 'final' });
-console.log('Latest block height:', blockResult.header.height);
+  const { NearRpcClient, block } = await import(
+    'https://unpkg.com/@psalomo/jsonrpc-client@0.5.0/dist/browser-standalone.min.js'
+  );
+  const client = new NearRpcClient({
+    endpoint: 'https://rpc.mainnet.near.org',
+  });
+  const blockResult = await block(client, { finality: 'final' });
+  console.log('Latest block height:', blockResult.header.height);
 </script>
 ```
 
@@ -65,8 +71,10 @@ console.log('Latest block height:', blockResult.header.height);
 Paste this directly into any browser's developer console on any webpage:
 
 ```javascript
-const { NearRpcClient, block } = await import('https://unpkg.com/@psalomo/jsonrpc-client@0.5.0/dist/browser-standalone.min.js');
-const client = new NearRpcClient({endpoint: 'https://rpc.mainnet.near.org'});
+const { NearRpcClient, block } = await import(
+  'https://unpkg.com/@psalomo/jsonrpc-client@0.5.0/dist/browser-standalone.min.js'
+);
+const client = new NearRpcClient({ endpoint: 'https://rpc.mainnet.near.org' });
 const blockResult = await block(client, { finality: 'final' });
 console.log('Latest block height:', blockResult.header.height);
 ```

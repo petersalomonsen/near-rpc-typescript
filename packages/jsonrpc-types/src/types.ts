@@ -1,5 +1,5 @@
 // Auto-generated TypeScript types from NEAR OpenAPI spec using z.infer (zod/mini version)
-// Generated on: 2025-07-25T19:15:07.244Z
+// Generated on: 2025-07-25T20:14:02.617Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/mini';
@@ -1447,3 +1447,6 @@ export type ValidatorsRequest = z.infer<
 export type ValidatorsResponse = z.infer<
   ReturnType<typeof schemas.ValidatorsResponseSchema>
 >;
+
+// Re-exports for convenience
+export * from './schemas';

@@ -14,11 +14,13 @@ The TypeScript types, Zod schemas, and client interface in this project are auto
 The code generation process creates several files:
 
 ### Types Package (`packages/jsonrpc-types/`)
+
 - `src/types.ts` - Pure TypeScript types using `z.infer`
 - `src/schemas.ts` - Zod validation schemas
 - `src/methods.ts` - RPC method mappings extracted from OpenAPI paths
 
 ### Client Package (`packages/jsonrpc-client/`)
+
 - `src/generated-types.ts` - TypeScript interface for the dynamic client with:
   - `DynamicRpcMethods` - All 28+ RPC methods with proper parameter and response types
   - `ConvenienceMethods` - Helper methods like `viewAccount`, `viewFunction`, `viewAccessKey`
@@ -32,6 +34,7 @@ The client uses a unique approach where all RPC methods are dynamically added to
 3. **Declaration Merging**: The client interface extends both `DynamicRpcMethods` and `ConvenienceMethods`
 
 This approach ensures that:
+
 - New API methods appear automatically when the OpenAPI spec is updated
 - Full TypeScript type safety with proper parameter and response types
 - Zero manual maintenance when the NEAR API evolves

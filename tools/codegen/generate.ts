@@ -284,11 +284,7 @@ function generateZodSchema(
         ([key, prop]) => {
           const isOptional = !schema.required?.includes(key);
           const camelKey = snakeToCamel(key);
-          const zodSchema = generateZodSchema(
-            prop,
-            schemas,
-            depth + 1
-          );
+          const zodSchema = generateZodSchema(prop, schemas, depth + 1);
           if (isOptional) {
             return `  ${camelKey}: z.optional(${zodSchema})`;
           }
@@ -303,9 +299,7 @@ function generateZodSchema(
 }
 
 // Add explicit types for problematic schemas
-function getSchemaExplicitType(
-  schemaName: string
-): string | null {
+function getSchemaExplicitType(schemaName: string): string | null {
   const circularSchemas = [
     'Action',
     'DelegateAction',
@@ -385,7 +379,6 @@ export async function generateTypes() {
       }
     });
 
-
     // Create types content (zod/mini only)
     const typesContent = `// Auto-generated TypeScript types from NEAR OpenAPI spec using z.infer (zod/mini version)
 // Generated on: ${new Date().toISOString()}
@@ -445,11 +438,7 @@ export * from './schemas';
       if (post.requestBody?.content?.['application/json']?.schema) {
         const requestSchema =
           post.requestBody.content['application/json'].schema;
-        const zodMiniSchema = generateZodSchema(
-          requestSchema,
-          schemas,
-          0
-        );
+        const zodMiniSchema = generateZodSchema(requestSchema, schemas, 0);
         miniMethodSchemas.push(
           `export const ${methodNamePascal}RequestSchema = () => ${zodMiniSchema};`
         );
@@ -459,11 +448,7 @@ export * from './schemas';
       if (post.responses?.['200']?.content?.['application/json']?.schema) {
         const responseSchema =
           post.responses['200'].content['application/json'].schema;
-        const zodMiniSchema = generateZodSchema(
-          responseSchema,
-          schemas,
-          0
-        );
+        const zodMiniSchema = generateZodSchema(responseSchema, schemas, 0);
         miniMethodSchemas.push(
           `export const ${methodNamePascal}ResponseSchema = () => ${zodMiniSchema};`
         );

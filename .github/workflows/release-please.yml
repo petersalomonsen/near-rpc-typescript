@@ -12,8 +12,8 @@ permissions:
 
 env:
   # Temporary scope configuration - change these when migrating to @near-js
-  PUBLISH_SCOPE: "@psalomo"
-  ORIGINAL_SCOPE: "@near-js"
+  PUBLISH_SCOPE: '@psalomo'
+  ORIGINAL_SCOPE: '@near-js'
 
 jobs:
   release-please:
@@ -56,7 +56,7 @@ jobs:
               gh release upload "$tag" "$tarball" 2>/dev/null || echo "Release $tag not found, skipping"
             fi
           done
-          
+
           for tarball in packages/jsonrpc-client/near-js-jsonrpc-client-*.tgz; do
             if [ -f "$tarball" ]; then
               version=$(basename "$tarball" | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
@@ -82,13 +82,13 @@ jobs:
           node-version: 20
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
-      
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      
+
       - name: Build packages
         run: pnpm build
-      
+
       - name: Prepare and publish packages
         run: |
           if [ "${{ env.PUBLISH_SCOPE }}" != "${{ env.ORIGINAL_SCOPE }}" ]; then

@@ -42,7 +42,9 @@ async function testClient() {
 
     // Test 3: Test gas price
     console.log('\n⛽ Testing gasPrice() method...');
-    const gasPriceResult = await gasPrice(client, { blockId: blockResult.header.height });
+    const gasPriceResult = await gasPrice(client, {
+      blockId: blockResult.header.height,
+    });
     console.log(`✅ Gas price: ${gasPriceResult.gasPrice} yoctoNEAR`);
 
     // Test 4: Test health endpoint

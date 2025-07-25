@@ -16,7 +16,7 @@ Create a new client instance and use the available RPC functions:
 import { NearRpcClient, status } from '@near-js/jsonrpc-client';
 
 const client = new NearRpcClient({
-  endpoint: 'https://rpc.mainnet.near.org'
+  endpoint: 'https://rpc.mainnet.near.org',
 });
 
 async function getNetworkStatus() {
@@ -35,7 +35,7 @@ All method calls return a promise that resolves to a fully typed result object b
 import { NearRpcClient, block } from '@near-js/jsonrpc-client';
 
 const client = new NearRpcClient({
-  endpoint: 'https://rpc.mainnet.near.org'
+  endpoint: 'https://rpc.mainnet.near.org',
 });
 
 async function getLatestBlock() {
@@ -54,7 +54,7 @@ The client includes convenience methods for common query operations:
 // View account information
 const account = await client.viewAccount({
   accountId: 'example.near',
-  finality: 'final'
+  finality: 'final',
 });
 console.log('Account balance:', account.amount);
 console.log('Storage used:', account.storageUsage);
@@ -63,14 +63,14 @@ console.log('Storage used:', account.storageUsage);
 const result = await client.viewFunction({
   accountId: 'contract.near',
   methodName: 'get_balance',
-  finality: 'final'
+  finality: 'final',
 });
 
 // View access keys
 const accessKey = await client.viewAccessKey({
   accountId: 'example.near',
   publicKey: 'ed25519:...',
-  finality: 'final'
+  finality: 'final',
 });
 ```
 

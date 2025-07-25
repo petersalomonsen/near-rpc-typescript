@@ -7,11 +7,13 @@ This directory contains examples demonstrating how to use the `@near-js/jsonrpc-
 The library provides two main variants:
 
 ### Regular Client
+
 - **Bundle size:** ~95KB minified
 - **Import:** `import { NearRpcClient } from '@near-js/jsonrpc-client'`
 - **Best for:** Node.js applications, full developer experience
 
-### Mini Client  
+### Mini Client
+
 - **Bundle size:** Optimized with tree-shaking
 - **Import:** `import { NearRpcClient, status, block } from '@near-js/jsonrpc-client/mini'`
 - **Architecture:** Static functions with client-based configuration
@@ -51,6 +53,7 @@ The browser examples are integrated into our test suite to ensure they remain wo
 - **[tests/browser/mini.html](../tests/browser/mini.html)** - Mini client browser demo with tree-shaking
 
 These examples are:
+
 - ✅ Automatically tested with Playwright
 - ✅ Always up-to-date with the latest API
 - ✅ Interactive with real NEAR testnet calls
@@ -104,6 +107,7 @@ node tests/browser/server.js
 ```
 
 The test server serves:
+
 - HTML test pages with interactive demos
 - All bundle variants (regular, mini, minified, unminified)
 - Direct bundle URLs for one-liner testing
@@ -126,8 +130,9 @@ pnpm test:typescript
 ```
 
 This test:
+
 - ✅ Validates all TypeScript examples for type errors
-- ✅ Uses each project's own tsconfig.json (respects React/Vite settings)  
+- ✅ Uses each project's own tsconfig.json (respects React/Vite settings)
 - ✅ Ensures examples remain error-free with every change
 - ✅ Runs automatically in CI/CD pipeline
 
@@ -163,6 +168,7 @@ ls -lh dist/
 ```
 
 The tree-shaking example demonstrates:
+
 - **Bundle size optimization**: 4.9KB → 2.2KB (55% reduction) when minified
 - **Validation impact**: 42KB with validation → 19KB minified (selective Zod schema inclusion)
 - **Function-level tree-shaking**: Only schemas for imported functions are included
@@ -170,14 +176,15 @@ The tree-shaking example demonstrates:
 
 ## 💡 Bundle Size Comparison
 
-| Variant | Size (Unminified) | Size (Minified) | Use Case |
-|---------|------------------|-----------------|----------|
-| Mini client (no validation) | 4.9KB | 2.2KB | Production web apps |
-| Mini client (with validation) | 42KB | 19KB | Production with runtime validation |
-| Regular client | ~95KB | ~65KB | Development/Node.js |
-| React app (complete) | ~195KB | ~61KB gzipped | Full React application |
+| Variant                       | Size (Unminified) | Size (Minified) | Use Case                           |
+| ----------------------------- | ----------------- | --------------- | ---------------------------------- |
+| Mini client (no validation)   | 4.9KB             | 2.2KB           | Production web apps                |
+| Mini client (with validation) | 42KB              | 19KB            | Production with runtime validation |
+| Regular client                | ~95KB             | ~65KB           | Development/Node.js                |
+| React app (complete)          | ~195KB            | ~61KB gzipped   | Full React application             |
 
 **Key insights:**
+
 - **55% size reduction** with minification
 - **Function-level tree-shaking**: Only imported schemas included
 - **Validation optional**: Add Zod validation when needed
@@ -186,23 +193,36 @@ The tree-shaking example demonstrates:
 ## 🌐 Browser Usage Patterns
 
 ### One-liner Import (CDN)
+
 ```javascript
-const { NearRpcClient, status } = await import('https://unpkg.com/@near-js/jsonrpc-client/dist/browser-standalone-mini.min.js');
-const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
+const { NearRpcClient, status } = await import(
+  'https://unpkg.com/@near-js/jsonrpc-client/dist/browser-standalone-mini.min.js'
+);
+const client = new NearRpcClient({
+  endpoint: 'https://rpc.testnet.fastnear.com',
+});
 const result = await status(client);
 ```
 
 ### Local Bundle
+
 ```javascript
 // After building the project
-const { NearRpcClient, status } = await import('./node_modules/@near-js/jsonrpc-client/dist/browser-standalone-mini.min.js');
-const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
+const { NearRpcClient, status } = await import(
+  './node_modules/@near-js/jsonrpc-client/dist/browser-standalone-mini.min.js'
+);
+const client = new NearRpcClient({
+  endpoint: 'https://rpc.testnet.fastnear.com',
+});
 ```
 
 ### Module Bundler (Webpack, Vite, etc.)
+
 ```javascript
 import { NearRpcClient, status, block } from '@near-js/jsonrpc-client/mini';
-const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
+const client = new NearRpcClient({
+  endpoint: 'https://rpc.testnet.fastnear.com',
+});
 const statusResult = await status(client);
 ```
 
@@ -214,12 +234,13 @@ const statusResult = await status(client);
 ## 📚 API Documentation
 
 ### Regular Client (Instance Methods)
+
 ```javascript
 import { NearRpcClient } from '@near-js/jsonrpc-client';
 const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
 
 - `client.status()` - Network status
-- `client.block()` - Block information  
+- `client.block()` - Block information
 - `client.viewAccount()` - Account details
 - `client.gasPrice()` - Current gas price
 - `client.query()` - Generic queries
@@ -227,12 +248,13 @@ const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' 
 ```
 
 ### Mini Client (Static Functions)
+
 ```javascript
 import { NearRpcClient, status, block, viewAccount, viewFunction, viewAccessKey } from '@near-js/jsonrpc-client/mini';
 const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
 
 - `status(client)` - Network status
-- `block(client, params)` - Block information  
+- `block(client, params)` - Block information
 - `viewAccount(client, params)` - Account details
 - `viewFunction(client, params)` - Call view functions
 - `viewAccessKey(client, params)` - View access key details

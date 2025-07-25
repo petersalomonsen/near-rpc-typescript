@@ -15,7 +15,7 @@ This is a minimal React application demonstrating the use of `@near-js/jsonrpc-c
 
 1. **Network Status**: Fetches and displays current status from both NEAR mainnet and testnet
 2. **Account Information**: Views account details using the `viewAccount` convenience function
-3. **Error Handling**: Graceful error handling and retry functionality  
+3. **Error Handling**: Graceful error handling and retry functionality
 4. **Tree-shaking**: Only imports the specific RPC functions needed
 
 ## Bundle Size
@@ -58,7 +58,7 @@ pnpm dev
 # Build for production
 pnpm build
 
-# Preview production build  
+# Preview production build
 pnpm preview
 
 # Open http://localhost:4173
@@ -73,26 +73,30 @@ pnpm preview
 const mainnetClient = new NearRpcClient({
   endpoint: 'https://rpc.mainnet.near.org',
   timeout: 10000,
-})
+});
 
 const testnetClient = new NearRpcClient({
-  endpoint: 'https://rpc.testnet.near.org', 
+  endpoint: 'https://rpc.testnet.near.org',
   timeout: 10000,
-})
+});
 ```
 
 ### Static Function Usage
 
 ```typescript
 // Import only the functions you need
-import { NearRpcClient, status, viewAccount } from '@near-js/jsonrpc-client/mini'
+import {
+  NearRpcClient,
+  status,
+  viewAccount,
+} from '@near-js/jsonrpc-client/mini';
 
 // Use static functions with client parameter
-const statusRes = await status(mainnetClient)
+const statusRes = await status(mainnetClient);
 const accountRes = await viewAccount(testnetClient, {
   accountId: 'testnet',
-  finality: 'final'
-})
+  finality: 'final',
+});
 ```
 
 ### Key Benefits in React
@@ -115,13 +119,13 @@ The app demonstrates these mini client features:
 
 ## Comparison with Regular Client
 
-| Feature | Regular Client | Mini Client |
-|---------|---------------|-------------|
-| **API Style** | `client.status()` | `status(client)` |
-| **Bundle Size** | Larger | Tree-shakable |
-| **Imports** | `import { NearRpcClient }` | `import { NearRpcClient, status }` |
-| **Tree-shaking** | Limited | Optimal |
-| **Functionality** | Identical | Identical |
+| Feature           | Regular Client             | Mini Client                        |
+| ----------------- | -------------------------- | ---------------------------------- |
+| **API Style**     | `client.status()`          | `status(client)`                   |
+| **Bundle Size**   | Larger                     | Tree-shakable                      |
+| **Imports**       | `import { NearRpcClient }` | `import { NearRpcClient, status }` |
+| **Tree-shaking**  | Limited                    | Optimal                            |
+| **Functionality** | Identical                  | Identical                          |
 
 ## Deployment
 

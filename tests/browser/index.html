@@ -1,285 +1,313 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NEAR RPC Client Browser Test</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            line-height: 1.6;
-        }
-        .container {
-            background: #f5f5f5;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-        .result {
-            background: white;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin: 10px 0;
-            white-space: pre-wrap;
-            font-family: monospace;
-        }
-        .error {
-            background: #fee;
-            border-color: #fcc;
-            color: #c00;
-        }
-        .success {
-            background: #efe;
-            border-color: #cfc;
-            color: #060;
-        }
-        .loading {
-            color: #666;
-            font-style: italic;
-        }
-        button {
-            background: #007cba;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 5px;
-        }
-        button:hover {
-            background: #005a87;
-        }
-        button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+      }
+      .container {
+        background: #f5f5f5;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
+      .result {
+        background: white;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin: 10px 0;
+        white-space: pre-wrap;
+        font-family: monospace;
+      }
+      .error {
+        background: #fee;
+        border-color: #fcc;
+        color: #c00;
+      }
+      .success {
+        background: #efe;
+        border-color: #cfc;
+        color: #060;
+      }
+      .loading {
+        color: #666;
+        font-style: italic;
+      }
+      button {
+        background: #007cba;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #005a87;
+      }
+      button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>NEAR RPC Client Browser Test</h1>
-    <p>This page tests the NEAR RPC TypeScript client running in a browser environment.</p>
+    <p>
+      This page tests the NEAR RPC TypeScript client running in a browser
+      environment.
+    </p>
 
     <div class="container">
-        <h2>Test Controls</h2>
-        <button id="runAllTests">Run All Tests</button>
-        <button id="clearResults">Clear Results</button>
+      <h2>Test Controls</h2>
+      <button id="runAllTests">Run All Tests</button>
+      <button id="clearResults">Clear Results</button>
     </div>
 
     <div class="container">
-        <h2>Latest Block Test</h2>
-        <button id="testLatestBlock">Get Latest Block</button>
-        <div id="latestBlockResult" class="result"></div>
+      <h2>Latest Block Test</h2>
+      <button id="testLatestBlock">Get Latest Block</button>
+      <div id="latestBlockResult" class="result"></div>
     </div>
 
     <div class="container">
-        <h2>Account View Test</h2>
-        <button id="testAccountView">View Account (example.testnet)</button>
-        <div id="accountViewResult" class="result"></div>
+      <h2>Account View Test</h2>
+      <button id="testAccountView">View Account (example.testnet)</button>
+      <div id="accountViewResult" class="result"></div>
     </div>
 
     <div class="container">
-        <h2>Specific Block Test</h2>
-        <button id="testSpecificBlock">Get Specific Block</button>
-        <div id="specificBlockResult" class="result"></div>
+      <h2>Specific Block Test</h2>
+      <button id="testSpecificBlock">Get Specific Block</button>
+      <div id="specificBlockResult" class="result"></div>
     </div>
 
     <div class="container">
-        <h2>Network Status Test</h2>
-        <button id="testNetworkStatus">Get Network Status</button>
-        <div id="networkStatusResult" class="result"></div>
+      <h2>Network Status Test</h2>
+      <button id="testNetworkStatus">Get Network Status</button>
+      <div id="networkStatusResult" class="result"></div>
     </div>
 
     <div class="container">
-        <h2>Gas Price Test</h2>
-        <button id="testGasPrice">Get Gas Price</button>
-        <div id="gasPriceResult" class="result"></div>
+      <h2>Gas Price Test</h2>
+      <button id="testGasPrice">Get Gas Price</button>
+      <div id="gasPriceResult" class="result"></div>
     </div>
 
     <script type="module">
-        import { NearRpcClient, block, status, gasPrice, viewAccount } from './browser-standalone.js';
+      import {
+        NearRpcClient,
+        block,
+        status,
+        gasPrice,
+        viewAccount,
+      } from './browser-standalone.js';
 
-        const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
+      const client = new NearRpcClient({
+        endpoint: 'https://rpc.testnet.fastnear.com',
+      });
 
-        function displayResult(elementId, result, isError = false) {
-            const element = document.getElementById(elementId);
-            element.textContent = typeof result === 'object' ? JSON.stringify(result, null, 2) : result;
-            element.className = `result ${isError ? 'error' : 'success'}`;
+      function displayResult(elementId, result, isError = false) {
+        const element = document.getElementById(elementId);
+        element.textContent =
+          typeof result === 'object' ? JSON.stringify(result, null, 2) : result;
+        element.className = `result ${isError ? 'error' : 'success'}`;
+      }
+
+      function displayLoading(elementId) {
+        const element = document.getElementById(elementId);
+        element.textContent = 'Loading...';
+        element.className = 'result loading';
+      }
+
+      async function testLatestBlock() {
+        displayLoading('latestBlockResult');
+        try {
+          const blockResult = await block(client, { finality: 'final' });
+          const result = {
+            height: blockResult.header.height,
+            hash: blockResult.header.hash,
+            timestamp: blockResult.header.timestamp,
+            chunksIncluded: blockResult.header.chunksIncluded,
+            gasPrice: blockResult.header.gasPrice,
+          };
+          displayResult('latestBlockResult', result);
+
+          window.latestBlockHeight = blockResult.header.height;
+          return result;
+        } catch (error) {
+          displayResult('latestBlockResult', `Error: ${error.message}`, true);
+          throw error;
+        }
+      }
+
+      async function testAccountView() {
+        displayLoading('accountViewResult');
+        try {
+          const account = await viewAccount(client, {
+            accountId: 'example.testnet',
+            finality: 'final',
+          });
+          const result = {
+            accountId: 'example.testnet', // API doesn't return this, so we add it
+            amount: account.amount,
+            locked: account.locked,
+            storageUsage: account.storageUsage,
+            blockHeight: account.blockHeight,
+          };
+          displayResult('accountViewResult', result);
+          return result;
+        } catch (error) {
+          displayResult('accountViewResult', `Error: ${error.message}`, true);
+          throw error;
+        }
+      }
+
+      async function testSpecificBlock() {
+        displayLoading('specificBlockResult');
+        try {
+          const targetHeight = window.latestBlockHeight
+            ? window.latestBlockHeight - 100
+            : 170000000;
+
+          const blockResult = await block(client, { blockId: targetHeight });
+          const result = {
+            requestedHeight: targetHeight,
+            actualHeight: blockResult.header.height,
+            hash: blockResult.header.hash,
+            prevHash: blockResult.header.prevHash,
+            chunksCount: blockResult.chunks.length,
+          };
+          displayResult('specificBlockResult', result);
+          return result;
+        } catch (error) {
+          displayResult('specificBlockResult', `Error: ${error.message}`, true);
+          throw error;
+        }
+      }
+
+      async function testNetworkStatus() {
+        displayLoading('networkStatusResult');
+        try {
+          const statusResult = await status(client);
+          const result = {
+            chainId: statusResult.chainId,
+            latestBlockHeight: statusResult.syncInfo.latestBlockHeight,
+            latestBlockHash: statusResult.syncInfo.latestBlockHash,
+            syncing: statusResult.syncInfo.syncing,
+            nodePublicKey: statusResult.validatorPublicKey || 'N/A',
+          };
+          displayResult('networkStatusResult', result);
+          return result;
+        } catch (error) {
+          displayResult('networkStatusResult', `Error: ${error.message}`, true);
+          throw error;
+        }
+      }
+
+      async function testGasPrice() {
+        displayLoading('gasPriceResult');
+        try {
+          const gasPriceResult = await gasPrice(client, [null]); // Use null for latest
+          const result = {
+            gasPrice: gasPriceResult.gasPrice,
+          };
+          displayResult('gasPriceResult', result);
+          return result;
+        } catch (error) {
+          displayResult('gasPriceResult', `Error: ${error.message}`, true);
+          throw error;
+        }
+      }
+
+      async function runAllTests() {
+        const runAllButton = document.getElementById('runAllTests');
+        runAllButton.disabled = true;
+        runAllButton.textContent = 'Running Tests...';
+
+        const tests = [
+          { name: 'Latest Block', fn: testLatestBlock },
+          { name: 'Account View', fn: testAccountView },
+          { name: 'Network Status', fn: testNetworkStatus },
+          { name: 'Gas Price', fn: testGasPrice },
+          { name: 'Specific Block', fn: testSpecificBlock },
+        ];
+
+        let passedTests = 0;
+        let totalTests = tests.length;
+
+        for (const test of tests) {
+          try {
+            await test.fn();
+            passedTests++;
+            console.log(`✅ ${test.name} test passed`);
+          } catch (error) {
+            console.error(`❌ ${test.name} test failed:`, error);
+          }
         }
 
-        function displayLoading(elementId) {
-            const element = document.getElementById(elementId);
-            element.textContent = 'Loading...';
-            element.className = 'result loading';
-        }
+        runAllButton.disabled = false;
+        runAllButton.textContent = `Run All Tests (${passedTests}/${totalTests} passed)`;
 
-        async function testLatestBlock() {
-            displayLoading('latestBlockResult');
-            try {
-                const blockResult = await block(client, { finality: 'final' });
-                const result = {
-                    height: blockResult.header.height,
-                    hash: blockResult.header.hash,
-                    timestamp: blockResult.header.timestamp,
-                    chunksIncluded: blockResult.header.chunksIncluded,
-                    gasPrice: blockResult.header.gasPrice
-                };
-                displayResult('latestBlockResult', result);
-                
-                window.latestBlockHeight = blockResult.header.height;
-                return result;
-            } catch (error) {
-                displayResult('latestBlockResult', `Error: ${error.message}`, true);
-                throw error;
-            }
-        }
-
-        async function testAccountView() {
-            displayLoading('accountViewResult');
-            try {
-                const account = await viewAccount(client, {
-                    accountId: 'example.testnet',
-                    finality: 'final'
-                });
-                const result = {
-                    accountId: 'example.testnet', // API doesn't return this, so we add it
-                    amount: account.amount,
-                    locked: account.locked,
-                    storageUsage: account.storageUsage,
-                    blockHeight: account.blockHeight
-                };
-                displayResult('accountViewResult', result);
-                return result;
-            } catch (error) {
-                displayResult('accountViewResult', `Error: ${error.message}`, true);
-                throw error;
-            }
-        }
-
-        async function testSpecificBlock() {
-            displayLoading('specificBlockResult');
-            try {
-                const targetHeight = window.latestBlockHeight ? window.latestBlockHeight - 100 : 170000000;
-                
-                const blockResult = await block(client, { blockId: targetHeight });
-                const result = {
-                    requestedHeight: targetHeight,
-                    actualHeight: blockResult.header.height,
-                    hash: blockResult.header.hash,
-                    prevHash: blockResult.header.prevHash,
-                    chunksCount: blockResult.chunks.length
-                };
-                displayResult('specificBlockResult', result);
-                return result;
-            } catch (error) {
-                displayResult('specificBlockResult', `Error: ${error.message}`, true);
-                throw error;
-            }
-        }
-
-        async function testNetworkStatus() {
-            displayLoading('networkStatusResult');
-            try {
-                const statusResult = await status(client);
-                const result = {
-                    chainId: statusResult.chainId,
-                    latestBlockHeight: statusResult.syncInfo.latestBlockHeight,
-                    latestBlockHash: statusResult.syncInfo.latestBlockHash,
-                    syncing: statusResult.syncInfo.syncing,
-                    nodePublicKey: statusResult.validatorPublicKey || 'N/A'
-                };
-                displayResult('networkStatusResult', result);
-                return result;
-            } catch (error) {
-                displayResult('networkStatusResult', `Error: ${error.message}`, true);
-                throw error;
-            }
-        }
-
-        async function testGasPrice() {
-            displayLoading('gasPriceResult');
-            try {
-                const gasPriceResult = await gasPrice(client, [null]); // Use null for latest
-                const result = {
-                    gasPrice: gasPriceResult.gasPrice
-                };
-                displayResult('gasPriceResult', result);
-                return result;
-            } catch (error) {
-                displayResult('gasPriceResult', `Error: ${error.message}`, true);
-                throw error;
-            }
-        }
-
-        async function runAllTests() {
-            const runAllButton = document.getElementById('runAllTests');
-            runAllButton.disabled = true;
-            runAllButton.textContent = 'Running Tests...';
-
-            const tests = [
-                { name: 'Latest Block', fn: testLatestBlock },
-                { name: 'Account View', fn: testAccountView },
-                { name: 'Network Status', fn: testNetworkStatus },
-                { name: 'Gas Price', fn: testGasPrice },
-                { name: 'Specific Block', fn: testSpecificBlock }
-            ];
-
-            let passedTests = 0;
-            let totalTests = tests.length;
-
-            for (const test of tests) {
-                try {
-                    await test.fn();
-                    passedTests++;
-                    console.log(`✅ ${test.name} test passed`);
-                } catch (error) {
-                    console.error(`❌ ${test.name} test failed:`, error);
-                }
-            }
-
-            runAllButton.disabled = false;
-            runAllButton.textContent = `Run All Tests (${passedTests}/${totalTests} passed)`;
-            
-            window.testResults = {
-                passed: passedTests,
-                total: totalTests,
-                success: passedTests === totalTests
-            };
-        }
-
-        function clearResults() {
-            const resultElements = document.querySelectorAll('.result');
-            resultElements.forEach(element => {
-                element.textContent = '';
-                element.className = 'result';
-            });
-            
-            const runAllButton = document.getElementById('runAllTests');
-            runAllButton.textContent = 'Run All Tests';
-        }
-
-        document.getElementById('testLatestBlock').addEventListener('click', testLatestBlock);
-        document.getElementById('testAccountView').addEventListener('click', testAccountView);
-        document.getElementById('testSpecificBlock').addEventListener('click', testSpecificBlock);
-        document.getElementById('testNetworkStatus').addEventListener('click', testNetworkStatus);
-        document.getElementById('testGasPrice').addEventListener('click', testGasPrice);
-        document.getElementById('runAllTests').addEventListener('click', runAllTests);
-        document.getElementById('clearResults').addEventListener('click', clearResults);
-
-        window.nearRpcTests = {
-            testLatestBlock,
-            testAccountView,
-            testSpecificBlock,
-            testNetworkStatus,
-            testGasPrice,
-            runAllTests,
-            clearResults
+        window.testResults = {
+          passed: passedTests,
+          total: totalTests,
+          success: passedTests === totalTests,
         };
+      }
 
-        console.log('NEAR RPC Client browser test page loaded successfully');
+      function clearResults() {
+        const resultElements = document.querySelectorAll('.result');
+        resultElements.forEach(element => {
+          element.textContent = '';
+          element.className = 'result';
+        });
+
+        const runAllButton = document.getElementById('runAllTests');
+        runAllButton.textContent = 'Run All Tests';
+      }
+
+      document
+        .getElementById('testLatestBlock')
+        .addEventListener('click', testLatestBlock);
+      document
+        .getElementById('testAccountView')
+        .addEventListener('click', testAccountView);
+      document
+        .getElementById('testSpecificBlock')
+        .addEventListener('click', testSpecificBlock);
+      document
+        .getElementById('testNetworkStatus')
+        .addEventListener('click', testNetworkStatus);
+      document
+        .getElementById('testGasPrice')
+        .addEventListener('click', testGasPrice);
+      document
+        .getElementById('runAllTests')
+        .addEventListener('click', runAllTests);
+      document
+        .getElementById('clearResults')
+        .addEventListener('click', clearResults);
+
+      window.nearRpcTests = {
+        testLatestBlock,
+        testAccountView,
+        testSpecificBlock,
+        testNetworkStatus,
+        testGasPrice,
+        runAllTests,
+        clearResults,
+      };
+
+      console.log('NEAR RPC Client browser test page loaded successfully');
     </script>
-</body>
+  </body>
 </html>

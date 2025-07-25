@@ -1,5 +1,5 @@
 // Auto-generated method mapping from NEAR OpenAPI spec
-// Generated on: 2025-07-25T19:15:07.248Z
+// Generated on: 2025-07-25T20:14:02.620Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 // Maps OpenAPI paths to actual JSON-RPC method names
