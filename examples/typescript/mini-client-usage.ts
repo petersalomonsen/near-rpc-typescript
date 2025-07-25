@@ -20,7 +20,7 @@ import {
   block,
   gasPrice,
   viewAccount,
-} from '@near-js/jsonrpc-client/mini';
+} from '@near-js/jsonrpc-client';
 
 // Create client instance - holds configuration only, no RPC methods
 const client = new NearRpcClient({
@@ -52,9 +52,7 @@ console.log('');
 
 // Get gas price using static function
 console.log('⛽ Fetching gas price...');
-const gasPriceResult = await gasPrice(client, {
-  blockId: blockResult.header.height,
-});
+const gasPriceResult = await gasPrice(client, [blockResult.header.height]);
 console.log(`Gas price: ${gasPriceResult.gasPrice} yoctoNEAR`);
 console.log('');
 

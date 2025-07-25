@@ -1,12 +1,12 @@
 // Tree-shaking example: Import multiple schemas to test selective inclusion
 // This demonstrates optimal tree-shaking with minimal bundle size
 
-// Import from mini variant (now powered by individual schema files)
+// Import from main export (now powered by individual schema files)
 import {
   status,
   defaultClient,
   NearRpcClient,
-} from '@near-js/jsonrpc-client/mini';
+} from '@near-js/jsonrpc-client';
 
 // Use the default client
 const result = await status(defaultClient);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { NearRpcClient, status, viewAccount } from '@near-js/jsonrpc-client/mini'
+import { NearRpcClient, status, viewAccount } from '@near-js/jsonrpc-client'
 import './App.css'
 
 // Create clients for both mainnet and testnet
