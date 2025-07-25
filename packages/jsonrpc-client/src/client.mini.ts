@@ -44,6 +44,9 @@ function convertKeysToCamelCase(obj: any): any {
   return converted;
 }
 
+// Use static ID matching NEAR RPC documentation examples
+const REQUEST_ID = 'dontcare';
+
 // Types for mini client configuration
 export interface MiniClientConfig {
   endpoint: string;
@@ -133,7 +136,7 @@ export class NearRpcClient {
 
     const request: JsonRpcRequest<TParams | undefined> = {
       jsonrpc: '2.0',
-      id: crypto.randomUUID(),
+      id: REQUEST_ID,
       method,
       params: snakeCaseParams as TParams | undefined,
     };

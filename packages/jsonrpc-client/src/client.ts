@@ -112,7 +112,6 @@ export class NearRpcClient {
   private timeout: number;
   private retries: number;
   private validateResponses: boolean;
-  private requestIdCounter = 0;
 
   constructor(config: string | ClientConfig) {
     if (typeof config === 'string') {
@@ -136,10 +135,10 @@ export class NearRpcClient {
   }
 
   /**
-   * Generate a unique request ID
+   * Get request ID matching NEAR RPC documentation examples
    */
-  private generateRequestId(): string {
-    return `near-rpc-${Date.now()}-${++this.requestIdCounter}`;
+  private getRequestId(): string {
+    return 'dontcare';
   }
 
   /**
@@ -150,7 +149,7 @@ export class NearRpcClient {
     method: RpcMethod,
     params?: TParams
   ): Promise<TResult> {
-    const requestId = this.generateRequestId();
+    const requestId = this.getRequestId();
 
     // Convert camelCase params to snake_case for the RPC call
     const snakeCaseParams = params ? convertKeysToSnakeCase(params) : undefined;

@@ -255,11 +255,11 @@ test.describe('Mini Bundle Browser Tests', () => {
       `Difference: ${((miniSize - regularSize) / 1024).toFixed(1)}KB`
     );
 
-    // Verify both bundles exist and have reasonable sizes (updated for rollup bundles)
+    // Verify both bundles exist and have reasonable sizes (updated for optimized bundles)
     expect(regularSize).toBeGreaterThan(50 * 1024); // > 50KB
-    expect(miniSize).toBeGreaterThan(30 * 1024); // > 30KB
+    expect(miniSize).toBeGreaterThan(10 * 1024); // > 10KB (optimized with function consolidation)
     expect(regularSize).toBeLessThan(200 * 1024); // < 200KB
-    expect(miniSize).toBeLessThan(150 * 1024); // < 150KB
+    expect(miniSize).toBeLessThan(50 * 1024); // < 50KB (much smaller due to tree-shaking)
 
     // Mini bundle should be smaller than regular bundle
     expect(miniSize).toBeLessThan(regularSize);
