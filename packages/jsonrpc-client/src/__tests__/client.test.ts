@@ -95,6 +95,22 @@ describe('NearRpcClient', () => {
         endpoint: 'https://rpc.mainnet.near.org',
         retries: 0,
       });
+      
+      // Mock a JSON-RPC error response (not HTTP error)
+      const fetchSpy = vi.spyOn(global, 'fetch');
+      fetchSpy.mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          jsonrpc: '2.0',
+          id: 'dontcare',
+          error: {
+            code: -32601,
+            message: 'Method not found',
+            data: null
+          }
+        }),
+      } as Response);
+      
       await expect(client.makeRequest('non_existent_method')).rejects.toThrow(
         JsonRpcClientError
       );
@@ -211,7 +227,7 @@ describe('NearRpcClient', () => {
     );
 
     it('should call experimental protocol config method', async () => {
-      const result = await experimentalProtocolConfig(client({
+      const result = await experimentalProtocolConfig(client, {
         finality: 'final',
       });
       expect(result).toHaveProperty('chainId');
@@ -226,7 +242,7 @@ describe('NearRpcClient', () => {
     it('should call experimental receipt method with real receipt', async () => {
       const receiptId = '21RBsYGnt6qQwGCdLdzeSHQdfgjrHY9p1oEuzQWmXf5k';
 
-      const result = await experimentalReceipt(archivalClient({ receiptId });
+      const result = await experimentalReceipt(archivalClient, { receiptId });
       expect(result).toBeDefined();
       expect(result).toHaveProperty('receiptId', receiptId);
       expect(result).toHaveProperty('receiverId', 'twelvetone.near');
@@ -243,7 +259,7 @@ describe('NearRpcClient', () => {
       const senderAccountId =
         '5d3b3ff8c39dea6b9016cfac3902a2907f41fee7146cda2e7600703ef22cf5ec';
 
-      const result = await experimentalTxStatus(archivalClient({
+      const result = await experimentalTxStatus(archivalClient, {
         txHash,
         senderAccountId,
       });
@@ -262,7 +278,7 @@ describe('NearRpcClient', () => {
       const archivalClient = new NearRpcClient(
         'https://archival-rpc.mainnet.fastnear.com'
       );
-      const result = await experimentalChangesInBlock(archivalClient({
+      const result = await experimentalChangesInBlock(archivalClient, {
         blockId: 62899098,
       });
       expect(result).toBeDefined();
@@ -288,7 +304,7 @@ describe('NearRpcClient', () => {
       const archivalClient = new NearRpcClient(
         'https://archival-rpc.mainnet.fastnear.com'
       );
-      const result = await experimentalValidatorsOrdered(archivalClient({
+      const result = await experimentalValidatorsOrdered(archivalClient, {
         blockId: '9ZEqsVLykxUr8XMhzGrxf49PgCEKscqYtsbEJoqXb5rH',
       });
       expect(result).toBeDefined();
@@ -306,7 +322,7 @@ describe('NearRpcClient', () => {
       const archivalClient = new NearRpcClient(
         'https://archival-rpc.mainnet.fastnear.com'
       );
-      const result = await experimentalChanges(archivalClient({
+      const result = await experimentalChanges(archivalClient, {
         changesType: 'account_changes',
         accountIds: ['aurora'],
         blockId: 62899098,

@@ -37,7 +37,7 @@ describe('Integration Tests', () => {
             outcome_root: '55555555555555555555555555555555',
             chunks_included: 1,
             challenges_root: '66666666666666666666666666666666',
-            timestamp: 1640995200000000000,
+            timestamp: '1640995200000000000',
             timestamp_nanosec: '1640995200000000000',
             random_value: '77777777777777777777777777777777',
             validator_proposals: [],
@@ -85,7 +85,7 @@ describe('Integration Tests', () => {
         json: async () => mockBlockResponse,
       });
 
-      const result = await block(client({ finality: 'final' });
+      const result = await block(client, { finality: 'final' });
 
       // Verify the request was made correctly
       expect(mockFetch).toHaveBeenCalledWith(
@@ -161,7 +161,7 @@ describe('Integration Tests', () => {
         json: async () => mockAccountResponse,
       });
 
-      const result = await viewAccount(client({
+      const result = await viewAccount(client, {
         accountId: 'test.testnet',
         finality: 'final',
       });
@@ -253,7 +253,7 @@ describe('Integration Tests', () => {
         json: async () => mockComplexResponse,
       });
 
-      const result = await tx(client({
+      const result = await tx(client, {
         txHash: '22222222222222222222222222222222',
         senderAccountId: 'test.testnet',
       });
@@ -319,7 +319,7 @@ describe('Integration Tests', () => {
         json: async () => mockErrorResponse,
       });
 
-      await expect(block(client({ blockId: 'invalid-hash' })).rejects.toThrow(
+      await expect(block(client, { blockId: 'invalid-hash' })).rejects.toThrow(
         'Server error'
       );
     });
@@ -338,7 +338,7 @@ describe('Integration Tests', () => {
           }),
         });
 
-      const result = await status(client();
+      const result = await status(client);
 
       // Should have retried and eventually succeeded
       expect(mockFetch).toHaveBeenCalledTimes(3);
@@ -354,9 +354,9 @@ describe('Integration Tests', () => {
       });
 
       // Test sequential calls
-      await status(client();
-      await block(client({ finality: 'final' });
-      await gasPrice(client();
+      await status(client);
+      await block(client, { finality: 'final' });
+      await gasPrice(client);
 
       expect(mockFetch).toHaveBeenCalledTimes(3);
     });
@@ -369,10 +369,10 @@ describe('Integration Tests', () => {
 
       // Test concurrent calls
       const promises = [
-        status(client(),
-        health(client(),
-        networkInfo(client(),
-        gasPrice(client(),
+        status(client),
+        health(client),
+        networkInfo(client),
+        gasPrice(client),
       ];
 
       await Promise.all(promises);
@@ -389,7 +389,7 @@ describe('Integration Tests', () => {
         },
         timeout: 5000,
         retries: 1,
-        validateResponses: false,
+        validation: undefined,
       });
 
       mockFetch.mockResolvedValueOnce({
@@ -397,7 +397,7 @@ describe('Integration Tests', () => {
         json: async () => ({ jsonrpc: '2.0', id: '1', result: {} }),
       });
 
-      await status(customClient();
+      await status(customClient);
 
       expect(mockFetch).toHaveBeenCalledWith(
         'https://custom-rpc.example.com',

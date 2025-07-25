@@ -94,7 +94,7 @@ export class JsonRpcClientError extends Error {
 export class JsonRpcNetworkError extends Error {
   constructor(
     message: string,
-    public cause?: Error
+    public originalError?: Error
   ) {
     super(message);
     this.name = 'JsonRpcNetworkError';
@@ -178,7 +178,15 @@ export class NearRpcClient {
           );
         }
 
-        const jsonResponse = await response.json();
+        let jsonResponse;
+        try {
+          jsonResponse = await response.json();
+        } catch (parseError) {
+          throw new JsonRpcNetworkError(
+            'Failed to parse JSON response',
+            parseError as Error
+          );
+        }
 
         // Validate response if validation is enabled
         if (this.validation) {
@@ -219,8 +227,9 @@ export class NearRpcClient {
       }
     }
 
-    throw (
-      lastError || new JsonRpcNetworkError('Request failed after all retries')
+    throw new JsonRpcNetworkError(
+      lastError?.message || 'Request failed after all retries',
+      lastError || undefined
     );
   }
 
