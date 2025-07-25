@@ -39,6 +39,10 @@ Both variants provide identical functionality with different API approaches.
 
 - **[react-mini-client/](react-mini-client/)** - Complete React app with mini client and tree-shaking
 
+### Tree-shaking Examples
+
+- **[tree-shaking/](tree-shaking/)** - Rollup-based bundle analysis demonstrating tree-shaking optimization
+
 ### Browser Examples
 
 The browser examples are integrated into our test suite to ensure they remain working with every change:
@@ -111,6 +115,22 @@ The test server serves:
 pnpm test:browser
 ```
 
+### TypeScript Validation Tests
+
+All examples are automatically tested for TypeScript errors using a language server:
+
+```bash
+# From examples directory
+cd examples
+pnpm test:typescript
+```
+
+This test:
+- ✅ Validates all TypeScript examples for type errors
+- ✅ Uses each project's own tsconfig.json (respects React/Vite settings)  
+- ✅ Ensures examples remain error-free with every change
+- ✅ Runs automatically in CI/CD pipeline
+
 ### JavaScript Examples
 
 ```bash
@@ -125,14 +145,43 @@ npm install
 node basic-usage.js
 ```
 
+### Tree-shaking Examples
+
+```bash
+# From the repository root:
+cd examples/tree-shaking
+
+# Build all bundle variants (regular, minified, with/without validation)
+pnpm build:all
+
+# Run the examples
+node dist/bundle.js                     # Without validation
+node dist/bundle-with-validation.js     # With Zod validation
+
+# Check bundle sizes
+ls -lh dist/
+```
+
+The tree-shaking example demonstrates:
+- **Bundle size optimization**: 4.9KB → 2.2KB (55% reduction) when minified
+- **Validation impact**: 42KB with validation → 19KB minified (selective Zod schema inclusion)
+- **Function-level tree-shaking**: Only schemas for imported functions are included
+- **Parameter validation**: Using `block()` and `viewAccount()` with proper type checking
+
 ## 💡 Bundle Size Comparison
 
-| Use Case | Recommended Variant | Bundle Size | Benefits |
-|----------|-------------------|-------------|----------|
-| Web applications | Mini client | Tree-shaken | Optimal bundle size, static functions |
-| Node.js services | Regular client | N/A (not bundled) | Full developer experience |
-| Desktop/mobile apps | Mini client | Tree-shaken | Minimal app size |
-| Development/testing | Regular client | ~95KB | Better debugging experience |
+| Variant | Size (Unminified) | Size (Minified) | Use Case |
+|---------|------------------|-----------------|----------|
+| Mini client (no validation) | 4.9KB | 2.2KB | Production web apps |
+| Mini client (with validation) | 42KB | 19KB | Production with runtime validation |
+| Regular client | ~95KB | ~65KB | Development/Node.js |
+| React app (complete) | ~195KB | ~61KB gzipped | Full React application |
+
+**Key insights:**
+- **55% size reduction** with minification
+- **Function-level tree-shaking**: Only imported schemas included
+- **Validation optional**: Add Zod validation when needed
+- **React-ready**: Excellent performance in modern web frameworks
 
 ## 🌐 Browser Usage Patterns
 
