@@ -34,6 +34,9 @@ jobs:
 
       - name: Build packages
         run: pnpm build
+        
+      - name: Check TypeScript examples for errors
+        run: cd examples && pnpm test:typescript
 
       # TypeScript examples
       - name: Run TypeScript basic-usage example
@@ -67,3 +70,16 @@ jobs:
 
       - name: Run CJS status-and-account-demo example
         run: node examples/javascript-cjs/status-and-account-demo.js
+
+      # Tree-shaking example
+      - name: Build tree-shaking example
+        run: cd examples/tree-shaking && pnpm build:all
+
+      - name: Run tree-shaking example (without validation)
+        run: node examples/tree-shaking/dist/bundle.js
+
+      - name: Run tree-shaking example (with validation)
+        run: node examples/tree-shaking/dist/bundle-with-validation.js
+
+      - name: Show tree-shaking bundle sizes
+        run: ls -lh examples/tree-shaking/dist/
