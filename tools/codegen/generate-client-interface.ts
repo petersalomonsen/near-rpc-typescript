@@ -567,7 +567,7 @@ export async function ${mapping.clientMethodName}(
     ]),
   ].sort();
 
-  const importStatement = `import type {\n  ${allTypes.join(',\n  ')}\n} from '@near-js/jsonrpc-types/mini';
+  const importStatement = `import type {\n  ${allTypes.join(',\n  ')}\n} from '@near-js/jsonrpc-types';
 import type { NearRpcClient } from './client';`;
 
   const interfaces = `

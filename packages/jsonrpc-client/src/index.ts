@@ -18,10 +18,10 @@ export type {
 export {
   JsonRpcRequestSchema,
   JsonRpcResponseSchema,
-} from '@near-js/jsonrpc-types/mini';
+} from '@near-js/jsonrpc-types';
 
 // Re-export RPC methods
-export { RPC_METHODS } from '@near-js/jsonrpc-types/mini';
+export { RPC_METHODS } from '@near-js/jsonrpc-types';
 
 // Export individual tree-shakable functions
 export * from './generated-functions';

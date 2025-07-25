@@ -5,7 +5,7 @@ import type {
   AccountView,
   CallResult,
   AccessKeyView,
-} from '@near-js/jsonrpc-types/mini';
+} from '@near-js/jsonrpc-types';
 
 export async function viewAccount(
   client: NearRpcClient,

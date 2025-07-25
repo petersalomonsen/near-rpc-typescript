@@ -611,22 +611,18 @@ export const JsonRpcResponseSchema = () => z.object({
 });
 `;
 
-    await fs.writeFile(join(outputDir, 'types.ts'), typesContent);
-    await fs.writeFile(join(outputDir, 'types.mini.ts'), miniTypesContent);
-    await fs.writeFile(join(outputDir, 'schemas.ts'), schemasContent);
-    await fs.writeFile(join(outputDir, 'schemas.mini.ts'), miniSchemasContent);
+    // Use zod/mini as the default and only version
+    await fs.writeFile(join(outputDir, 'types.ts'), miniTypesContent);
+    await fs.writeFile(join(outputDir, 'schemas.ts'), miniSchemasContent);
     await fs.writeFile(join(outputDir, 'methods.ts'), methodMappingContent);
 
     console.log('✅ Type generation complete!');
     console.log('📁 Generated files:');
     console.log(
-      `  - packages/jsonrpc-types/src/types.ts (${typeExports.length} types)`
+      `  - packages/jsonrpc-types/src/types.ts (${typeExports.length} types - zod/mini)`
     );
     console.log(
-      `  - packages/jsonrpc-types/src/schemas.ts (${schemaExports.length} schemas)`
-    );
-    console.log(
-      `  - packages/jsonrpc-types/src/schemas.mini.ts (${schemaExports.length} schemas - zod/mini)`
+      `  - packages/jsonrpc-types/src/schemas.ts (${schemaExports.length} schemas - zod/mini)`
     );
     console.log(
       `  - packages/jsonrpc-types/src/methods.ts (${Object.keys(PATH_TO_METHOD_MAP).length} methods)`

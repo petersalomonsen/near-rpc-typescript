@@ -75,7 +75,7 @@ describe('Client Interface Generator', () => {
 
       // Verify file was created
       const generatedContent = await fs.readFile(outputPath, 'utf8');
-      expect(generatedContent).toContain("from '@near-js/jsonrpc-types/mini'");
+      expect(generatedContent).toContain("from '@near-js/jsonrpc-types'");
     });
 
     it('should handle all current RPC methods without errors', async () => {
@@ -313,7 +313,7 @@ describe('Client Interface Generator', () => {
       // Basic syntax validation
       expect(content).toMatch(/export interface \w+/);
       expect(content).toMatch(
-        /import type \{[\s\S]*\} from '@near-js\/jsonrpc-types\/mini'/
+        /import type \{[\s\S]*\} from '@near-js\/jsonrpc-types'/
       );
       expect(content).not.toContain('Promise<Promise<'); // No double promises
       expect(content).not.toContain('undefined'); // No undefined types
