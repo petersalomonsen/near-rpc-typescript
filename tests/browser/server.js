@@ -12,6 +12,9 @@ const mimeTypes = {
   '.mjs': 'text/javascript',
   '.css': 'text/css',
   '.json': 'application/json',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.ico': 'image/x-icon',
 };
 
 // Bundle paths - serve directly from dist folder
@@ -33,6 +36,19 @@ const BUNDLE_PATHS = {
     '../../packages/jsonrpc-client/dist/browser-standalone-mini.min.js'
   ),
 };
+
+// React app paths
+const REACT_APP_DIR = join(__dirname, '../../examples/react-mini-client/dist');
+
+async function serveStaticFiles(requestPath, res) {
+  // Check if this is a request for a static asset from React app
+  if (requestPath.startsWith('assets/')) {
+    const filePath = join(REACT_APP_DIR, requestPath);
+    await serveFile(filePath, res);
+    return true;
+  }
+  return false;
+}
 
 async function serveFile(filePath, res) {
   try {
@@ -80,9 +96,15 @@ const server = createServer(async (req, res) => {
     await serveFile(join(__dirname, 'index.html'), res);
   } else if (requestedFile === 'mini.html') {
     await serveFile(join(__dirname, 'mini.html'), res);
+  } else if (requestedFile === 'react' || requestedFile === 'react.html') {
+    // Serve React app
+    await serveFile(join(REACT_APP_DIR, 'index.html'), res);
   } else if (BUNDLE_PATHS[requestedFile]) {
     // Serve bundle files directly from dist folder
     await serveFile(BUNDLE_PATHS[requestedFile], res);
+  } else if (await serveStaticFiles(requestedFile, res)) {
+    // Static files were served by serveStaticFiles
+    return;
   } else {
     res.writeHead(404);
     res.end('Not Found');
@@ -91,6 +113,10 @@ const server = createServer(async (req, res) => {
 
 server.listen(PORT, () => {
   console.log(`Test server running at http://localhost:${PORT}`);
+  console.log('Available pages:');
+  console.log('  - / (regular client test page)');
+  console.log('  - /mini.html (mini client test page)');
+  console.log('  - /react (React mini client example)');
   console.log('Available bundles:');
   console.log('  - /browser-standalone.js (regular unminified)');
   console.log('  - /browser-standalone.min.js (regular minified)');
