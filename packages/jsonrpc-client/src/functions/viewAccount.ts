@@ -11,7 +11,7 @@ export async function viewAccount(
   }
 ) {
   // Construct query parameters: use blockId if provided, otherwise use finality (default 'final')
-  const queryParams = params.blockId 
+  const queryParams = params.blockId
     ? {
         requestType: 'view_account' as const,
         accountId: params.accountId,
@@ -20,8 +20,8 @@ export async function viewAccount(
     : {
         requestType: 'view_account' as const,
         accountId: params.accountId,
-        finality: params.finality || 'final' as const,
+        finality: params.finality || ('final' as const),
       };
-  
+
   return query(client, queryParams);
 }

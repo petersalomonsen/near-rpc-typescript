@@ -35,6 +35,10 @@ Both variants provide identical functionality with different API approaches.
 - **[javascript-esm/](javascript-esm/)** - ES6 module examples
 - **[javascript-cjs/](javascript-cjs/)** - CommonJS examples
 
+### React Examples
+
+- **[react-mini-client/](react-mini-client/)** - Complete React app with mini client and tree-shaking
+
 ### Browser Examples
 
 The browser examples are integrated into our test suite to ensure they remain working with every change:
@@ -61,6 +65,22 @@ pnpm tsx examples/typescript/mini-client-usage.ts
 
 # Run other TypeScript examples
 pnpm tsx examples/typescript/basic-usage.ts
+```
+
+### React Examples
+
+```bash
+# From the repository root:
+pnpm install
+
+# Navigate to React example
+cd examples/react-mini-client
+
+# Development mode
+pnpm dev
+
+# Production build
+pnpm build && pnpm preview
 ```
 
 ### Browser Examples (without Playwright)

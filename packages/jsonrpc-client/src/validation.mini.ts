@@ -3,7 +3,12 @@ import {
   JsonRpcRequestSchema,
   JsonRpcResponseSchema,
 } from '@near-js/jsonrpc-types/mini';
-import { JsonRpcRequest, JsonRpcResponse, JsonRpcClientError, JsonRpcNetworkError } from './client.mini.js';
+import {
+  JsonRpcRequest,
+  JsonRpcResponse,
+  JsonRpcClientError,
+  JsonRpcNetworkError,
+} from './client.mini.js';
 
 export interface ValidationResult {
   validateRequest: (request: JsonRpcRequest) => void;
@@ -30,7 +35,7 @@ export function enableValidation(): ValidationResult {
         );
       }
     },
-    
+
     validateResponse: (response: JsonRpcResponse) => {
       try {
         responseSchema.parse(response);
@@ -39,6 +44,6 @@ export function enableValidation(): ValidationResult {
           `Invalid response format: ${error instanceof Error ? error.message : 'Unknown error'}`
         );
       }
-    }
+    },
   };
 }

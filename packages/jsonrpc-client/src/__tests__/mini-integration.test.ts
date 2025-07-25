@@ -41,7 +41,7 @@ describe('Mini Integration Tests', () => {
 
   it('should validate all RPC methods are available in both versions', () => {
     const regularClient = new regular.NearRpcClient({ endpoint: testnetUrl });
-    
+
     // Check that all major RPC methods exist on both clients
     const rpcMethods = [
       'status',

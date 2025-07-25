@@ -2,7 +2,11 @@
 // This demonstrates optimal tree-shaking with minimal bundle size
 
 // Import from mini variant (now powered by individual schema files)
-import { status, defaultClient, NearRpcClient } from '@near-js/jsonrpc-client/mini';
+import {
+  status,
+  defaultClient,
+  NearRpcClient,
+} from '@near-js/jsonrpc-client/mini';
 
 // Use the default client
 const result = await status(defaultClient);
@@ -16,4 +20,3 @@ const customClient = new NearRpcClient({
 
 const testnetResult = await status(customClient);
 console.log('Testnet status result:', testnetResult);
-

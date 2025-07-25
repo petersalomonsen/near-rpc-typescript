@@ -1,5 +1,8 @@
 // send_tx individual function for tree-shaking
-import type { RpcSendTransactionRequest, RpcTransactionResponse } from '@near-js/jsonrpc-types/mini';
+import type {
+  RpcSendTransactionRequest,
+  RpcTransactionResponse,
+} from '@near-js/jsonrpc-types/mini';
 import type { NearRpcClient } from '../client.mini.js';
 
 export async function sendTx(

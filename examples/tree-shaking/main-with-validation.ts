@@ -1,12 +1,16 @@
 // Tree-shaking example with validation enabled
 // This will include Zod schemas in the bundle
 
-import { status, NearRpcClient, enableValidation } from '@near-js/jsonrpc-client/mini';
+import {
+  status,
+  NearRpcClient,
+  enableValidation,
+} from '@near-js/jsonrpc-client/mini';
 
 // Enable validation - this will include Zod schemas in the bundle
 const validation = enableValidation();
 
-// Create client with validation enabled  
+// Create client with validation enabled
 const validatedClient = new NearRpcClient({
   endpoint: 'https://rpc.mainnet.near.org',
   validation,

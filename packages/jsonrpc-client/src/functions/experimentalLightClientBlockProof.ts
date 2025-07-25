@@ -1,5 +1,8 @@
 // EXPERIMENTAL_light_client_block_proof individual function for tree-shaking
-import type { RpcLightClientBlockProofRequest, RpcLightClientBlockProofResponse } from '@near-js/jsonrpc-types/mini';
+import type {
+  RpcLightClientBlockProofRequest,
+  RpcLightClientBlockProofResponse,
+} from '@near-js/jsonrpc-types/mini';
 import type { NearRpcClient } from '../client.mini.js';
 
 export async function experimentalLightClientBlockProof(

@@ -19,10 +19,10 @@ export async function viewFunction(
     methodName: params.methodName,
     argsBase64: params.argsBase64 ?? '', // Default to empty string if no arguments
   };
-  
-  const queryParams = params.blockId 
+
+  const queryParams = params.blockId
     ? { ...baseParams, blockId: params.blockId }
-    : { ...baseParams, finality: params.finality || 'final' as const };
-  
+    : { ...baseParams, finality: params.finality || ('final' as const) };
+
   return query(client, queryParams);
 }

@@ -1,5 +1,8 @@
 // changes individual function for tree-shaking
-import type { RpcStateChangesInBlockByTypeRequest, RpcStateChangesInBlockResponse } from '@near-js/jsonrpc-types/mini';
+import type {
+  RpcStateChangesInBlockByTypeRequest,
+  RpcStateChangesInBlockResponse,
+} from '@near-js/jsonrpc-types/mini';
 import type { NearRpcClient } from '../client.mini.js';
 
 export async function changes(

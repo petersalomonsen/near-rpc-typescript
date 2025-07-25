@@ -33,9 +33,9 @@ describe('Mini Schemas Compatibility', () => {
     const regularResult = regular.JsonRpcRequestSchema.parse(
       testData.validJsonRpcRequest
     );
-    const miniResult = mini.JsonRpcRequestSchema().parse(
-      testData.validJsonRpcRequest
-    );
+    const miniResult = mini
+      .JsonRpcRequestSchema()
+      .parse(testData.validJsonRpcRequest);
 
     expect(regularResult).toEqual(miniResult);
   });

@@ -12,7 +12,7 @@ export async function viewAccessKey(
   }
 ) {
   // Construct query parameters: use blockId if provided, otherwise use finality (default 'final')
-  const queryParams = params.blockId 
+  const queryParams = params.blockId
     ? {
         requestType: 'view_access_key' as const,
         accountId: params.accountId,
@@ -23,8 +23,8 @@ export async function viewAccessKey(
         requestType: 'view_access_key' as const,
         accountId: params.accountId,
         publicKey: params.publicKey,
-        finality: params.finality || 'final' as const,
+        finality: params.finality || ('final' as const),
       };
-  
+
   return query(client, queryParams);
 }

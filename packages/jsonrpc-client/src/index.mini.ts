@@ -8,10 +8,10 @@ export * from './types';
 export { NearRpcClient, defaultClient } from './client.mini';
 
 // Export interfaces from generated types (but not the functions to avoid conflicts)
-export type { 
-  DynamicRpcMethods, 
-  ConvenienceMethods, 
-  CompleteClientInterface 
+export type {
+  DynamicRpcMethods,
+  ConvenienceMethods,
+  CompleteClientInterface,
 } from './generated-types';
 
 // Re-export commonly used types from the types package (mini version)

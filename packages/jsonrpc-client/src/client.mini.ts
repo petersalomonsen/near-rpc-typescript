@@ -130,7 +130,7 @@ export class NearRpcClient {
   ): Promise<TResult> {
     // Convert camelCase params to snake_case for the RPC call
     const snakeCaseParams = params ? convertKeysToSnakeCase(params) : params;
-    
+
     const request: JsonRpcRequest<TParams | undefined> = {
       jsonrpc: '2.0',
       id: crypto.randomUUID(),
@@ -143,9 +143,8 @@ export class NearRpcClient {
       this.validation.validateRequest(request);
     }
 
-
     let lastError: Error | null = null;
-    
+
     for (let attempt = 0; attempt <= this.retries; attempt++) {
       try {
         const controller = new AbortController();
@@ -188,27 +187,31 @@ export class NearRpcClient {
         const camelCaseResult = jsonResponse.result
           ? convertKeysToCamelCase(jsonResponse.result)
           : jsonResponse.result;
-        
+
         return camelCaseResult as TResult;
       } catch (error) {
         lastError = error as Error;
-        
+
         // Don't retry on client errors or validation errors
         if (error instanceof JsonRpcClientError) {
           throw error;
         }
-        
+
         // Don't retry if this is the last attempt
         if (attempt === this.retries) {
           break;
         }
-        
+
         // Wait before retrying (exponential backoff)
-        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+        await new Promise(resolve =>
+          setTimeout(resolve, Math.pow(2, attempt) * 1000)
+        );
       }
     }
 
-    throw lastError || new JsonRpcNetworkError('Request failed after all retries');
+    throw (
+      lastError || new JsonRpcNetworkError('Request failed after all retries')
+    );
   }
 
   /**
@@ -220,8 +223,11 @@ export class NearRpcClient {
       headers: config.headers ?? this.headers,
       timeout: config.timeout ?? this.timeout,
       retries: config.retries ?? this.retries,
-      ...(config.validation !== undefined ? { validation: config.validation } : 
-          this.validation !== undefined ? { validation: this.validation } : {}),
+      ...(config.validation !== undefined
+        ? { validation: config.validation }
+        : this.validation !== undefined
+          ? { validation: this.validation }
+          : {}),
     });
   }
 }

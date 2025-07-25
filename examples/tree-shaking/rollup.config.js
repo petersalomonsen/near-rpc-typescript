@@ -9,14 +9,14 @@ export default {
   },
   plugins: [
     nodeResolve({
-      preferBuiltins: false
+      preferBuiltins: false,
     }),
     typescript({
-      tsconfig: './tsconfig.json'
-    })
+      tsconfig: './tsconfig.json',
+    }),
   ],
   treeshake: {
-    moduleSideEffects: false
+    moduleSideEffects: false,
   },
-  external: [] // Bundle everything to see the tree-shaking effect
+  external: [], // Bundle everything to see the tree-shaking effect
 };
