@@ -30,7 +30,7 @@ export {
   sendTx,
   status,
   tx,
-  validators
+  validators,
 } from './generated-types';
 
 // Re-export convenience functions

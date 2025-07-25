@@ -686,7 +686,7 @@ export { viewAccount, viewFunction, viewAccessKey } from './convenience';
   return {
     content: staticFunctionsContent,
     methodCount: mappings.length,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 }
 
