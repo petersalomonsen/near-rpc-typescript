@@ -1,6 +1,8 @@
 // Integration tests for the complete RPC client workflow
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { NearRpcClient } from '../client';
+import { block, status, gasPrice, tx, health, networkInfo } from '../generated-types';
+import { viewAccount } from '../convenience';
 
 // Mock fetch for integration testing
 const mockFetch = vi.fn();
@@ -83,7 +85,7 @@ describe('Integration Tests', () => {
         json: async () => mockBlockResponse,
       });
 
-      const result = await client.block({ finality: 'final' });
+      const result = await block(client({ finality: 'final' });
 
       // Verify the request was made correctly
       expect(mockFetch).toHaveBeenCalledWith(
@@ -159,7 +161,7 @@ describe('Integration Tests', () => {
         json: async () => mockAccountResponse,
       });
 
-      const result = await client.viewAccount({
+      const result = await viewAccount(client({
         accountId: 'test.testnet',
         finality: 'final',
       });
@@ -251,7 +253,7 @@ describe('Integration Tests', () => {
         json: async () => mockComplexResponse,
       });
 
-      const result = await client.tx({
+      const result = await tx(client({
         txHash: '22222222222222222222222222222222',
         senderAccountId: 'test.testnet',
       });
@@ -317,7 +319,7 @@ describe('Integration Tests', () => {
         json: async () => mockErrorResponse,
       });
 
-      await expect(client.block({ blockId: 'invalid-hash' })).rejects.toThrow(
+      await expect(block(client({ blockId: 'invalid-hash' })).rejects.toThrow(
         'Server error'
       );
     });
@@ -336,7 +338,7 @@ describe('Integration Tests', () => {
           }),
         });
 
-      const result = await client.status();
+      const result = await status(client();
 
       // Should have retried and eventually succeeded
       expect(mockFetch).toHaveBeenCalledTimes(3);
@@ -352,9 +354,9 @@ describe('Integration Tests', () => {
       });
 
       // Test sequential calls
-      await client.status();
-      await client.block({ finality: 'final' });
-      await client.gasPrice();
+      await status(client();
+      await block(client({ finality: 'final' });
+      await gasPrice(client();
 
       expect(mockFetch).toHaveBeenCalledTimes(3);
     });
@@ -367,10 +369,10 @@ describe('Integration Tests', () => {
 
       // Test concurrent calls
       const promises = [
-        client.status(),
-        client.health(),
-        client.networkInfo(),
-        client.gasPrice(),
+        status(client(),
+        health(client(),
+        networkInfo(client(),
+        gasPrice(client(),
       ];
 
       await Promise.all(promises);
@@ -395,7 +397,7 @@ describe('Integration Tests', () => {
         json: async () => ({ jsonrpc: '2.0', id: '1', result: {} }),
       });
 
-      await customClient.status();
+      await status(customClient();
 
       expect(mockFetch).toHaveBeenCalledWith(
         'https://custom-rpc.example.com',

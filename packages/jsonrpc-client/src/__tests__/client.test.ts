@@ -6,7 +6,7 @@ import {
   JsonRpcNetworkError,
   type ClientConfig,
 } from '../client';
-import { status, block, query, validators, gasPrice, health, networkInfo } from '../generated-types';
+import { status, block, query, validators, gasPrice, health, networkInfo, experimentalProtocolConfig, experimentalGenesisConfig, experimentalReceipt, experimentalTxStatus, experimentalChangesInBlock, experimentalValidatorsOrdered, experimentalChanges } from '../generated-types';
 import { viewAccount } from '../convenience';
 
 vi.setConfig({ testTimeout: 30000 });
@@ -173,7 +173,7 @@ describe('NearRpcClient', () => {
         validateResponses: false,
       });
 
-      const result = await client.status();
+      const result = await status(client);
       expect(result).toHaveProperty('chainId');
     });
   });
@@ -182,7 +182,7 @@ describe('NearRpcClient', () => {
     const client = new NearRpcClient('https://rpc.mainnet.fastnear.com');
 
     it('should transform snake_case response to camelCase', async () => {
-      const result = await client.status();
+      const result = await status(client);
       expect(result).toHaveProperty('chainId');
       expect(result).not.toHaveProperty('chain_id');
     });
@@ -193,8 +193,8 @@ describe('NearRpcClient', () => {
         ok: true,
         json: async () => ({ jsonrpc: '2.0', id: 'dontcare', result: {} }),
       } as Response);
-      await client.status();
-      await client.health();
+      await status(client);
+      await health(client);
 
       const call1Body = JSON.parse(fetchSpy.mock.calls[0][1].body);
       const call2Body = JSON.parse(fetchSpy.mock.calls[1][1].body);
@@ -211,14 +211,14 @@ describe('NearRpcClient', () => {
     );
 
     it('should call experimental protocol config method', async () => {
-      const result = await client.experimentalProtocolConfig({
+      const result = await experimentalProtocolConfig(client({
         finality: 'final',
       });
       expect(result).toHaveProperty('chainId');
     });
 
     it('should call experimental genesis config method', async () => {
-      const result = await archivalClient.experimentalGenesisConfig();
+      const result = await experimentalGenesisConfig(archivalClient);
       expect(result).toHaveProperty('chainId');
       expect(result).toHaveProperty('genesisHeight');
     });
@@ -226,7 +226,7 @@ describe('NearRpcClient', () => {
     it('should call experimental receipt method with real receipt', async () => {
       const receiptId = '21RBsYGnt6qQwGCdLdzeSHQdfgjrHY9p1oEuzQWmXf5k';
 
-      const result = await archivalClient.experimentalReceipt({ receiptId });
+      const result = await experimentalReceipt(archivalClient({ receiptId });
       expect(result).toBeDefined();
       expect(result).toHaveProperty('receiptId', receiptId);
       expect(result).toHaveProperty('receiverId', 'twelvetone.near');
@@ -243,7 +243,7 @@ describe('NearRpcClient', () => {
       const senderAccountId =
         '5d3b3ff8c39dea6b9016cfac3902a2907f41fee7146cda2e7600703ef22cf5ec';
 
-      const result = await archivalClient.experimentalTxStatus({
+      const result = await experimentalTxStatus(archivalClient({
         txHash,
         senderAccountId,
       });
@@ -262,7 +262,7 @@ describe('NearRpcClient', () => {
       const archivalClient = new NearRpcClient(
         'https://archival-rpc.mainnet.fastnear.com'
       );
-      const result = await archivalClient.experimentalChangesInBlock({
+      const result = await experimentalChangesInBlock(archivalClient({
         blockId: 62899098,
       });
       expect(result).toBeDefined();
@@ -288,7 +288,7 @@ describe('NearRpcClient', () => {
       const archivalClient = new NearRpcClient(
         'https://archival-rpc.mainnet.fastnear.com'
       );
-      const result = await archivalClient.experimentalValidatorsOrdered({
+      const result = await experimentalValidatorsOrdered(archivalClient({
         blockId: '9ZEqsVLykxUr8XMhzGrxf49PgCEKscqYtsbEJoqXb5rH',
       });
       expect(result).toBeDefined();
@@ -306,7 +306,7 @@ describe('NearRpcClient', () => {
       const archivalClient = new NearRpcClient(
         'https://archival-rpc.mainnet.fastnear.com'
       );
-      const result = await archivalClient.experimentalChanges({
+      const result = await experimentalChanges(archivalClient({
         changesType: 'account_changes',
         accountIds: ['aurora'],
         blockId: 62899098,
