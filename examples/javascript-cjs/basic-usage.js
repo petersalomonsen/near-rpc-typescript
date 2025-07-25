@@ -7,7 +7,11 @@
  * 3. Run `node examples/javascript-cjs/basic-usage.js` from the root of the repository.
  */
 
-const { NearRpcClient, block, viewAccount } = require('@near-js/jsonrpc-client');
+const {
+  NearRpcClient,
+  block,
+  viewAccount,
+} = require('@near-js/jsonrpc-client');
 
 async function runExample() {
   const client = new NearRpcClient({
@@ -29,7 +33,10 @@ async function runExample() {
   // Use a recent block height from the result above for a valid query
   const specificBlockHeight = latestBlock.header.height - 100;
   const specificBlock = await block(client, { blockId: specificBlockHeight });
-  console.log(`Block at height ${specificBlockHeight}:`, specificBlock.header.hash);
+  console.log(
+    `Block at height ${specificBlockHeight}:`,
+    specificBlock.header.hash
+  );
 }
 
 runExample().catch(console.error);

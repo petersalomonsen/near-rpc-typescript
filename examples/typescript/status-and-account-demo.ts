@@ -7,7 +7,14 @@
  * 3. Run `pnpm tsx examples/typescript/status-and-account-demo.ts` from the root of the repository.
  */
 
-import { NearRpcClient, status, block, gasPrice, health, viewAccount } from '@near-js/jsonrpc-client';
+import {
+  NearRpcClient,
+  status,
+  block,
+  gasPrice,
+  health,
+  viewAccount,
+} from '@near-js/jsonrpc-client';
 
 async function testClient() {
   console.log('🚀 Testing NEAR RPC Client...\n');

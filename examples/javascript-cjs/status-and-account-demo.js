@@ -7,7 +7,14 @@
  * 3. Run `node examples/javascript-cjs/status-and-account-demo.js` from the root of the repository.
  */
 
-const { NearRpcClient, status, block, gasPrice, health, viewAccount } = require('@near-js/jsonrpc-client');
+const {
+  NearRpcClient,
+  status,
+  block,
+  gasPrice,
+  health,
+  viewAccount,
+} = require('@near-js/jsonrpc-client');
 
 async function testClient() {
   console.log('🚀 Testing NEAR RPC Client...\n');

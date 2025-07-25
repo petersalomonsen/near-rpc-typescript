@@ -1,7 +1,14 @@
 // Integration tests for the complete RPC client workflow
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { NearRpcClient } from '../client';
-import { block, status, gasPrice, tx, health, networkInfo } from '../generated-types';
+import {
+  block,
+  status,
+  gasPrice,
+  tx,
+  health,
+  networkInfo,
+} from '../generated-types';
 import { viewAccount } from '../convenience';
 
 // Mock fetch for integration testing

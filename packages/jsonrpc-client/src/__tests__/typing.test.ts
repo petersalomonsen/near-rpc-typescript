@@ -3,7 +3,13 @@
 
 import { describe, it, expect } from 'vitest';
 import { NearRpcClient } from '../client.js';
-import { block, health, experimentalGenesisConfig, query, broadcastTxAsync } from '../generated-types';
+import {
+  block,
+  health,
+  experimentalGenesisConfig,
+  query,
+  broadcastTxAsync,
+} from '../generated-types';
 import type {
   RpcBlockRequest,
   RpcBlockResponse,
@@ -39,8 +45,10 @@ describe('Client Type Safety', () => {
       expect(blockPromiseOptional).toBeInstanceOf(Promise);
 
       // Type assertion to verify return type
-      const _blockResult: Promise<RpcBlockResponse> =
-        block(client, validBlockRequest);
+      const _blockResult: Promise<RpcBlockResponse> = block(
+        client,
+        validBlockRequest
+      );
     });
 
     it('should have properly typed health method', () => {
@@ -56,8 +64,10 @@ describe('Client Type Safety', () => {
     it('should have properly typed experimental methods', () => {
       const validGenesisRequest: GenesisConfigRequest = null;
 
-      const genesisPromise =
-        experimentalGenesisConfig(client, validGenesisRequest);
+      const genesisPromise = experimentalGenesisConfig(
+        client,
+        validGenesisRequest
+      );
       expect(genesisPromise).toBeInstanceOf(Promise);
 
       // Type assertion to verify return type
@@ -75,8 +85,10 @@ describe('Client Type Safety', () => {
       expect(asyncPromise).toBeInstanceOf(Promise);
 
       // Type assertion to verify specific return type
-      const _asyncResult: Promise<CryptoHash> =
-        broadcastTxAsync(client, validTxRequest);
+      const _asyncResult: Promise<CryptoHash> = broadcastTxAsync(
+        client,
+        validTxRequest
+      );
     });
   });
 

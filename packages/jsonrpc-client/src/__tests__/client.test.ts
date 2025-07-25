@@ -6,7 +6,22 @@ import {
   JsonRpcNetworkError,
   type ClientConfig,
 } from '../client';
-import { status, block, query, validators, gasPrice, health, networkInfo, experimentalProtocolConfig, experimentalGenesisConfig, experimentalReceipt, experimentalTxStatus, experimentalChangesInBlock, experimentalValidatorsOrdered, experimentalChanges } from '../generated-types';
+import {
+  status,
+  block,
+  query,
+  validators,
+  gasPrice,
+  health,
+  networkInfo,
+  experimentalProtocolConfig,
+  experimentalGenesisConfig,
+  experimentalReceipt,
+  experimentalTxStatus,
+  experimentalChangesInBlock,
+  experimentalValidatorsOrdered,
+  experimentalChanges,
+} from '../generated-types';
 import { viewAccount } from '../convenience';
 
 vi.setConfig({ testTimeout: 30000 });
@@ -39,7 +54,9 @@ describe('NearRpcClient', () => {
   });
 
   describe('live RPC method calls', () => {
-    const client = new NearRpcClient({ endpoint: 'https://rpc.mainnet.fastnear.com' });
+    const client = new NearRpcClient({
+      endpoint: 'https://rpc.mainnet.fastnear.com',
+    });
 
     it('should make status call', async () => {
       const result = await status(client);
@@ -95,7 +112,7 @@ describe('NearRpcClient', () => {
         endpoint: 'https://rpc.mainnet.near.org',
         retries: 0,
       });
-      
+
       // Mock a JSON-RPC error response (not HTTP error)
       const fetchSpy = vi.spyOn(global, 'fetch');
       fetchSpy.mockResolvedValue({
@@ -106,11 +123,11 @@ describe('NearRpcClient', () => {
           error: {
             code: -32601,
             message: 'Method not found',
-            data: null
-          }
+            data: null,
+          },
         }),
       } as Response);
-      
+
       await expect(client.makeRequest('non_existent_method')).rejects.toThrow(
         JsonRpcClientError
       );

@@ -29,4 +29,7 @@ console.log('\nGetting a specific block...');
 // Use a recent block height from the result above for a valid query
 const specificBlockHeight = latestBlock.header.height - 100;
 const specificBlock = await block(client, { blockId: specificBlockHeight });
-console.log(`Block at height ${specificBlockHeight}:`, specificBlock.header.hash);
+console.log(
+  `Block at height ${specificBlockHeight}:`,
+  specificBlock.header.hash
+);

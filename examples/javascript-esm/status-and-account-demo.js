@@ -7,7 +7,14 @@
  * 3. Run `node examples/javascript-esm/status-and-account-demo.js` from the root of the repository.
  */
 
-import { NearRpcClient, status, block, gasPrice, health, viewAccount } from '@near-js/jsonrpc-client';
+import {
+  NearRpcClient,
+  status,
+  block,
+  gasPrice,
+  health,
+  viewAccount,
+} from '@near-js/jsonrpc-client';
 
 console.log('🚀 Testing NEAR RPC Client...\n');
 
@@ -21,7 +28,9 @@ try {
   // Test 1: Get node status
   console.log('\n📊 Testing status() method...');
   const statusResult = await status(client);
-  console.log(`✅ Node status: ${statusResult.chainId} (${statusResult.version?.version})`);
+  console.log(
+    `✅ Node status: ${statusResult.chainId} (${statusResult.version?.version})`
+  );
   console.log(`   Block height: ${statusResult.syncInfo?.latestBlockHeight}`);
 
   // Test 2: Get latest block
@@ -38,7 +47,9 @@ try {
   // Test 4: Test health endpoint
   console.log('\n🏥 Testing health() method...');
   const healthResult = await health(client);
-  console.log(`✅ Health check: ${healthResult === null ? 'OK' : 'Issues detected'}`);
+  console.log(
+    `✅ Health check: ${healthResult === null ? 'OK' : 'Issues detected'}`
+  );
 
   // Test 5: Test a view account call
   console.log('\n👤 Testing viewAccount() method...');
