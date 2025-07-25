@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-types-v0.4.0...jsonrpc-types-v0.5.0) (2025-07-25)
+
+
+### Features
+
+* implement mini client with tree-shaking optimization and comprehensive examples ([#31](https://github.com/petersalomonsen/near-rpc-typescript/issues/31)) ([7d7b16d](https://github.com/petersalomonsen/near-rpc-typescript/commit/7d7b16d429b3174d5831f5d27ac3c59b56370b03))
+
+
+### Bug Fixes
+
+* resolve module import issues and improve union type handling ([#27](https://github.com/petersalomonsen/near-rpc-typescript/issues/27)) ([027796f](https://github.com/petersalomonsen/near-rpc-typescript/commit/027796fff410e38211c1b1a1b56375bdc6cb8c33))
+
 ## [0.4.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-types-v0.3.0...jsonrpc-types-v0.4.0) (2025-07-21)
 
 
