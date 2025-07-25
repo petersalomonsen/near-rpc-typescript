@@ -3,6 +3,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { NearRpcClient } from '../client.js';
+import { block, health, experimentalGenesisConfig, query, broadcastTxAsync } from '../generated-types';
 import type {
   RpcBlockRequest,
   RpcBlockResponse,
@@ -17,7 +18,7 @@ describe('Client Type Safety', () => {
   let client: NearRpcClient;
 
   beforeEach(() => {
-    client = new NearRpcClient('https://rpc.testnet.near.org');
+    client = new NearRpcClient({ endpoint: 'https://rpc.testnet.near.org' });
   });
 
   describe('Method Parameter Types', () => {
@@ -30,38 +31,38 @@ describe('Client Type Safety', () => {
       };
 
       // Should compile without errors
-      const blockPromise = client.block(validBlockRequest);
+      const blockPromise = block(client, validBlockRequest);
       expect(blockPromise).toBeInstanceOf(Promise);
 
       // Optional parameters should work
-      const blockPromiseOptional = client.block();
+      const blockPromiseOptional = block(client);
       expect(blockPromiseOptional).toBeInstanceOf(Promise);
 
       // Type assertion to verify return type
       const _blockResult: Promise<RpcBlockResponse> =
-        client.block(validBlockRequest);
+        block(client, validBlockRequest);
     });
 
     it('should have properly typed health method', () => {
       const validHealthRequest: RpcHealthRequest = {};
 
-      const healthPromise = client.health(validHealthRequest);
+      const healthPromise = health(client, validHealthRequest);
       expect(healthPromise).toBeInstanceOf(Promise);
 
       // Type assertion to verify return type
-      const _healthResult: Promise<RpcHealthResponse> = client.health();
+      const _healthResult: Promise<RpcHealthResponse> = health(client);
     });
 
     it('should have properly typed experimental methods', () => {
       const validGenesisRequest: GenesisConfigRequest = null;
 
       const genesisPromise =
-        client.experimentalGenesisConfig(validGenesisRequest);
+        experimentalGenesisConfig(client, validGenesisRequest);
       expect(genesisPromise).toBeInstanceOf(Promise);
 
       // Type assertion to verify return type
       const _genesisResult: Promise<GenesisConfig> =
-        client.experimentalGenesisConfig();
+        experimentalGenesisConfig(client);
     });
 
     it('should have properly typed broadcast methods with specific return types', () => {
@@ -70,75 +71,46 @@ describe('Client Type Safety', () => {
       };
 
       // broadcastTxAsync should return CryptoHash, not generic response
-      const asyncPromise = client.broadcastTxAsync(validTxRequest);
+      const asyncPromise = broadcastTxAsync(client, validTxRequest);
       expect(asyncPromise).toBeInstanceOf(Promise);
 
       // Type assertion to verify specific return type
       const _asyncResult: Promise<CryptoHash> =
-        client.broadcastTxAsync(validTxRequest);
+        broadcastTxAsync(client, validTxRequest);
     });
   });
 
-  describe('Dynamic Method Generation', () => {
-    it('should have all RPC methods available on client instance', () => {
-      // Verify that all expected methods exist on the client
-      const methodNames = [
-        'block',
-        'health',
-        'status',
-        'broadcastTxAsync',
-        'broadcastTxCommit',
-        'query',
-        'gasPrice',
-        'validators',
-        'chunk',
-        'networkInfo',
-        'experimentalGenesisConfig',
-        'experimentalProtocolConfig',
-      ];
-
-      for (const methodName of methodNames) {
-        expect(typeof (client as any)[methodName]).toBe('function');
-      }
+  describe('Static Function Exports', () => {
+    it('should export all RPC methods as static functions', () => {
+      // Verify that all expected static functions are exported
+      expect(typeof block).toBe('function');
+      expect(typeof health).toBe('function');
+      expect(typeof broadcastTxAsync).toBe('function');
+      expect(typeof query).toBe('function');
+      expect(typeof experimentalGenesisConfig).toBe('function');
     });
 
-    it('should handle camelCase conversion correctly', () => {
-      // Test that snake_case RPC methods become camelCase client methods
-      expect(typeof client.gasPrice).toBe('function'); // gas_price -> gasPrice
-      expect(typeof client.networkInfo).toBe('function'); // network_info -> networkInfo
-      expect(typeof client.broadcastTxAsync).toBe('function'); // broadcast_tx_async -> broadcastTxAsync
+    it('should have makeRequest method on client for generic calls', () => {
+      expect(typeof client.makeRequest).toBe('function');
 
-      // EXPERIMENTAL methods
-      expect(typeof client.experimentalGenesisConfig).toBe('function'); // EXPERIMENTAL_genesis_config -> experimentalGenesisConfig
-    });
-
-    it('should preserve generic call method for flexibility', () => {
-      expect(typeof client.call).toBe('function');
-
-      // Should be able to call any method via generic call
-      const genericCall = client.call('block', { blockId: 'latest' });
+      // Should be able to call any method via generic makeRequest
+      const genericCall = client.makeRequest('block', { blockId: 'latest' });
       expect(genericCall).toBeInstanceOf(Promise);
     });
   });
 
-  describe('Type Evolution Simulation', () => {
-    it('should handle new methods being added', () => {
-      // Simulate what happens when new methods are added to RPC_METHODS
-      // This test ensures our dynamic generation approach is future-proof
-
-      // Mock a new method being added (this simulates the generator working)
-      const mockNewMethod = 'hypotheticalNewMethod';
-
-      // If RPC_METHODS contained this, our dynamic generation should handle it
-      // We can't actually test this without modifying RPC_METHODS, but we can
-      // verify the mechanism works by checking the prototype modification
-
+  describe('Client Architecture', () => {
+    it('should use static functions instead of instance methods', () => {
+      // The new architecture uses static functions for RPC methods
+      // Client only has core methods like makeRequest
       const clientProto = Object.getPrototypeOf(client);
       const existingMethods = Object.getOwnPropertyNames(clientProto);
 
-      // Should have core methods plus dynamic ones
-      expect(existingMethods).toContain('call');
-      expect(existingMethods.length).toBeGreaterThan(5); // Should have many dynamic methods
+      // Should have core methods but not dynamic RPC methods
+      expect(existingMethods).toContain('makeRequest');
+      expect(existingMethods).toContain('withConfig');
+      expect(existingMethods).not.toContain('block');
+      expect(existingMethods).not.toContain('status');
     });
   });
 
@@ -164,7 +136,7 @@ describe('Client Type Safety', () => {
       });
 
       try {
-        const blockResult = await client.block();
+        const blockResult = await block(client);
 
         // TypeScript should infer this as RpcBlockResponse
         expect(blockResult).toBeDefined();
@@ -190,17 +162,17 @@ describe('Client Type Safety', () => {
       // These would cause TypeScript compilation errors if types are wrong:
 
       // ✅ Valid usage
-      client.block({ blockId: 'latest' });
-      client.block({ blockId: 12345 });
-      client.query({
+      block(client, { blockId: 'latest' });
+      block(client, { blockId: 12345 });
+      query(client, {
         requestType: 'view_account',
         accountId: 'test.near',
       });
 
       // ❌ These should cause TypeScript errors if uncommented:
-      // client.block({ invalidProperty: 'test' });
-      // client.query({ requestType: 'invalid_type' });
-      // client.broadcastTxAsync({ wrongParam: 'test' });
+      // block(client, { invalidProperty: 'test' });
+      // query(client, { requestType: 'invalid_type' });
+      // broadcastTxAsync(client, { wrongParam: 'test' });
 
       expect(true).toBe(true); // Test passes if TypeScript compilation succeeds
     });

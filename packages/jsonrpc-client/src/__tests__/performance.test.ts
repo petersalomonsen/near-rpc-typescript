@@ -1,6 +1,8 @@
 // Performance tests for Zod validation overhead
 import { describe, it, expect, vi } from 'vitest';
 import { NearRpcClient } from '../client';
+import { block } from '../generated-types';
+import { enableValidation } from '../validation';
 import {
   JsonRpcRequestSchema,
   JsonRpcResponseSchema,
@@ -258,22 +260,22 @@ describe('Zod Validation Performance Tests', () => {
 
       vi.stubGlobal('fetch', mockFetch);
 
+      const validation = enableValidation();
       const clientWithValidation = new NearRpcClient({
         endpoint: 'https://test.near.org',
-        validateResponses: true,
+        validation,
       });
 
       const clientWithoutValidation = new NearRpcClient({
         endpoint: 'https://test.near.org',
-        validateResponses: false,
       });
 
       const withValidationResults = await benchmark.measure(async () => {
-        await clientWithValidation.block();
+        await block(clientWithValidation);
       }, 100);
 
       const withoutValidationResults = await benchmark.measure(async () => {
-        await clientWithoutValidation.block();
+        await block(clientWithoutValidation);
       }, 100);
 
       console.log('With validation:', withValidationResults);
@@ -295,19 +297,19 @@ describe('Zod Validation Performance Tests', () => {
 
       vi.stubGlobal('fetch', mockFetch);
 
+      const validation = enableValidation();
       const clientWithValidation = new NearRpcClient({
         endpoint: 'https://test.near.org',
-        validateResponses: true,
+        validation,
       });
 
       const clientWithoutValidation = new NearRpcClient({
         endpoint: 'https://test.near.org',
-        validateResponses: false,
       });
 
       const [validatedResponse, nonValidatedResponse] = await Promise.all([
-        clientWithValidation.block(),
-        clientWithoutValidation.block(),
+        block(clientWithValidation),
+        block(clientWithoutValidation),
       ]);
 
       // Verify both responses contain actual content
@@ -333,12 +335,13 @@ describe('Zod Validation Performance Tests', () => {
 
       vi.stubGlobal('fetch', mockFetch);
 
+      const validation = enableValidation();
       const clientWithValidation = new NearRpcClient({
         endpoint: 'https://test.near.org',
-        validateResponses: true,
+        validation,
       });
 
-      const response = await clientWithValidation.block();
+      const response = await block(clientWithValidation);
 
       // Verify complex nested structure is preserved (note: camelCase conversion)
       expect(response.chunks).toHaveLength(10);

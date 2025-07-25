@@ -6,6 +6,8 @@ import {
   JsonRpcNetworkError,
   type ClientConfig,
 } from '../client';
+import { status, block, query, validators, gasPrice, health, networkInfo } from '../generated-types';
+import { viewAccount } from '../convenience';
 
 vi.setConfig({ testTimeout: 30000 });
 
@@ -30,7 +32,6 @@ describe('NearRpcClient', () => {
         timeout: 10000,
         retries: 3,
         headers: { 'Custom-Header': 'value' },
-        validateResponses: false,
       };
       const configClient = new NearRpcClient(config);
       expect(configClient).toBeInstanceOf(NearRpcClient);
@@ -38,20 +39,20 @@ describe('NearRpcClient', () => {
   });
 
   describe('live RPC method calls', () => {
-    const client = new NearRpcClient('https://rpc.mainnet.fastnear.com');
+    const client = new NearRpcClient({ endpoint: 'https://rpc.mainnet.fastnear.com' });
 
     it('should make status call', async () => {
-      const result = await client.status();
+      const result = await status(client);
       expect(result).toHaveProperty('chainId');
     });
 
     it('should make block call with params', async () => {
-      const result = await client.block({ finality: 'final' });
+      const result = await block(client, { finality: 'final' });
       expect(result).toHaveProperty('header');
     });
 
     it('should make query call with camelCase conversion', async () => {
-      const result = await client.query({
+      const result = await query(client, {
         requestType: 'view_account',
         accountId: 'near.near',
         finality: 'final',
@@ -60,27 +61,27 @@ describe('NearRpcClient', () => {
     });
 
     it('should make validators call', async () => {
-      const result = await client.validators('latest');
+      const result = await validators(client, 'latest');
       expect(result).toHaveProperty('currentValidators');
     });
 
     it('should make gasPrice call', async () => {
-      const result = await client.gasPrice([null]);
+      const result = await gasPrice(client, [null]);
       expect(result).toHaveProperty('gasPrice');
     });
 
     it('should make health call', async () => {
-      const result = await client.health();
+      const result = await health(client);
       expect(result).toBeNull();
     });
 
     it('should make networkInfo call', async () => {
-      const result = await client.networkInfo();
+      const result = await networkInfo(client);
       expect(result).toHaveProperty('numActivePeers');
     });
 
     it('should make viewAccount call', async () => {
-      const result = await client.viewAccount({
+      const result = await viewAccount(client, {
         accountId: 'near.near',
         finality: 'final',
       });
@@ -94,8 +95,7 @@ describe('NearRpcClient', () => {
         endpoint: 'https://rpc.mainnet.near.org',
         retries: 0,
       });
-      // @ts-expect-error - testing a method that does not exist
-      await expect(client.call('non_existent_method')).rejects.toThrow(
+      await expect(client.makeRequest('non_existent_method')).rejects.toThrow(
         JsonRpcClientError
       );
     });
@@ -108,7 +108,7 @@ describe('NearRpcClient', () => {
       const fetchSpy = vi.spyOn(global, 'fetch');
       fetchSpy.mockRejectedValue(new Error('Network error'));
 
-      await expect(client.status()).rejects.toThrow(JsonRpcNetworkError);
+      await expect(status(client)).rejects.toThrow(JsonRpcNetworkError);
     });
 
     it('should handle HTTP error responses', async () => {
@@ -123,7 +123,7 @@ describe('NearRpcClient', () => {
         statusText: 'Internal Server Error',
       } as Response);
 
-      await expect(client.status()).rejects.toThrow(JsonRpcNetworkError);
+      await expect(status(client)).rejects.toThrow(JsonRpcNetworkError);
     });
 
     it('should handle invalid JSON responses', async () => {
@@ -139,7 +139,7 @@ describe('NearRpcClient', () => {
         },
       } as Response);
 
-      await expect(client.status()).rejects.toThrow(JsonRpcNetworkError);
+      await expect(status(client)).rejects.toThrow(JsonRpcNetworkError);
     });
   });
 
@@ -155,7 +155,7 @@ describe('NearRpcClient', () => {
         ok: true,
         json: async () => ({ jsonrpc: '2.0', id: '1', result: {} }),
       } as Response);
-      await client.status();
+      await status(client);
 
       expect(fetchSpy).toHaveBeenCalledWith(
         'https://rpc.mainnet.fastnear.com',

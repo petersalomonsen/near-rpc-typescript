@@ -99,10 +99,10 @@ describe('Developer Experience Scenarios', () => {
     languageService = ts.createLanguageService(host, ts.createDocumentRegistry());
   });
 
-  it('should show RPC methods after client instantiation', () => {
+  it('should show client methods and static functions are available', () => {
     const testFile = 'test-basic-completion.ts';
     const content = `
-import { NearRpcClient } from '@near-js/jsonrpc-client';
+import { NearRpcClient, block, status, query } from '@near-js/jsonrpc-client';
 
 const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.near.org' });
 client.`;
@@ -116,30 +116,18 @@ client.`;
     
     const methodNames = completions.entries.map(entry => entry.name);
     
-    // Should include RPC methods
-    expect(methodNames).toContain('block');
-    expect(methodNames).toContain('status');
-    expect(methodNames).toContain('query');
-    expect(methodNames).toContain('tx');
-    expect(methodNames).toContain('chunk');
-    expect(methodNames).toContain('validators');
-    
-    // Should include convenience methods
-    expect(methodNames).toContain('viewAccount');
-    expect(methodNames).toContain('viewFunction');
-    expect(methodNames).toContain('viewAccessKey');
-    
-    // Should include generic call method
-    expect(methodNames).toContain('call');
+    // Should include client core methods but not RPC methods
+    expect(methodNames).toContain('makeRequest');
+    expect(methodNames).toContain('withConfig');
   });
 
-  it('should provide hover information for RPC methods', () => {
+  it('should provide hover information for static RPC functions', () => {
     const testFile = 'test-hover.ts';
     const content = `
-import { NearRpcClient } from '@near-js/jsonrpc-client';
+import { NearRpcClient, block } from '@near-js/jsonrpc-client';
 
 const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.near.org' });
-client.block`;
+block`;
     
     updateFile(testFile, content);
     
@@ -156,13 +144,13 @@ client.block`;
     expect(typeInfo).toMatch(/block.*Promise/);
   });
 
-  it('should show parameter information for RPC methods', () => {
+  it('should show parameter information for static RPC functions', () => {
     const testFile = 'test-parameters.ts';
     const content = `
-import { NearRpcClient } from '@near-js/jsonrpc-client';
+import { NearRpcClient, viewAccount } from '@near-js/jsonrpc-client';
 
 const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.near.org' });
-client.viewAccount({
+viewAccount(client, {
   accountId: "example.near",
   `;
     
@@ -184,11 +172,11 @@ client.viewAccount({
   it('should provide error diagnostics for incorrect usage', () => {
     const testFile = 'test-diagnostics.ts';
     const content = `
-import { NearRpcClient } from '@near-js/jsonrpc-client';
+import { NearRpcClient, viewAccount } from '@near-js/jsonrpc-client';
 
 const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.near.org' });
 // This should cause a type error - wrong parameter type
-client.viewAccount({ accountId: 123 });`;
+viewAccount(client, { accountId: 123 });`;
     
     updateFile(testFile, content);
     
@@ -209,10 +197,10 @@ client.viewAccount({ accountId: 123 });`;
   it('should show completions for chained method calls', () => {
     const testFile = 'test-chaining.ts';
     const content = `
-import { NearRpcClient } from '@near-js/jsonrpc-client';
+import { NearRpcClient, status } from '@near-js/jsonrpc-client';
 
 const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.near.org' });
-client.status().then(result => result.`;
+status(client).then(result => result.`;
     
     updateFile(testFile, content);
     

@@ -24,7 +24,7 @@ describe('TypeScript IntelliSense', () => {
     
     // Create test content
     const testContent = `
-import { NearRpcClient } from '@near-js/jsonrpc-client';
+import { NearRpcClient, block, status, query } from '@near-js/jsonrpc-client';
 
 const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.near.org' });
 
@@ -137,15 +137,16 @@ client.`;
     expect(completions).toBeDefined();
     expect(completions.entries).toBeDefined();
     
-    // Check for some expected RPC methods
+    // Check for expected client methods
     const methodNames = completions.entries.map(entry => entry.name);
     
-    // Should include common RPC methods
-    expect(methodNames).toContain('block');
-    expect(methodNames).toContain('status');
-    expect(methodNames).toContain('query');
-    expect(methodNames).toContain('tx');
-    expect(methodNames).toContain('chunk');
+    // Should include client core methods
+    expect(methodNames).toContain('makeRequest');
+    expect(methodNames).toContain('withConfig');
+    
+    // Should not include RPC methods (these are now static functions)
+    expect(methodNames).not.toContain('block');
+    expect(methodNames).not.toContain('status');
     
     // Should not include internal properties
     expect(methodNames).not.toContain('constructor');
