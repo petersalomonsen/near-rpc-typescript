@@ -21,7 +21,7 @@ import {
   experimentalChangesInBlock,
   experimentalValidatorsOrdered,
   experimentalChanges,
-} from '../generated-types';
+} from '../generated-functions';
 import { viewAccount } from '../convenience';
 
 vi.setConfig({ testTimeout: 30000 });

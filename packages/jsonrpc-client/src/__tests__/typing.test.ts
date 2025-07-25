@@ -9,7 +9,7 @@ import {
   experimentalGenesisConfig,
   query,
   broadcastTxAsync,
-} from '../generated-types';
+} from '../generated-functions';
 import type {
   RpcBlockRequest,
   RpcBlockResponse,

@@ -1,6 +1,6 @@
 // Convenience functions for the client
 import type { NearRpcClient } from './client.js';
-import { query } from './generated-types.js';
+import { query } from './generated-functions.js';
 import type {
   AccountView,
   CallResult,

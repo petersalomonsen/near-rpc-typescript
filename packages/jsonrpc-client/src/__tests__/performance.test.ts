@@ -1,7 +1,7 @@
 // Performance tests for Zod validation overhead
 import { describe, it, expect, vi } from 'vitest';
 import { NearRpcClient } from '../client';
-import { block } from '../generated-types';
+import { block } from '../generated-functions';
 import { enableValidation } from '../validation';
 import {
   JsonRpcRequestSchema,

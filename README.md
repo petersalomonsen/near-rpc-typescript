@@ -65,7 +65,10 @@ console.log('Latest block height:', blockResult.header.height);
 Paste this directly into any browser's developer console on any webpage:
 
 ```javascript
-const { NearRpcClient, block } = await import('https://unpkg.com/@psalomo/jsonrpc-client@0.5.0/dist/browser-standalone.min.js'); const client = new NearRpcClient({endpoint: 'https://rpc.mainnet.near.org'}); const blockResult = await block(client, { finality: 'final' }); console.log('Latest block height:', blockResult.header.height);
+const { NearRpcClient, block } = await import('https://unpkg.com/@psalomo/jsonrpc-client@0.5.0/dist/browser-standalone.min.js');
+const client = new NearRpcClient({endpoint: 'https://rpc.mainnet.near.org'});
+const blockResult = await block(client, { finality: 'final' });
+console.log('Latest block height:', blockResult.header.height);
 ```
 
 > **Note**: Currently published under `@psalomo` scope temporarily. If chosen for the [NEAR DevHub bounty](https://nearn.io/devhub/13/), packages will be republished under the official `@near-js` namespace.

@@ -8,7 +8,7 @@ import {
   tx,
   health,
   networkInfo,
-} from '../generated-types';
+} from '../generated-functions';
 import { viewAccount } from '../convenience';
 
 // Mock fetch for integration testing
