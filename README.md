@@ -25,25 +25,25 @@ npm install @psalomo/jsonrpc-client
 ### Node.js (Vanilla)
 
 ```javascript
-import { NearRpcClient } from '@psalomo/jsonrpc-client';
+import { NearRpcClient, block } from '@psalomo/jsonrpc-client';
 
-const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
-const block = await client.block({ finality: 'final' });
-console.log('Latest block height:', block.header.height);
+const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
+const blockResult = await block(client, { finality: 'final' });
+console.log('Latest block height:', blockResult.header.height);
 ```
 
 ### Bundlers (React, Vue, Angular, etc.)
 
 ```typescript
-import { NearRpcClient } from '@near-js/jsonrpc-client';
+import { NearRpcClient, block, viewAccount } from '@near-js/jsonrpc-client';
 
 const client = new NearRpcClient({
   endpoint: 'https://rpc.mainnet.near.org'
 });
 
 // Fully typed method calls
-const block = await client.block({ finality: 'final' });
-const account = await client.viewAccount({ 
+const blockResult = await block(client, { finality: 'final' });
+const account = await viewAccount(client, { 
   accountId: 'example.near',
   finality: 'final' 
 });
@@ -53,10 +53,10 @@ const account = await client.viewAccount({
 
 ```html
 <script type="module">
-const { NearRpcClient } = await import('https://unpkg.com/@psalomo/jsonrpc-client@0.1.0/dist/browser-standalone.js');
-const client = new NearRpcClient('https://rpc.mainnet.near.org');
-const block = await client.block({ finality: 'final' });
-console.log('Latest block height:', block.header.height);
+const { NearRpcClient, block } = await import('https://unpkg.com/@psalomo/jsonrpc-client@0.5.0/dist/browser-standalone.min.js');
+const client = new NearRpcClient({ endpoint: 'https://rpc.mainnet.near.org' });
+const blockResult = await block(client, { finality: 'final' });
+console.log('Latest block height:', blockResult.header.height);
 </script>
 ```
 
@@ -65,7 +65,7 @@ console.log('Latest block height:', block.header.height);
 Paste this directly into any browser's developer console on any webpage:
 
 ```javascript
-const { NearRpcClient } = await import('https://unpkg.com/@psalomo/jsonrpc-client@0.1.0/dist/browser-standalone.js'); const client = new NearRpcClient('https://rpc.testnet.fastnear.com'); const block = await client.block({ finality: 'final' }); console.log('Latest block height:', block.header.height);
+const { NearRpcClient, block } = await import('https://unpkg.com/@psalomo/jsonrpc-client@0.5.0/dist/browser-standalone.min.js'); const client = new NearRpcClient({endpoint: 'https://rpc.mainnet.near.org'}); const blockResult = await block(client, { finality: 'final' }); console.log('Latest block height:', blockResult.header.height);
 ```
 
 > **Note**: Currently published under `@psalomo` scope temporarily. If chosen for the [NEAR DevHub bounty](https://nearn.io/devhub/13/), packages will be republished under the official `@near-js` namespace.
