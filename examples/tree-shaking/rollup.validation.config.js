@@ -15,6 +15,10 @@ export default {
     }),
     typescript({
       tsconfig: './tsconfig.json',
+      compilerOptions: {
+        target: 'ES2020',
+        module: 'ESNext',
+      },
     }),
   ],
   external: [],

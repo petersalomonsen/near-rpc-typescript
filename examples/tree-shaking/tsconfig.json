@@ -6,6 +6,6 @@
     "declaration": false,
     "declarationMap": false
   },
-  "include": ["main.ts"],
+  "include": ["main.ts", "main-with-validation.ts"],
   "exclude": ["dist", "node_modules"]
 }
