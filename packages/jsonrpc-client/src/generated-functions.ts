@@ -1,5 +1,5 @@
 // Auto-generated exports for tree-shakable functions
-// Generated at: 2025-07-25T05:44:53.309Z
+// Generated at: 2025-07-25T19:07:01.049Z
 // Do not edit manually - changes will be overwritten
 
 export {
@@ -30,8 +30,8 @@ export {
   sendTx,
   status,
   tx,
-  validators,
-} from './generated-types.mini';
+  validators
+} from './generated-types';
 
 // Re-export convenience functions
 export { viewAccount, viewFunction, viewAccessKey } from './convenience';
