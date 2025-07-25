@@ -24,7 +24,7 @@ export {
 export { RPC_METHODS } from '@near-js/jsonrpc-types/mini';
 
 // Export individual tree-shakable functions
-export * from './functions';
+export * from './generated-functions.mini';
 
 // Export optional validation (only gets included if imported)
 export { enableValidation } from './validation.mini.js';

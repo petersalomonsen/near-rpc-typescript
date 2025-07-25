@@ -568,7 +568,7 @@ export async function ${mapping.clientMethodName}(
   ].sort();
 
   const importStatement = `import type {\n  ${allTypes.join(',\n  ')}\n} from '@near-js/jsonrpc-types/mini';
-import type { NearRpcClient } from '../client.mini.js';`;
+import type { NearRpcClient } from './client.mini';`;
 
   const interfaces = `
 // Dynamic RPC methods interface with proper typing
@@ -662,46 +662,31 @@ export async function generateClientInterface(
   const miniOutputPath = outputPath.replace('.ts', '.mini.ts');
   await fs.writeFile(miniOutputPath, staticFunctionsContent, 'utf8');
 
-  // Also write individual function files for maximum tree-shaking
-  const functionsDir = join(dirname(outputPath), 'functions');
-  await fs.mkdir(functionsDir, { recursive: true });
+  // Generate a separate export file for functions
+  const functionExports = mappings.map(m => m.clientMethodName).join(',\n  ');
+  const functionsExportContent = `// Auto-generated exports for tree-shakable functions
+// Generated at: ${new Date().toISOString()}
+// Do not edit manually - changes will be overwritten
 
-  // Generate individual files for each function
-  for (const mapping of mappings) {
-    const functionContent = `// ${mapping.rpcMethod} individual function for tree-shaking
-import type { ${mapping.requestType}, ${mapping.responseType} } from '@near-js/jsonrpc-types/mini';
-import type { NearRpcClient } from '../client.mini.js';
+export {
+  ${functionExports}
+} from './generated-types.mini';
 
-export async function ${mapping.clientMethodName}(
-  client: NearRpcClient,
-  params?: ${mapping.requestType}
-): Promise<${mapping.responseType}> {
-  return client.makeRequest('${mapping.rpcMethod}', params);
-}
+// Re-export convenience functions
+export { viewAccount, viewFunction, viewAccessKey } from './convenience.mini';
 `;
 
-    const functionPath = join(functionsDir, `${mapping.clientMethodName}.ts`);
-    await fs.writeFile(functionPath, functionContent, 'utf8');
-  }
-
-  // Generate index file for functions directory
-  const functionsIndex = mappings
-    .map(
-      mapping =>
-        `export { ${mapping.clientMethodName} } from './${mapping.clientMethodName}';`
-    )
-    .join('\n');
-
-  await fs.writeFile(
-    join(functionsDir, 'index.ts'),
-    `// Auto-generated index for individual RPC functions\n// Generated at: ${new Date().toISOString()}\n\n${functionsIndex}\n`,
-    'utf8'
+  const functionsExportPath = join(
+    dirname(outputPath),
+    'generated-functions.mini.ts'
   );
+  await fs.writeFile(functionsExportPath, functionsExportContent, 'utf8');
 
   console.log(`✅ Generated client interface at ${outputPath}`);
   console.log(`✅ Generated mini static functions at ${miniOutputPath}`);
+  console.log(`✅ Generated function exports at ${functionsExportPath}`);
   console.log(
-    `✅ Generated ${mappings.length} individual functions in ${functionsDir}/`
+    `✅ All ${mappings.length} functions in single file for optimal tree-shaking`
   );
   console.log(`   Methods: ${generated.methodCount}`);
   console.log(`   Timestamp: ${generated.timestamp}`);
