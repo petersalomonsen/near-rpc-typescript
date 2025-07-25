@@ -8,7 +8,7 @@ import {
   JsonRpcResponse,
   JsonRpcClientError,
   JsonRpcNetworkError,
-} from './client.mini.js';
+} from './client.js';
 
 export interface ValidationResult {
   validateRequest: (request: JsonRpcRequest) => void;

@@ -31,7 +31,7 @@ export {
   status,
   tx,
   validators,
-} from './generated-types.mini';
+} from './generated-types';
 
 // Re-export convenience functions
-export { viewAccount, viewFunction, viewAccessKey } from './convenience.mini';
+export { viewAccount, viewFunction, viewAccessKey } from './convenience';

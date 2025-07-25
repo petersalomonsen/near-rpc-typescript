@@ -1,6 +1,6 @@
-// Convenience functions for the mini client
-import type { NearRpcClient } from './client.mini.js';
-import { query } from './generated-types.mini.js';
+// Convenience functions for the client
+import type { NearRpcClient } from './client.js';
+import { query } from './generated-types.js';
 import type {
   AccountView,
   CallResult,
