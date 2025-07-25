@@ -100,7 +100,7 @@
     </div>
 
     <script type="module">
-        import { NearRpcClient, block, viewAccount, status, gasPrice } from './browser-standalone-mini.min.js';
+        import { NearRpcClient, block, viewAccount, status, gasPrice } from './browser-standalone.min.js';
 
         const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
 
@@ -202,7 +202,7 @@
         async function testGasPrice() {
             displayLoading('gasPriceResult');
             try {
-                const gasPriceResult = await gasPrice(client, {}); // Use empty object for latest
+                const gasPriceResult = await gasPrice(client, [null]); // Use null for latest
                 const result = {
                     gasPrice: gasPriceResult.gasPrice
                 };

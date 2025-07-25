@@ -9,14 +9,15 @@ test.describe('NEAR RPC One-Liner Browser Tests', () => {
 
     // Execute the one-liner from the README
     const result = await page.evaluate(async () => {
-      const { NearRpcClient } = await import(
-        'https://unpkg.com/@psalomo/jsonrpc-client@0.1.0/dist/browser-standalone.js'
+      const module = await import(
+        'http://localhost:3000/browser-standalone.js'
       );
+      const { NearRpcClient, block } = module;
       const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
-      const block = await client.block({ finality: 'final' });
+      const blockResult = await block(client, { finality: 'final' });
       return {
-        height: block.header.height,
-        hash: block.header.hash,
+        height: blockResult.header.height,
+        hash: blockResult.header.hash,
         success: true,
       };
     });
