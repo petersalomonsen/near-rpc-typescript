@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v0.4.0...jsonrpc-client-v0.5.0) (2025-07-25)
+
+
+### Features
+
+* add TypeScript Language Server testing for IntelliSense validation ([#30](https://github.com/petersalomonsen/near-rpc-typescript/issues/30)) ([30276d7](https://github.com/petersalomonsen/near-rpc-typescript/commit/30276d7be9028c7eb62d2dbd41e483897474f2c8))
+* implement mini client with tree-shaking optimization and comprehensive examples ([#31](https://github.com/petersalomonsen/near-rpc-typescript/issues/31)) ([7d7b16d](https://github.com/petersalomonsen/near-rpc-typescript/commit/7d7b16d429b3174d5831f5d27ac3c59b56370b03))
+
 ## [0.4.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v0.3.0...jsonrpc-client-v0.4.0) (2025-07-21)
 
 
