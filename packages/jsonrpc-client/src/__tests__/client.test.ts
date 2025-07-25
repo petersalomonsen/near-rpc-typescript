@@ -187,11 +187,11 @@ describe('NearRpcClient', () => {
       expect(result).not.toHaveProperty('chain_id');
     });
 
-    it('should generate unique request IDs', async () => {
+    it('should use "dontcare" as request ID matching NEAR documentation', async () => {
       const fetchSpy = vi.spyOn(global, 'fetch');
       fetchSpy.mockResolvedValue({
         ok: true,
-        json: async () => ({ jsonrpc: '2.0', id: '1', result: {} }),
+        json: async () => ({ jsonrpc: '2.0', id: 'dontcare', result: {} }),
       } as Response);
       await client.status();
       await client.health();
@@ -199,7 +199,8 @@ describe('NearRpcClient', () => {
       const call1Body = JSON.parse(fetchSpy.mock.calls[0][1].body);
       const call2Body = JSON.parse(fetchSpy.mock.calls[1][1].body);
 
-      expect(call1Body.id).not.toBe(call2Body.id);
+      expect(call1Body.id).toBe('dontcare');
+      expect(call2Body.id).toBe('dontcare');
     });
   });
 

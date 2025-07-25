@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEAR RPC Client Browser Test</title>
+    <title>NEAR RPC Client Mini Bundle Test</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -60,8 +60,8 @@
     </style>
 </head>
 <body>
-    <h1>NEAR RPC Client Browser Test</h1>
-    <p>This page tests the NEAR RPC TypeScript client running in a browser environment.</p>
+    <h1>NEAR RPC Client Mini Bundle Test</h1>
+    <p>This page tests the NEAR RPC TypeScript client mini bundle running in a browser environment.</p>
 
     <div class="container">
         <h2>Test Controls</h2>
@@ -100,7 +100,7 @@
     </div>
 
     <script type="module">
-        import { NearRpcClient } from './browser-standalone.js';
+        import { NearRpcClient, block, viewAccount, status, gasPrice } from './browser-standalone-mini.min.js';
 
         const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
 
@@ -119,17 +119,17 @@
         async function testLatestBlock() {
             displayLoading('latestBlockResult');
             try {
-                const block = await client.block({ finality: 'final' });
+                const blockResult = await block(client, { finality: 'final' });
                 const result = {
-                    height: block.header.height,
-                    hash: block.header.hash,
-                    timestamp: block.header.timestamp,
-                    chunksIncluded: block.header.chunksIncluded,
-                    gasPrice: block.header.gasPrice
+                    height: blockResult.header.height,
+                    hash: blockResult.header.hash,
+                    timestamp: blockResult.header.timestamp,
+                    chunksIncluded: blockResult.header.chunksIncluded,
+                    gasPrice: blockResult.header.gasPrice
                 };
                 displayResult('latestBlockResult', result);
                 
-                window.latestBlockHeight = block.header.height;
+                window.latestBlockHeight = blockResult.header.height;
                 return result;
             } catch (error) {
                 displayResult('latestBlockResult', `Error: ${error.message}`, true);
@@ -140,7 +140,7 @@
         async function testAccountView() {
             displayLoading('accountViewResult');
             try {
-                const account = await client.viewAccount({
+                const account = await viewAccount(client, {
                     accountId: 'example.testnet',
                     finality: 'final'
                 });
@@ -164,13 +164,13 @@
             try {
                 const targetHeight = window.latestBlockHeight ? window.latestBlockHeight - 100 : 170000000;
                 
-                const block = await client.block({ blockId: targetHeight });
+                const blockResult = await block(client, { blockId: targetHeight });
                 const result = {
                     requestedHeight: targetHeight,
-                    actualHeight: block.header.height,
-                    hash: block.header.hash,
-                    prevHash: block.header.prevHash,
-                    chunksCount: block.chunks.length
+                    actualHeight: blockResult.header.height,
+                    hash: blockResult.header.hash,
+                    prevHash: blockResult.header.prevHash,
+                    chunksCount: blockResult.chunks.length
                 };
                 displayResult('specificBlockResult', result);
                 return result;
@@ -183,13 +183,13 @@
         async function testNetworkStatus() {
             displayLoading('networkStatusResult');
             try {
-                const status = await client.status();
+                const statusResult = await status(client);
                 const result = {
-                    chainId: status.chainId,
-                    latestBlockHeight: status.syncInfo.latestBlockHeight,
-                    latestBlockHash: status.syncInfo.latestBlockHash,
-                    syncing: status.syncInfo.syncing,
-                    nodePublicKey: status.validatorPublicKey || 'N/A'
+                    chainId: statusResult.chainId,
+                    latestBlockHeight: statusResult.syncInfo.latestBlockHeight,
+                    latestBlockHash: statusResult.syncInfo.latestBlockHash,
+                    syncing: statusResult.syncInfo.syncing,
+                    nodePublicKey: statusResult.validatorPublicKey || 'N/A'
                 };
                 displayResult('networkStatusResult', result);
                 return result;
@@ -202,9 +202,9 @@
         async function testGasPrice() {
             displayLoading('gasPriceResult');
             try {
-                const gasPrice = await client.gasPrice({}); // Use empty object for latest
+                const gasPriceResult = await gasPrice(client, {}); // Use empty object for latest
                 const result = {
-                    gasPrice: gasPrice.gasPrice
+                    gasPrice: gasPriceResult.gasPrice
                 };
                 displayResult('gasPriceResult', result);
                 return result;
@@ -269,7 +269,7 @@
         document.getElementById('runAllTests').addEventListener('click', runAllTests);
         document.getElementById('clearResults').addEventListener('click', clearResults);
 
-        window.nearRpcTests = {
+        window.nearRpcMiniTests = {
             testLatestBlock,
             testAccountView,
             testSpecificBlock,
@@ -279,7 +279,7 @@
             clearResults
         };
 
-        console.log('NEAR RPC Client browser test page loaded successfully');
+        console.log('NEAR RPC Client mini bundle test page loaded successfully');
     </script>
 </body>
 </html>

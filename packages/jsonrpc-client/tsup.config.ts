@@ -1,24 +1,23 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig([
-  // Regular builds
+  // Regular builds (Node.js)
   {
     entry: ['src/index.ts'],
     format: ['cjs', 'esm'],
     dts: true,
     clean: true,
   },
-  // Browser bundle with all dependencies included
+  // Mini builds (Node.js, using zod/mini)
   {
-    entry: { 'browser-standalone': 'src/index.ts' },
-    format: ['esm'],
+    entry: { 'index.mini': 'src/index.mini.ts' },
+    format: ['cjs', 'esm'],
     outDir: 'dist',
-    outExtension: () => ({ js: '.js' }),
-    bundle: true,
-    external: [],
-    noExternal: ['@near-js/jsonrpc-types', 'zod', 'cross-fetch'],
-    dts: false,
-    minify: false,
+    outExtension: ({ format }) => ({
+      js: format === 'cjs' ? '.cjs' : '.mjs',
+      dts: '.d.ts',
+    }),
+    dts: true,
     clean: false,
   },
 ]);

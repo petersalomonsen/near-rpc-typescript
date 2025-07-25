@@ -1,7 +1,16 @@
 {
   "type": "module",
+  "scripts": {
+    "test:typescript": "vitest run typescript-check.test.ts"
+  },
   "dependencies": {
     "@near-js/jsonrpc-client": "workspace:*",
     "@near-js/jsonrpc-types": "workspace:*"
+  },
+  "devDependencies": {
+    "glob": "^10.3.10",
+    "@types/glob": "^8.1.0",
+    "typescript": "^5.8.3",
+    "vitest": "^1.2.0"
   }
 }

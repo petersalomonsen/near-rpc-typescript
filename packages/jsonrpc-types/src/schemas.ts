@@ -1,5 +1,5 @@
 // Auto-generated Zod schemas from NEAR OpenAPI spec
-// Generated on: 2025-07-21T19:17:58.564Z
+// Generated on: 2025-07-25T05:44:49.650Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/v4';
@@ -3650,18 +3650,18 @@ export const JsonRpcRequestSchema = z.object({
   jsonrpc: z.literal('2.0'),
   id: z.string(),
   method: z.string(),
-  params: z.unknown().optional(),
+  params: z.optional(z.unknown()),
 });
 
 export const JsonRpcErrorSchema = z.object({
   code: z.number(),
   message: z.string(),
-  data: z.unknown().optional(),
+  data: z.optional(z.unknown()),
 });
 
 export const JsonRpcResponseSchema = z.object({
   jsonrpc: z.literal('2.0'),
   id: z.string(),
-  result: z.unknown().optional(),
-  error: JsonRpcErrorSchema.optional(),
+  result: z.optional(z.unknown()),
+  error: z.optional(JsonRpcErrorSchema),
 });
