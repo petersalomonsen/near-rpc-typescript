@@ -72,11 +72,13 @@ test.describe('NEAR RPC One-Liner Browser Tests', () => {
   });
 
   test('should work when pasted into any website console', async ({ page }) => {
-    // Go to a real website to simulate real-world usage
-    await page.goto('https://example.com');
+    // Go to a simple page to simulate real-world usage
+    await page.goto(
+      'data:text/html,<html><head><title>Test Page</title></head><body><h1>Test Page</h1></body></html>'
+    );
 
     // Wait for page to load
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Execute the one-liner as if pasted into console
     const result = await page.evaluate(async () => {
@@ -264,11 +266,13 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
       browserName === 'webkit',
       'WebKit blocks cross-origin dynamic imports stricter than other browsers'
     );
-    // Go to a real website to simulate real-world usage
-    await page.goto('https://example.com');
+    // Go to a simple page to simulate real-world usage
+    await page.goto(
+      'data:text/html,<html><head><title>Test Page</title></head><body><h1>Test Page</h1></body></html>'
+    );
 
     // Wait for page to load
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Execute the one-liner as if pasted into console with mini bundle
     const result = await page.evaluate(async () => {
