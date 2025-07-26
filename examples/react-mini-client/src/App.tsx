@@ -4,12 +4,12 @@ import './App.css';
 
 // Create clients for both mainnet and testnet
 const mainnetClient = new NearRpcClient({
-  endpoint: 'https://rpc.mainnet.near.org',
+  endpoint: 'https://rpc.mainnet.fastnear.com',
   timeout: 10000,
 });
 
 const testnetClient = new NearRpcClient({
-  endpoint: 'https://rpc.testnet.near.org',
+  endpoint: 'https://rpc.testnet.fastnear.com',
   timeout: 10000,
 });
 

@@ -8,7 +8,7 @@ test.describe('React Client App Tests', () => {
 
     // Wait for the main title to appear
     await expect(page.locator('h1')).toContainText(
-      'NEAR RPC Client React Demo'
+      '🚀 NEAR RPC Client React Demo'
     );
 
     // Check that the subtitle is present
@@ -41,10 +41,10 @@ test.describe('React Client App Tests', () => {
     await expect(page.locator('.network-card').first()).toBeVisible();
     await expect(
       page.locator('.network-card').first().locator('h2')
-    ).toContainText('Mainnet Status');
+    ).toContainText('🌐 Mainnet Status');
     await expect(
       page.locator('.network-card').nth(1).locator('h2')
-    ).toContainText('Testnet Status');
+    ).toContainText('🧪 Testnet Status');
 
     // Check that mainnet data is loaded
     const mainnetCard = page.locator('.network-card').first();
@@ -79,7 +79,7 @@ test.describe('React Client App Tests', () => {
     const accountCard = page.locator('.account-card');
     await expect(accountCard).toBeVisible();
     await expect(accountCard.locator('h2')).toContainText(
-      'Account Information'
+      '👤 Account Information'
     );
 
     // Check account details
@@ -103,7 +103,7 @@ test.describe('React Client App Tests', () => {
     // Check features section
     const features = page.locator('.features');
     await expect(features).toBeVisible();
-    await expect(features.locator('h2')).toContainText('Client Features');
+    await expect(features.locator('h2')).toContainText('✨ Client Features');
 
     // Check feature list items
     const featureList = features.locator('ul li');
@@ -127,10 +127,10 @@ test.describe('React Client App Tests', () => {
 
   test('should handle errors gracefully', async ({ page }) => {
     // Mock network error by intercepting requests
-    await page.route('**/rpc.mainnet.near.org/**', route => {
+    await page.route('**/rpc.mainnet.fastnear.com/**', route => {
       route.abort('failed');
     });
-    await page.route('**/rpc.testnet.near.org/**', route => {
+    await page.route('**/rpc.testnet.fastnear.com/**', route => {
       route.abort('failed');
     });
 
