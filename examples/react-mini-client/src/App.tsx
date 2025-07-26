@@ -99,7 +99,7 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>🚀 NEAR RPC Mini Client React Demo</h1>
+        <h1>🚀 NEAR RPC Client React Demo</h1>
         <p>
           Demonstrating tree-shaking optimized NEAR RPC calls with static
           functions
@@ -186,7 +186,7 @@ function App() {
           </div>
 
           <div className="features">
-            <h2>✨ Mini Client Features</h2>
+            <h2>✨ Client Features</h2>
             <ul>
               <li>🌳 Tree-shaking optimized bundle size</li>
               <li>📦 Static functions instead of instance methods</li>

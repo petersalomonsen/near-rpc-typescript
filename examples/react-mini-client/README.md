@@ -117,15 +117,15 @@ The app demonstrates these mini client features:
 - ✅ Parallel network requests
 - ✅ TypeScript integration
 
-## Comparison with Regular Client
+## Client Architecture Benefits
 
-| Feature           | Regular Client             | Mini Client                        |
-| ----------------- | -------------------------- | ---------------------------------- |
-| **API Style**     | `client.status()`          | `status(client)`                   |
-| **Bundle Size**   | Larger                     | Tree-shakable                      |
-| **Imports**       | `import { NearRpcClient }` | `import { NearRpcClient, status }` |
-| **Tree-shaking**  | Limited                    | Optimal                            |
-| **Functionality** | Identical                  | Identical                          |
+| Feature           | Description                                         |
+| ----------------- | --------------------------------------------------- |
+| **API Style**     | `status(client)` - Static functions               |
+| **Bundle Size**   | Tree-shakable for minimal overhead                |
+| **Imports**       | `import { NearRpcClient, status }` - Selective    |
+| **Tree-shaking**  | Optimal - Only imported functions included        |
+| **Functionality** | Complete NEAR RPC functionality                   |
 
 ## Deployment
 

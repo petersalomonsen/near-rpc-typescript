@@ -2,24 +2,18 @@
 
 This directory contains examples demonstrating how to use the `@near-js/jsonrpc-client` library in different environments and with different variants.
 
-## 📦 Client Variants
+## 📦 Client Architecture
 
-The library provides two main variants:
+The library uses a static function architecture for optimal tree-shaking:
 
-### Regular Client
-
-- **Bundle size:** ~95KB minified
-- **Import:** `import { NearRpcClient } from '@near-js/jsonrpc-client'`
-- **Best for:** Node.js applications, full developer experience
-
-### Mini Client
+### Default Client
 
 - **Bundle size:** Optimized with tree-shaking
-- **Import:** `import { NearRpcClient, status, block } from '@near-js/jsonrpc-client/mini'`
+- **Import:** `import { NearRpcClient, status, block } from '@near-js/jsonrpc-client'`
 - **Architecture:** Static functions with client-based configuration
-- **Best for:** Bundle size-sensitive web applications
+- **Best for:** All applications requiring minimal bundle size
 
-Both variants provide identical functionality with different API approaches.
+The client provides identical functionality to traditional instance methods but with better tree-shaking optimization.
 
 ## 🚀 Examples
 
@@ -49,8 +43,8 @@ Both variants provide identical functionality with different API approaches.
 
 The browser examples are integrated into our test suite to ensure they remain working with every change:
 
-- **[tests/browser/index.html](../tests/browser/index.html)** - Regular client browser demo
-- **[tests/browser/mini.html](../tests/browser/mini.html)** - Mini client browser demo with tree-shaking
+- **[tests/browser/index.html](../tests/browser/index.html)** - Client browser demo
+- **[tests/browser/mini.html](../tests/browser/mini.html)** - Alternative client test page
 
 These examples are:
 
@@ -102,14 +96,14 @@ pnpm build
 node tests/browser/server.js
 
 # Open in browser
-# Regular client: http://localhost:3000/index.html
-# Mini client: http://localhost:3000/mini.html
+# Client: http://localhost:3000/index.html
+# Alternative test: http://localhost:3000/mini.html
 ```
 
 The test server serves:
 
 - HTML test pages with interactive demos
-- All bundle variants (regular, mini, minified, unminified)
+- All bundle variants (minified, unminified)
 - Direct bundle URLs for one-liner testing
 
 ### Running Browser Tests with Playwright
@@ -176,12 +170,11 @@ The tree-shaking example demonstrates:
 
 ## 💡 Bundle Size Comparison
 
-| Variant                       | Size (Unminified) | Size (Minified) | Use Case                           |
-| ----------------------------- | ----------------- | --------------- | ---------------------------------- |
-| Mini client (no validation)   | 4.9KB             | 2.2KB           | Production web apps                |
-| Mini client (with validation) | 42KB              | 19KB            | Production with runtime validation |
-| Regular client                | ~95KB             | ~65KB           | Development/Node.js                |
-| React app (complete)          | ~195KB            | ~61KB gzipped   | Full React application             |
+| Variant                    | Size (Unminified) | Size (Minified) | Use Case                           |
+| -------------------------- | ----------------- | --------------- | ---------------------------------- |
+| Client (no validation)     | 4.9KB             | 2.2KB           | Production web apps                |
+| Client (with validation)   | 42KB              | 19KB            | Production with runtime validation |
+| React app (complete)       | ~195KB            | ~61KB gzipped   | Full React application             |
 
 **Key insights:**
 
@@ -196,7 +189,7 @@ The tree-shaking example demonstrates:
 
 ```javascript
 const { NearRpcClient, status } = await import(
-  'https://unpkg.com/@near-js/jsonrpc-client/dist/browser-standalone-mini.min.js'
+  'https://unpkg.com/@near-js/jsonrpc-client/dist/browser-standalone.min.js'
 );
 const client = new NearRpcClient({
   endpoint: 'https://rpc.testnet.fastnear.com',
@@ -209,7 +202,7 @@ const result = await status(client);
 ```javascript
 // After building the project
 const { NearRpcClient, status } = await import(
-  './node_modules/@near-js/jsonrpc-client/dist/browser-standalone-mini.min.js'
+  './node_modules/@near-js/jsonrpc-client/dist/browser-standalone.min.js'
 );
 const client = new NearRpcClient({
   endpoint: 'https://rpc.testnet.fastnear.com',
@@ -219,7 +212,7 @@ const client = new NearRpcClient({
 ### Module Bundler (Webpack, Vite, etc.)
 
 ```javascript
-import { NearRpcClient, status, block } from '@near-js/jsonrpc-client/mini';
+import { NearRpcClient, status, block } from '@near-js/jsonrpc-client';
 const client = new NearRpcClient({
   endpoint: 'https://rpc.testnet.fastnear.com',
 });
@@ -233,24 +226,10 @@ const statusResult = await status(client);
 
 ## 📚 API Documentation
 
-### Regular Client (Instance Methods)
+### Static Functions
 
 ```javascript
-import { NearRpcClient } from '@near-js/jsonrpc-client';
-const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
-
-- `client.status()` - Network status
-- `client.block()` - Block information
-- `client.viewAccount()` - Account details
-- `client.gasPrice()` - Current gas price
-- `client.query()` - Generic queries
-- `client.sendTx()` - Send transactions
-```
-
-### Mini Client (Static Functions)
-
-```javascript
-import { NearRpcClient, status, block, viewAccount, viewFunction, viewAccessKey } from '@near-js/jsonrpc-client/mini';
+import { NearRpcClient, status, block, viewAccount, viewFunction, viewAccessKey } from '@near-js/jsonrpc-client';
 const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' });
 
 - `status(client)` - Network status
@@ -263,6 +242,6 @@ const client = new NearRpcClient({ endpoint: 'https://rpc.testnet.fastnear.com' 
 - `sendTx(client, params)` - Send transactions
 ```
 
-Both variants provide identical functionality and case conversion behavior.
+The client provides full functionality with case conversion behavior for optimal developer experience.
 
 For complete API documentation, see the main README in the project root.

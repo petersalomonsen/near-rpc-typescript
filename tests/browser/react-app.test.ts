@@ -2,13 +2,13 @@ import { test, expect } from '@playwright/test';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-test.describe('React Mini Client App Tests', () => {
+test.describe('React Client App Tests', () => {
   test('should load the React app successfully', async ({ page }) => {
     await page.goto('http://localhost:3000/react');
 
     // Wait for the main title to appear
     await expect(page.locator('h1')).toContainText(
-      'NEAR RPC Mini Client React Demo'
+      'NEAR RPC Client React Demo'
     );
 
     // Check that the subtitle is present
@@ -97,13 +97,13 @@ test.describe('React Mini Client App Tests', () => {
     await expect(accountCard.locator('p:has-text("bytes")')).toBeVisible();
   });
 
-  test('should display mini client features', async ({ page }) => {
+  test('should display client features', async ({ page }) => {
     await page.goto('http://localhost:3000/react');
 
     // Check features section
     const features = page.locator('.features');
     await expect(features).toBeVisible();
-    await expect(features.locator('h2')).toContainText('Mini Client Features');
+    await expect(features.locator('h2')).toContainText('Client Features');
 
     // Check feature list items
     const featureList = features.locator('ul li');
@@ -188,7 +188,7 @@ test.describe('React Mini Client App Tests', () => {
       console.log(`React vendor bundle: ${(vendorSize / 1024).toFixed(1)}KB`);
 
       // Vendor bundle should be reasonable (React + NEAR client)
-      expect(vendorSize).toBeLessThan(300 * 1024); // < 300KB for React + NEAR mini client
+      expect(vendorSize).toBeLessThan(300 * 1024); // < 300KB for React + NEAR client
       expect(vendorSize).toBeGreaterThan(100 * 1024); // > 100KB (React is substantial)
     }
   });

@@ -1,7 +1,7 @@
-// Simplified JSON-RPC client for mini version (configuration only)
+// JSON-RPC client with static function architecture (configuration only)
 import type { ValidationResult } from './validation.js';
 
-// Case conversion utilities (identical to regular client)
+// Case conversion utilities
 function camelToSnake(str: string): string {
   return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
 }
@@ -102,7 +102,7 @@ export class JsonRpcNetworkError extends Error {
 }
 
 /**
- * Simplified NEAR RPC Client for mini version
+ * NEAR RPC Client with static function architecture
  * This client only holds configuration and provides a makeRequest method
  * Individual RPC methods are provided as standalone functions that take this client as a parameter
  */

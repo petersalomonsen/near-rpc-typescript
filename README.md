@@ -56,7 +56,7 @@ const account = await viewAccount(client, {
 ```html
 <script type="module">
   const { NearRpcClient, block } = await import(
-    'https://unpkg.com/@psalomo/jsonrpc-client@0.5.0/dist/browser-standalone.min.js'
+    'https://unpkg.com/@psalomo/jsonrpc-client@latest/dist/browser-standalone.min.js'
   );
   const client = new NearRpcClient({
     endpoint: 'https://rpc.mainnet.near.org',
@@ -72,7 +72,7 @@ Paste this directly into any browser's developer console on any webpage:
 
 ```javascript
 const { NearRpcClient, block } = await import(
-  'https://unpkg.com/@psalomo/jsonrpc-client@0.5.0/dist/browser-standalone.min.js'
+  'https://unpkg.com/@psalomo/jsonrpc-client@latest/dist/browser-standalone.min.js'
 );
 const client = new NearRpcClient({ endpoint: 'https://rpc.mainnet.near.org' });
 const blockResult = await block(client, { finality: 'final' });
