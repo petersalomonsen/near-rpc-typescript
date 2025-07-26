@@ -118,3 +118,5 @@ test-results/
 
 # Tmp publishing to other scopes
 temp-publish
+test-published-package
+test-published-packages
