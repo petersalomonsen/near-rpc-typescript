@@ -122,7 +122,19 @@ clientPackageJson.repository = {
 if (clientPackageJson.dependencies) {
   for (const [dep, version] of Object.entries(clientPackageJson.dependencies)) {
     if (version === 'workspace:*') {
-      clientPackageJson.dependencies[dep] = '^0.1.0';
+      // Get the actual version from the types package
+      if (
+        dep === '@psalomo/jsonrpc-types' ||
+        dep === '@near-js/jsonrpc-types'
+      ) {
+        clientPackageJson.dependencies['@psalomo/jsonrpc-types'] =
+          `^${typesPackageJson.version}`;
+        if (dep === '@near-js/jsonrpc-types') {
+          delete clientPackageJson.dependencies[dep];
+        }
+      }
+      // Note: If other workspace dependencies are added in the future,
+      // they should be handled here with their actual versions
     }
   }
 }

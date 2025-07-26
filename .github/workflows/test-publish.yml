@@ -1,0 +1,46 @@
+name: Test Package Publishing
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Prepare packages for publishing
+        run: node scripts/publish-temp.js
+
+      - name: Test prepared packages
+        run: node scripts/test-published-packages.js
+
+      - name: Verify package contents
+        run: |
+          echo "📦 Checking package contents..."
+          echo ""
+          echo "jsonrpc-types package.json:"
+          cat temp-publish/jsonrpc-types/package.json | jq '.name, .version, .dependencies'
+          echo ""
+          echo "jsonrpc-client package.json:"
+          cat temp-publish/jsonrpc-client/package.json | jq '.name, .version, .dependencies'
+          echo ""
+          echo "✅ Package preparation test completed"
