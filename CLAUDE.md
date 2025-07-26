@@ -2,6 +2,14 @@
 
 This file contains important notes and reminders for Claude when working on this project.
 
+## Git Commits
+
+- **ALWAYS use conventional commits** - This project uses Release Please for automated releases
+- Use `fix:` for bug fixes (triggers patch release)
+- Use `feat:` for new features (triggers minor release)
+- Use `chore:`, `docs:`, `test:`, `refactor:`, `perf:`, `style:` for non-releasing changes
+- See RELEASE.md for full commit message conventions
+
 ## Testing
 
 - **Always run tests with `--run` flag** to avoid watch mode:
