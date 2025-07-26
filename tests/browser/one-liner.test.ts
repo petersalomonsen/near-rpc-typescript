@@ -379,19 +379,19 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
     expect(result).toHaveProperty('allSuccessful', true);
   });
 
-  test('should compare mini vs regular bundle schemas in one-liner', async ({
+  test('should validate schemas correctly with zod/mini functions', async ({
     page,
   }) => {
     await page.goto('about:blank');
 
-    // Test that both bundles provide identical schema functionality
+    // Test that both regular and minified bundles work with zod/mini schema functions
     const result = await page.evaluate(async () => {
-      const [regular, mini] = await Promise.all([
+      const [regular, minified] = await Promise.all([
         import('http://localhost:3000/browser-standalone.js'),
         import('http://localhost:3000/browser-standalone.min.js'),
       ]);
 
-      // Test that both can validate the same request
+      // Test that both can validate the same request using zod/mini function pattern
       const testRequest = {
         jsonrpc: '2.0' as const,
         id: 'test-123',
@@ -399,16 +399,19 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
       };
 
       try {
-        const regularValidated =
-          regular.JsonRpcRequestSchema.parse(testRequest);
-        const miniValidated = mini.JsonRpcRequestSchema().parse(testRequest);
+        const regularValidated = regular
+          .JsonRpcRequestSchema()
+          .parse(testRequest);
+        const minifiedValidated = minified
+          .JsonRpcRequestSchema()
+          .parse(testRequest);
 
         return {
           regularWorks: regularValidated.jsonrpc === '2.0',
-          miniWorks: miniValidated.jsonrpc === '2.0',
+          minifiedWorks: minifiedValidated.jsonrpc === '2.0',
           bothWork: true,
           regularClient: typeof regular.NearRpcClient === 'function',
-          miniClient: typeof mini.NearRpcClient === 'function',
+          minifiedClient: typeof minified.NearRpcClient === 'function',
         };
       } catch (error) {
         return {
@@ -419,9 +422,9 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
     });
 
     expect(result).toHaveProperty('regularWorks', true);
-    expect(result).toHaveProperty('miniWorks', true);
+    expect(result).toHaveProperty('minifiedWorks', true);
     expect(result).toHaveProperty('bothWork', true);
     expect(result).toHaveProperty('regularClient', true);
-    expect(result).toHaveProperty('miniClient', true);
+    expect(result).toHaveProperty('minifiedClient', true);
   });
 });
