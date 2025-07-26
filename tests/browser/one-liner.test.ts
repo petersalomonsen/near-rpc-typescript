@@ -49,13 +49,13 @@ test.describe('NEAR RPC One-Liner Browser Tests', () => {
 
     // Execute using the data URL (simulates the one-liner but with local bundle)
     const result = await page.evaluate(async bundleDataUrl => {
-      const { NearRpcClient } = await import(bundleDataUrl);
+      const { NearRpcClient, block } = await import(bundleDataUrl);
       const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
-      const block = await client.block({ finality: 'final' });
+      const blockResult = await block(client, { finality: 'final' });
       return {
-        height: block.header.height,
-        hash: block.header.hash,
-        timestamp: block.header.timestamp,
+        height: blockResult.header.height,
+        hash: blockResult.header.hash,
+        timestamp: blockResult.header.timestamp,
         success: true,
       };
     }, dataUrl);
@@ -81,22 +81,22 @@ test.describe('NEAR RPC One-Liner Browser Tests', () => {
     // Execute the one-liner as if pasted into console
     const result = await page.evaluate(async () => {
       // This simulates what a user would paste into browser console
-      const { NearRpcClient } = await import(
-        'https://unpkg.com/@psalomo/jsonrpc-client@0.1.0/dist/browser-standalone.js'
+      const { NearRpcClient, block, status, gasPrice } = await import(
+        'http://localhost:3000/browser-standalone.js'
       );
       const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
 
       // Test multiple RPC calls to ensure robustness
-      const [block, status, gasPrice] = await Promise.all([
-        client.block({ finality: 'final' }),
-        client.status(),
-        client.gasPrice({}),
+      const [blockResult, statusResult, gasPriceResult] = await Promise.all([
+        block(client, { finality: 'final' }),
+        status(client),
+        gasPrice(client, {}),
       ]);
 
       return {
-        blockHeight: block.header.height,
-        chainId: status.chainId,
-        gasPrice: gasPrice.gasPrice,
+        blockHeight: blockResult.header.height,
+        chainId: statusResult.chainId,
+        gasPrice: gasPriceResult.gasPrice,
         allSuccess: true,
       };
     });
@@ -116,13 +116,13 @@ test.describe('NEAR RPC One-Liner Browser Tests', () => {
     // Test error handling with invalid endpoint
     const result = await page.evaluate(async () => {
       try {
-        const { NearRpcClient } = await import(
-          'https://unpkg.com/@psalomo/jsonrpc-client@0.1.0/dist/browser-standalone.js'
+        const { NearRpcClient, block } = await import(
+          'http://localhost:3000/browser-standalone.js'
         );
         const client = new NearRpcClient(
           'https://invalid-endpoint.example.com'
         );
-        await client.block({ finality: 'final' });
+        await block(client, { finality: 'final' });
         return { success: false, error: 'Should have thrown' };
       } catch (error) {
         return {
@@ -146,21 +146,21 @@ test.describe('NEAR RPC One-Liner Browser Tests', () => {
 
     // Test various RPC methods that can be called in one-liner style
     const result = await page.evaluate(async () => {
-      const { NearRpcClient } = await import(
-        'https://unpkg.com/@psalomo/jsonrpc-client@0.1.0/dist/browser-standalone.js'
+      const { NearRpcClient, block, status, gasPrice, viewAccount } = await import(
+        'http://localhost:3000/browser-standalone.js'
       );
       const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
 
       // Get latest block for height
-      const latestBlock = await client.block({ finality: 'final' });
+      const latestBlock = await block(client, { finality: 'final' });
       const targetHeight = latestBlock.header.height - 10;
 
       // Test different method signatures
       const results = await Promise.allSettled([
-        client.block({ blockId: targetHeight }),
-        client.status(),
-        client.gasPrice({}),
-        client.viewAccount({ accountId: 'example.testnet', finality: 'final' }),
+        block(client, { blockId: targetHeight }),
+        status(client),
+        gasPrice(client, {}),
+        viewAccount(client, { accountId: 'example.testnet', finality: 'final' }),
       ]);
 
       return {
@@ -190,7 +190,7 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
     // Execute the one-liner using the local mini bundle
     const result = await page.evaluate(async () => {
       const { NearRpcClient, block } = await import(
-        'http://localhost:3000/browser-standalone-mini.min.js'
+        'http://localhost:3000/browser-standalone.min.js'
       );
       const client = new NearRpcClient({
         endpoint: 'https://rpc.testnet.fastnear.com',
@@ -223,7 +223,7 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
     const { join } = await import('path');
     const bundlePath = join(
       process.cwd(),
-      'packages/jsonrpc-client/dist/browser-standalone-mini.min.js'
+      'packages/jsonrpc-client/dist/browser-standalone.min.js'
     );
     const bundleContent = readFileSync(bundlePath, 'utf8');
     const dataUrl = `data:text/javascript;base64,${Buffer.from(bundleContent).toString('base64')}`;
@@ -272,7 +272,7 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
     const result = await page.evaluate(async () => {
       // This simulates what a user would paste into browser console with mini bundle
       const { NearRpcClient, block, status, gasPrice } = await import(
-        'http://localhost:3000/browser-standalone-mini.min.js'
+        'http://localhost:3000/browser-standalone.min.js'
       );
       const client = new NearRpcClient({
         endpoint: 'https://rpc.testnet.fastnear.com',
@@ -311,7 +311,7 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
     const result = await page.evaluate(async () => {
       try {
         const { NearRpcClient, block } = await import(
-          'http://localhost:3000/browser-standalone-mini.min.js'
+          'http://localhost:3000/browser-standalone.min.js'
         );
         const client = new NearRpcClient({
           endpoint: 'https://invalid-endpoint.example.com',
@@ -341,7 +341,7 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
     // Test various RPC methods that can be called in one-liner style with mini bundle
     const result = await page.evaluate(async () => {
       const { NearRpcClient, block, status, gasPrice, viewAccount } =
-        await import('http://localhost:3000/browser-standalone-mini.min.js');
+        await import('http://localhost:3000/browser-standalone.min.js');
       const client = new NearRpcClient({
         endpoint: 'https://rpc.testnet.fastnear.com',
       });
@@ -386,7 +386,7 @@ test.describe('NEAR RPC One-Liner Mini Bundle Tests', () => {
     const result = await page.evaluate(async () => {
       const [regular, mini] = await Promise.all([
         import('http://localhost:3000/browser-standalone.js'),
-        import('http://localhost:3000/browser-standalone-mini.min.js'),
+        import('http://localhost:3000/browser-standalone.min.js'),
       ]);
 
       // Test that both can validate the same request
