@@ -150,7 +150,11 @@ export class NearRpcClient {
 
     // Validate request if validation is enabled
     if (this.validation) {
-      this.validation.validateRequest(request);
+      if ('validateMethodRequest' in this.validation) {
+        this.validation.validateMethodRequest(method, request);
+      } else {
+        this.validation.validateRequest(request);
+      }
     }
 
     let lastError: Error | null = null;
@@ -188,7 +192,7 @@ export class NearRpcClient {
           );
         }
 
-        // Validate response if validation is enabled
+        // Validate basic JSON-RPC response structure first
         if (this.validation) {
           this.validation.validateResponse(jsonResponse);
         }
@@ -205,6 +209,16 @@ export class NearRpcClient {
         const camelCaseResult = jsonResponse.result
           ? convertKeysToCamelCase(jsonResponse.result)
           : jsonResponse.result;
+
+        // Validate method-specific response structure after camelCase conversion
+        if (this.validation && 'validateMethodResponse' in this.validation) {
+          // Create a camelCase version of the response for validation
+          const camelCaseResponse = {
+            ...jsonResponse,
+            result: camelCaseResult,
+          };
+          this.validation.validateMethodResponse(method, camelCaseResponse);
+        }
 
         return camelCaseResult as TResult;
       } catch (error) {

@@ -71,7 +71,12 @@ const createMockBlockResponse = (
         chunks_included: 0,
         block_merkle_root: 'merkle_root123',
         epoch_sync_data_hash: null,
-        challenges: [],
+        challenges_result: [],
+        challenges_root: '11111111111111111111111111111111',
+        chunk_headers_root: 'BuQk8UJ9zEVZkKJKF8Wfb2QFdKC2a2WXmYHqPKYxWQHF',
+        chunk_receipts_root: 'ACwSCW3s44V6j7zf6JsEP31pHKsHyHkSSLdGJCBSjHRw',
+        chunk_tx_root: 'dkMJJSbqzYzFyKGqtGpBP1oqRzFT1qJhZhWQRjYQzGX8',
+        outcome_root: 'CKGc2PEm4YCF4hbqDbCUYr2g3hTUpDRGSJ8PVUMpBhP6',
         last_final_block: 'final_block123',
         last_ds_final_block: 'ds_final_block123',
         next_bp_hash: 'bp_hash123',
@@ -270,11 +275,11 @@ describe('Zod Validation Performance Tests', () => {
       });
 
       const withValidationResults = await benchmark.measure(async () => {
-        await block(clientWithValidation);
+        await block(clientWithValidation, { finality: 'final' });
       }, 100);
 
       const withoutValidationResults = await benchmark.measure(async () => {
-        await block(clientWithoutValidation);
+        await block(clientWithoutValidation, { finality: 'final' });
       }, 100);
 
       console.log('With validation:', withValidationResults);
@@ -307,8 +312,8 @@ describe('Zod Validation Performance Tests', () => {
       });
 
       const [validatedResponse, nonValidatedResponse] = await Promise.all([
-        block(clientWithValidation),
-        block(clientWithoutValidation),
+        block(clientWithValidation, { finality: 'final' }),
+        block(clientWithoutValidation, { finality: 'final' }),
       ]);
 
       // Verify both responses contain actual content
@@ -340,7 +345,7 @@ describe('Zod Validation Performance Tests', () => {
         validation,
       });
 
-      const response = await block(clientWithValidation);
+      const response = await block(clientWithValidation, { finality: 'final' });
 
       // Verify complex nested structure is preserved (note: camelCase conversion)
       expect(response.chunks).toHaveLength(10);

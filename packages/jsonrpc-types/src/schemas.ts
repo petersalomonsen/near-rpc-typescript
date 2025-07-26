@@ -1,5 +1,5 @@
 // Auto-generated Zod schemas from NEAR OpenAPI spec (zod/mini version)
-// Generated on: 2025-07-25T20:14:02.620Z
+// Generated on: 2025-07-26T17:05:02.199Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/mini';
@@ -123,10 +123,10 @@ export const AccountViewSchema = () =>
     amount: z.string(),
     codeHash: z.lazy(() => CryptoHashSchema()),
     globalContractAccountId: z.optional(
-      z.union([z.lazy(() => AccountIdSchema()), z.enum(['null'])])
+      z.union([z.lazy(() => AccountIdSchema()), z.null()])
     ),
     globalContractHash: z.optional(
-      z.union([z.lazy(() => CryptoHashSchema()), z.enum(['null'])])
+      z.union([z.lazy(() => CryptoHashSchema()), z.null()])
     ),
     locked: z.string(),
     storagePaidAt: z.optional(z.number()),
@@ -525,11 +525,9 @@ export const BlockHeaderInnerLiteViewSchema = () =>
 // Contains main info about the block.
 export const BlockHeaderViewSchema = () =>
   z.object({
-    approvals: z.array(
-      z.union([z.lazy(() => SignatureSchema()), z.enum(['null'])])
-    ),
+    approvals: z.array(z.union([z.lazy(() => SignatureSchema()), z.null()])),
     blockBodyHash: z.optional(
-      z.union([z.lazy(() => CryptoHashSchema()), z.enum(['null'])])
+      z.union([z.lazy(() => CryptoHashSchema()), z.null()])
     ),
     blockMerkleRoot: z.lazy(() => CryptoHashSchema()),
     blockOrdinal: z.optional(z.number()),
@@ -543,7 +541,7 @@ export const BlockHeaderViewSchema = () =>
     chunksIncluded: z.number(),
     epochId: z.lazy(() => CryptoHashSchema()),
     epochSyncDataHash: z.optional(
-      z.union([z.lazy(() => CryptoHashSchema()), z.enum(['null'])])
+      z.union([z.lazy(() => CryptoHashSchema()), z.null()])
     ),
     gasPrice: z.string(),
     hash: z.lazy(() => CryptoHashSchema()),
@@ -621,11 +619,11 @@ export const ChunkHeaderViewSchema = () =>
   z.object({
     balanceBurnt: z.string(),
     bandwidthRequests: z.optional(
-      z.union([z.lazy(() => BandwidthRequestsSchema()), z.enum(['null'])])
+      z.union([z.lazy(() => BandwidthRequestsSchema()), z.null()])
     ),
     chunkHash: z.lazy(() => CryptoHashSchema()),
     congestionInfo: z.optional(
-      z.union([z.lazy(() => CongestionInfoViewSchema()), z.enum(['null'])])
+      z.union([z.lazy(() => CongestionInfoViewSchema()), z.null()])
     ),
     encodedLength: z.number(),
     encodedMerkleRoot: z.lazy(() => CryptoHashSchema()),
@@ -803,10 +801,7 @@ export const DumpConfigSchema = () =>
   z.object({
     credentialsFile: z.optional(z.string()),
     iterationDelay: z.optional(
-      z.union([
-        z.lazy(() => DurationAsStdSchemaProviderSchema()),
-        z.enum(['null']),
-      ])
+      z.union([z.lazy(() => DurationAsStdSchemaProviderSchema()), z.null()])
     ),
     location: z.lazy(() => ExternalStorageLocationSchema()),
     restartDumpForShards: z.optional(z.array(z.lazy(() => ShardIdSchema()))),
@@ -1168,7 +1163,7 @@ export const GenesisConfigSchema = () =>
     validators: z.array(z.lazy(() => AccountInfoSchema())),
   });
 
-export const GenesisConfigRequestSchema = () => z.enum(['null']);
+export const GenesisConfigRequestSchema = () => z.null();
 
 export const GlobalContractDeployModeSchema = () =>
   z.union([z.enum(['CodeHash']), z.enum(['AccountId'])]);
@@ -1684,10 +1679,7 @@ export const JsonRpcResponseFor_Nullable_RpcHealthResponseAnd_RpcErrorSchema =
   () =>
     z.union([
       z.object({
-        result: z.union([
-          z.lazy(() => RpcHealthResponseSchema()),
-          z.enum(['null']),
-        ]),
+        result: z.union([z.lazy(() => RpcHealthResponseSchema()), z.null()]),
       }),
       z.object({
         error: z.lazy(() => RpcErrorSchema()),
@@ -2004,13 +1996,11 @@ export const PeerIdSchema = () => z.lazy(() => PublicKeySchema());
 
 export const PeerInfoViewSchema = () =>
   z.object({
-    accountId: z.optional(
-      z.union([z.lazy(() => AccountIdSchema()), z.enum(['null'])])
-    ),
+    accountId: z.optional(z.union([z.lazy(() => AccountIdSchema()), z.null()])),
     addr: z.string(),
     archival: z.boolean(),
     blockHash: z.optional(
-      z.union([z.lazy(() => CryptoHashSchema()), z.enum(['null'])])
+      z.union([z.lazy(() => CryptoHashSchema()), z.null()])
     ),
     connectionEstablishedTimeMillis: z.number(),
     height: z.optional(z.number()),
@@ -2171,7 +2161,7 @@ export const RpcChunkResponseSchema = () =>
     transactions: z.array(z.lazy(() => SignedTransactionViewSchema())),
   });
 
-export const RpcClientConfigRequestSchema = () => z.enum(['null']);
+export const RpcClientConfigRequestSchema = () => z.null();
 
 // ClientConfig where some fields can be updated at runtime.
 export const RpcClientConfigResponseSchema = () =>
@@ -2183,10 +2173,7 @@ export const RpcClientConfigResponseSchema = () =>
     catchupStepPeriod: z.array(z.number()),
     chainId: z.string(),
     chunkDistributionNetwork: z.optional(
-      z.union([
-        z.lazy(() => ChunkDistributionNetworkConfigSchema()),
-        z.enum(['null']),
-      ])
+      z.union([z.lazy(() => ChunkDistributionNetworkConfigSchema()), z.null()])
     ),
     chunkRequestRetryPeriod: z.array(z.number()),
     chunkWaitMult: z.array(z.number()),
@@ -2282,9 +2269,7 @@ export const RpcErrorSchema = () =>
 
 export const RpcGasPriceRequestSchema = () =>
   z.object({
-    blockId: z.optional(
-      z.union([z.lazy(() => BlockIdSchema()), z.enum(['null'])])
-    ),
+    blockId: z.optional(z.union([z.lazy(() => BlockIdSchema()), z.null()])),
   });
 
 export const RpcGasPriceResponseSchema = () =>
@@ -2292,9 +2277,9 @@ export const RpcGasPriceResponseSchema = () =>
     gasPrice: z.string(),
   });
 
-export const RpcHealthRequestSchema = () => z.enum(['null']);
+export const RpcHealthRequestSchema = () => z.null();
 
-export const RpcHealthResponseSchema = () => z.enum(['null']);
+export const RpcHealthResponseSchema = () => z.null();
 
 export const RpcKnownProducerSchema = () =>
   z.object({
@@ -2349,7 +2334,7 @@ export const RpcLightClientNextBlockRequestSchema = () =>
 export const RpcLightClientNextBlockResponseSchema = () =>
   z.object({
     approvalsAfterNext: z.optional(
-      z.array(z.union([z.lazy(() => SignatureSchema()), z.enum(['null'])]))
+      z.array(z.union([z.lazy(() => SignatureSchema()), z.null()]))
     ),
     innerLite: z.optional(z.lazy(() => BlockHeaderInnerLiteViewSchema())),
     innerRestHash: z.optional(z.lazy(() => CryptoHashSchema())),
@@ -2363,7 +2348,7 @@ export const RpcMaintenanceWindowsRequestSchema = () =>
     accountId: z.lazy(() => AccountIdSchema()),
   });
 
-export const RpcNetworkInfoRequestSchema = () => z.enum(['null']);
+export const RpcNetworkInfoRequestSchema = () => z.null();
 
 export const RpcNetworkInfoResponseSchema = () =>
   z.object({
@@ -2377,9 +2362,7 @@ export const RpcNetworkInfoResponseSchema = () =>
 
 export const RpcPeerInfoSchema = () =>
   z.object({
-    accountId: z.optional(
-      z.union([z.lazy(() => AccountIdSchema()), z.enum(['null'])])
-    ),
+    accountId: z.optional(z.union([z.lazy(() => AccountIdSchema()), z.null()])),
     addr: z.optional(z.string()),
     id: z.lazy(() => PeerIdSchema()),
   });
@@ -2953,29 +2936,27 @@ export const RpcStateChangesInBlockResponseSchema = () =>
     changes: z.array(z.lazy(() => StateChangeWithCauseViewSchema())),
   });
 
-export const RpcStatusRequestSchema = () => z.enum(['null']);
+export const RpcStatusRequestSchema = () => z.null();
 
 export const RpcStatusResponseSchema = () =>
   z.object({
     chainId: z.string(),
     detailedDebugStatus: z.optional(
-      z.union([z.lazy(() => DetailedDebugStatusSchema()), z.enum(['null'])])
+      z.union([z.lazy(() => DetailedDebugStatusSchema()), z.null()])
     ),
     genesisHash: z.lazy(() => CryptoHashSchema()),
     latestProtocolVersion: z.number(),
-    nodeKey: z.optional(
-      z.union([z.lazy(() => PublicKeySchema()), z.enum(['null'])])
-    ),
+    nodeKey: z.optional(z.union([z.lazy(() => PublicKeySchema()), z.null()])),
     nodePublicKey: z.lazy(() => PublicKeySchema()),
     protocolVersion: z.number(),
     rpcAddr: z.optional(z.string()),
     syncInfo: z.lazy(() => StatusSyncInfoSchema()),
     uptimeSec: z.number(),
     validatorAccountId: z.optional(
-      z.union([z.lazy(() => AccountIdSchema()), z.enum(['null'])])
+      z.union([z.lazy(() => AccountIdSchema()), z.null()])
     ),
     validatorPublicKey: z.optional(
-      z.union([z.lazy(() => PublicKeySchema()), z.enum(['null'])])
+      z.union([z.lazy(() => PublicKeySchema()), z.null()])
     ),
     validators: z.array(z.lazy(() => ValidatorInfoSchema())),
     version: z.lazy(() => VersionSchema()),
@@ -3024,9 +3005,7 @@ export const RpcValidatorResponseSchema = () =>
 
 export const RpcValidatorsOrderedRequestSchema = () =>
   z.object({
-    blockId: z.optional(
-      z.union([z.lazy(() => BlockIdSchema()), z.enum(['null'])])
-    ),
+    blockId: z.optional(z.union([z.lazy(() => BlockIdSchema()), z.null()])),
   });
 
 // View that preserves JSON format of the runtime config.
@@ -3260,10 +3239,10 @@ export const StateChangeWithCauseViewSchema = () =>
         amount: z.string(),
         codeHash: z.lazy(() => CryptoHashSchema()),
         globalContractAccountId: z.optional(
-          z.union([z.lazy(() => AccountIdSchema()), z.enum(['null'])])
+          z.union([z.lazy(() => AccountIdSchema()), z.null()])
         ),
         globalContractHash: z.optional(
-          z.union([z.lazy(() => CryptoHashSchema()), z.enum(['null'])])
+          z.union([z.lazy(() => CryptoHashSchema()), z.null()])
         ),
         locked: z.string(),
         storagePaidAt: z.optional(z.number()),
@@ -3359,22 +3338,18 @@ export const StateItemSchema = () =>
 export const StateSyncConfigSchema = () =>
   z.object({
     concurrency: z.optional(z.lazy(() => SyncConcurrencySchema())),
-    dump: z.optional(
-      z.union([z.lazy(() => DumpConfigSchema()), z.enum(['null'])])
-    ),
+    dump: z.optional(z.union([z.lazy(() => DumpConfigSchema()), z.null()])),
     sync: z.optional(z.lazy(() => SyncConfigSchema())),
   });
 
 export const StatusSyncInfoSchema = () =>
   z.object({
     earliestBlockHash: z.optional(
-      z.union([z.lazy(() => CryptoHashSchema()), z.enum(['null'])])
+      z.union([z.lazy(() => CryptoHashSchema()), z.null()])
     ),
     earliestBlockHeight: z.optional(z.number()),
     earliestBlockTime: z.optional(z.string()),
-    epochId: z.optional(
-      z.union([z.lazy(() => EpochIdSchema()), z.enum(['null'])])
-    ),
+    epochId: z.optional(z.union([z.lazy(() => EpochIdSchema()), z.null()])),
     epochStartHeight: z.optional(z.number()),
     latestBlockHash: z.lazy(() => CryptoHashSchema()),
     latestBlockHeight: z.number(),
@@ -3829,6 +3804,126 @@ export const ValidatorsRequestSchema = () =>
 
 export const ValidatorsResponseSchema = () =>
   z.lazy(() => JsonRpcResponseFor_RpcValidatorResponseAnd_RpcErrorSchema());
+
+// Auto-generated validation schema mapping
+// Maps RPC method names to their request/response schema functions
+export const VALIDATION_SCHEMA_MAP: Record<
+  string,
+  {
+    requestSchema?: () => any;
+    responseSchema?: () => any;
+  }
+> = {
+  EXPERIMENTAL_changes: {
+    requestSchema: EXPERIMENTALChangesRequestSchema,
+    responseSchema: EXPERIMENTALChangesResponseSchema,
+  },
+  EXPERIMENTAL_changes_in_block: {
+    requestSchema: EXPERIMENTALChangesInBlockRequestSchema,
+    responseSchema: EXPERIMENTALChangesInBlockResponseSchema,
+  },
+  EXPERIMENTAL_congestion_level: {
+    requestSchema: EXPERIMENTALCongestionLevelRequestSchema,
+    responseSchema: EXPERIMENTALCongestionLevelResponseSchema,
+  },
+  EXPERIMENTAL_genesis_config: {
+    requestSchema: EXPERIMENTALGenesisConfigRequestSchema,
+    responseSchema: EXPERIMENTALGenesisConfigResponseSchema,
+  },
+  EXPERIMENTAL_light_client_block_proof: {
+    requestSchema: EXPERIMENTALLightClientBlockProofRequestSchema,
+    responseSchema: EXPERIMENTALLightClientBlockProofResponseSchema,
+  },
+  EXPERIMENTAL_light_client_proof: {
+    requestSchema: EXPERIMENTALLightClientProofRequestSchema,
+    responseSchema: EXPERIMENTALLightClientProofResponseSchema,
+  },
+  EXPERIMENTAL_maintenance_windows: {
+    requestSchema: EXPERIMENTALMaintenanceWindowsRequestSchema,
+    responseSchema: EXPERIMENTALMaintenanceWindowsResponseSchema,
+  },
+  EXPERIMENTAL_protocol_config: {
+    requestSchema: EXPERIMENTALProtocolConfigRequestSchema,
+    responseSchema: EXPERIMENTALProtocolConfigResponseSchema,
+  },
+  EXPERIMENTAL_receipt: {
+    requestSchema: EXPERIMENTALReceiptRequestSchema,
+    responseSchema: EXPERIMENTALReceiptResponseSchema,
+  },
+  EXPERIMENTAL_split_storage_info: {
+    requestSchema: EXPERIMENTALSplitStorageInfoRequestSchema,
+    responseSchema: EXPERIMENTALSplitStorageInfoResponseSchema,
+  },
+  EXPERIMENTAL_tx_status: {
+    requestSchema: EXPERIMENTALTxStatusRequestSchema,
+    responseSchema: EXPERIMENTALTxStatusResponseSchema,
+  },
+  EXPERIMENTAL_validators_ordered: {
+    requestSchema: EXPERIMENTALValidatorsOrderedRequestSchema,
+    responseSchema: EXPERIMENTALValidatorsOrderedResponseSchema,
+  },
+  block: {
+    requestSchema: BlockRequestSchema,
+    responseSchema: BlockResponseSchema,
+  },
+  broadcast_tx_async: {
+    requestSchema: BroadcastTxAsyncRequestSchema,
+    responseSchema: BroadcastTxAsyncResponseSchema,
+  },
+  broadcast_tx_commit: {
+    requestSchema: BroadcastTxCommitRequestSchema,
+    responseSchema: BroadcastTxCommitResponseSchema,
+  },
+  changes: {
+    requestSchema: ChangesRequestSchema,
+    responseSchema: ChangesResponseSchema,
+  },
+  chunk: {
+    requestSchema: ChunkRequestSchema,
+    responseSchema: ChunkResponseSchema,
+  },
+  client_config: {
+    requestSchema: ClientConfigRequestSchema,
+    responseSchema: ClientConfigResponseSchema,
+  },
+  gas_price: {
+    requestSchema: GasPriceRequestSchema,
+    responseSchema: GasPriceResponseSchema,
+  },
+  health: {
+    requestSchema: HealthRequestSchema,
+    responseSchema: HealthResponseSchema,
+  },
+  light_client_proof: {
+    requestSchema: LightClientProofRequestSchema,
+    responseSchema: LightClientProofResponseSchema,
+  },
+  network_info: {
+    requestSchema: NetworkInfoRequestSchema,
+    responseSchema: NetworkInfoResponseSchema,
+  },
+  next_light_client_block: {
+    requestSchema: NextLightClientBlockRequestSchema,
+    responseSchema: NextLightClientBlockResponseSchema,
+  },
+  query: {
+    requestSchema: QueryRequestSchema,
+    responseSchema: QueryResponseSchema,
+  },
+  send_tx: {
+    requestSchema: SendTxRequestSchema,
+    responseSchema: SendTxResponseSchema,
+  },
+  status: {
+    requestSchema: StatusRequestSchema,
+    responseSchema: StatusResponseSchema,
+  },
+  tx: { requestSchema: TxRequestSchema, responseSchema: TxResponseSchema },
+  validators: {
+    requestSchema: ValidatorsRequestSchema,
+    responseSchema: ValidatorsResponseSchema,
+  },
+};
 
 // Utility schemas
 export const JsonRpcRequestSchema = () =>

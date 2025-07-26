@@ -222,7 +222,11 @@ function generateZodSchema(
     if (options.length === 1) {
       return options[0];
     }
-    return `z.union([${options.join(', ')}])`;
+    // Replace z.enum(["null"]) with z.null() in unions
+    const processedOptions = options.map(opt =>
+      opt === 'z.enum(["null"])' ? 'z.null()' : opt
+    );
+    return `z.union([${processedOptions.join(', ')}])`;
   }
 
   if (schema.anyOf) {
@@ -232,7 +236,11 @@ function generateZodSchema(
     if (options.length === 1) {
       return options[0];
     }
-    return `z.union([${options.join(', ')}])`;
+    // Replace z.enum(["null"]) with z.null() in unions
+    const processedOptions = options.map(opt =>
+      opt === 'z.enum(["null"])' ? 'z.null()' : opt
+    );
+    return `z.union([${processedOptions.join(', ')}])`;
   }
 
   if (schema.allOf) {
@@ -246,7 +254,18 @@ function generateZodSchema(
   }
 
   if (schema.enum) {
-    return `z.enum([${schema.enum.map(val => `"${val}"`).join(', ')}])`;
+    // Special handling for null values in enums
+    const enumValues = schema.enum.map(val => {
+      if (val === null || val === 'null') {
+        return 'null';
+      }
+      return `"${val}"`;
+    });
+    // If enum only contains null, just return z.null()
+    if (enumValues.length === 1 && enumValues[0] === 'null') {
+      return 'z.null()';
+    }
+    return `z.enum([${enumValues.join(', ')}])`;
   }
 
   switch (schema.type) {
@@ -423,8 +442,13 @@ export * from './schemas';
       schemaExports.push(schemaTypeName);
     });
 
-    // Generate method schemas
+    // Generate method schemas and validation mapping
     const miniMethodSchemas: string[] = [];
+    const validationMapping: Record<
+      string,
+      { requestSchema?: string; responseSchema?: string }
+    > = {};
+
     Object.entries(spec.paths).forEach(([path, pathSpec]) => {
       const methodName = PATH_TO_METHOD_MAP[path];
       if (!methodName) return;
@@ -433,15 +457,18 @@ export * from './schemas';
       if (!post) return;
 
       const methodNamePascal = pascalCase(methodName);
+      const methodEntry = (validationMapping[methodName] = {});
 
       // Generate request schema
       if (post.requestBody?.content?.['application/json']?.schema) {
         const requestSchema =
           post.requestBody.content['application/json'].schema;
         const zodMiniSchema = generateZodSchema(requestSchema, schemas, 0);
+        const schemaName = `${methodNamePascal}RequestSchema`;
         miniMethodSchemas.push(
-          `export const ${methodNamePascal}RequestSchema = () => ${zodMiniSchema};`
+          `export const ${schemaName} = () => ${zodMiniSchema};`
         );
+        methodEntry.requestSchema = schemaName;
       }
 
       // Generate response schema
@@ -449,11 +476,37 @@ export * from './schemas';
         const responseSchema =
           post.responses['200'].content['application/json'].schema;
         const zodMiniSchema = generateZodSchema(responseSchema, schemas, 0);
+        const schemaName = `${methodNamePascal}ResponseSchema`;
         miniMethodSchemas.push(
-          `export const ${methodNamePascal}ResponseSchema = () => ${zodMiniSchema};`
+          `export const ${schemaName} = () => ${zodMiniSchema};`
         );
+        methodEntry.responseSchema = schemaName;
       }
     });
+
+    // Generate validation mapping for use by validation system
+    const validationMappingCode = `
+// Auto-generated validation schema mapping
+// Maps RPC method names to their request/response schema functions
+export const VALIDATION_SCHEMA_MAP: Record<string, {
+  requestSchema?: () => any;
+  responseSchema?: () => any;
+}> = {
+${Object.entries(validationMapping)
+  .map(([methodName, schemas]) => {
+    const requestPart = schemas.requestSchema
+      ? `requestSchema: ${schemas.requestSchema}`
+      : '';
+    const responsePart = schemas.responseSchema
+      ? `responseSchema: ${schemas.responseSchema}`
+      : '';
+    const parts = [requestPart, responsePart].filter(Boolean).join(', ');
+    return `  '${methodName}': { ${parts} }`;
+  })
+  .join(',\n')}
+};`;
+
+    miniMethodSchemas.push(validationMappingCode);
 
     // Generate method mapping
     const methodMappingContent = `// Auto-generated method mapping from NEAR OpenAPI spec
