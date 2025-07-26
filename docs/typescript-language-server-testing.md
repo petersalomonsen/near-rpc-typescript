@@ -43,7 +43,7 @@ client. // Should show: block, status, query, tx, etc.
 Tests that method hover shows proper type information:
 
 ```typescript
-client.block // Hover shows: (method) block(params?: RpcBlockRequest): Promise<RpcBlockResponse>
+client.block; // Hover shows: (method) block(params?: RpcBlockRequest): Promise<RpcBlockResponse>
 ```
 
 ### 3. Parameter Completions
@@ -52,9 +52,9 @@ Tests that object parameters show available properties:
 
 ```typescript
 client.viewAccount({
-  accountId: "example.near",
+  accountId: 'example.near',
   // Should show: finality, blockId
-})
+});
 ```
 
 ### 4. Error Diagnostics

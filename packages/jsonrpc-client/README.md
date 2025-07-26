@@ -10,18 +10,18 @@ pnpm add @near-js/jsonrpc-client
 
 ## Usage
 
-Create a new client instance and call any of the available RPC methods:
+Create a new client instance and use the available RPC functions:
 
 ```typescript
-import { NearRpcClient } from '@near-js/jsonrpc-client';
+import { NearRpcClient, status } from '@near-js/jsonrpc-client';
 
 const client = new NearRpcClient({
-  endpoint: 'https://rpc.mainnet.near.org'
+  endpoint: 'https://rpc.mainnet.near.org',
 });
 
 async function getNetworkStatus() {
-  const status = await client.status();
-  console.log('Network status:', status);
+  const result = await status(client);
+  console.log('Network status:', result);
 }
 
 getNetworkStatus();
@@ -32,15 +32,15 @@ getNetworkStatus();
 All method calls return a promise that resolves to a fully typed result object based on the JSON-RPC API specification.
 
 ```typescript
-import { NearRpcClient } from '@near-js/jsonrpc-client';
+import { NearRpcClient, block } from '@near-js/jsonrpc-client';
 
 const client = new NearRpcClient({
-  endpoint: 'https://rpc.mainnet.near.org'
+  endpoint: 'https://rpc.mainnet.near.org',
 });
 
 async function getLatestBlock() {
-  const block = await client.block({ finality: 'final' });
-  console.log('Latest block height:', block.header?.height);
+  const result = await block(client, { finality: 'final' });
+  console.log('Latest block height:', result.header?.height);
 }
 
 getLatestBlock();
@@ -54,7 +54,7 @@ The client includes convenience methods for common query operations:
 // View account information
 const account = await client.viewAccount({
   accountId: 'example.near',
-  finality: 'final'
+  finality: 'final',
 });
 console.log('Account balance:', account.amount);
 console.log('Storage used:', account.storageUsage);
@@ -63,14 +63,14 @@ console.log('Storage used:', account.storageUsage);
 const result = await client.viewFunction({
   accountId: 'contract.near',
   methodName: 'get_balance',
-  finality: 'final'
+  finality: 'final',
 });
 
 // View access keys
 const accessKey = await client.viewAccessKey({
   accountId: 'example.near',
   publicKey: 'ed25519:...',
-  finality: 'final'
+  finality: 'final',
 });
 ```
 

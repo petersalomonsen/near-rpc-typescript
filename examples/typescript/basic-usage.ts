@@ -7,18 +7,19 @@
  * 3. Run `pnpm tsx examples/typescript/basic-usage.ts` from the root of the repository.
  */
 
-import { NearRpcClient } from '@near-js/jsonrpc-client';
+import { NearRpcClient, block } from '@near-js/jsonrpc-client';
+import { viewAccount } from '@near-js/jsonrpc-client';
 
 const client = new NearRpcClient({
   endpoint: 'https://rpc.testnet.fastnear.com',
 });
 
 console.log('Getting latest block...');
-const latestBlock = await client.block({ finality: 'final' });
+const latestBlock = await block(client, { finality: 'final' });
 console.log('Latest block:', latestBlock.header.height);
 
 console.log('\nViewing account...');
-const account = await client.viewAccount({
+const account = await viewAccount(client, {
   accountId: 'example.testnet',
   finality: 'final',
 });
@@ -27,5 +28,8 @@ console.log('Account details:', account);
 console.log('\nGetting a specific block...');
 // Use a recent block height from the result above for a valid query
 const specificBlockHeight = latestBlock.header.height - 100;
-const block = await client.block({ blockId: specificBlockHeight });
-console.log(`Block at height ${specificBlockHeight}:`, block.header.hash);
+const specificBlock = await block(client, { blockId: specificBlockHeight });
+console.log(
+  `Block at height ${specificBlockHeight}:`,
+  specificBlock.header.hash
+);

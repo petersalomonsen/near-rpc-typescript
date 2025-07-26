@@ -27,14 +27,6 @@ const BUNDLE_PATHS = {
     __dirname,
     '../../packages/jsonrpc-client/dist/browser-standalone.min.js'
   ),
-  'browser-standalone-mini.js': join(
-    __dirname,
-    '../../packages/jsonrpc-client/dist/browser-standalone-mini.js'
-  ),
-  'browser-standalone-mini.min.js': join(
-    __dirname,
-    '../../packages/jsonrpc-client/dist/browser-standalone-mini.min.js'
-  ),
 };
 
 // React app paths
@@ -114,14 +106,12 @@ const server = createServer(async (req, res) => {
 server.listen(PORT, () => {
   console.log(`Test server running at http://localhost:${PORT}`);
   console.log('Available pages:');
-  console.log('  - / (regular client test page)');
-  console.log('  - /mini.html (mini client test page)');
-  console.log('  - /react (React mini client example)');
+  console.log('  - / (client test page)');
+  console.log('  - /mini.html (alternative test page)');
+  console.log('  - /react (React client example)');
   console.log('Available bundles:');
-  console.log('  - /browser-standalone.js (regular unminified)');
-  console.log('  - /browser-standalone.min.js (regular minified)');
-  console.log('  - /browser-standalone-mini.js (mini unminified)');
-  console.log('  - /browser-standalone-mini.min.js (mini minified)');
+  console.log('  - /browser-standalone.js (unminified)');
+  console.log('  - /browser-standalone.min.js (minified)');
 });
 
 // Graceful shutdown

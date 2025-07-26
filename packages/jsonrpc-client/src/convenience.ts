@@ -1,11 +1,11 @@
-// Convenience functions for the mini client
-import type { NearRpcClient } from './client.mini.js';
-import { query } from './generated-types.mini.js';
+// Convenience functions for the client
+import type { NearRpcClient } from './client.js';
+import { query } from './generated-functions.js';
 import type {
   AccountView,
   CallResult,
   AccessKeyView,
-} from '@near-js/jsonrpc-types/mini';
+} from '@near-js/jsonrpc-types';
 
 export async function viewAccount(
   client: NearRpcClient,

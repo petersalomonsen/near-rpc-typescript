@@ -236,32 +236,18 @@ test.describe('Mini Bundle Browser Tests', () => {
     expect(className).toBe('result');
   });
 
-  test('should compare bundle sizes', async ({ page }) => {
-    const regularBundlePath = join(
+  test('should verify optimized bundle size', async ({ page }) => {
+    const bundlePath = join(
       process.cwd(),
       'packages/jsonrpc-client/dist/browser-standalone.min.js'
     );
-    const miniBundlePath = join(
-      process.cwd(),
-      'packages/jsonrpc-client/dist/browser-standalone-mini.min.js'
-    );
 
-    const regularSize = readFileSync(regularBundlePath).length;
-    const miniSize = readFileSync(miniBundlePath).length;
+    const bundleSize = readFileSync(bundlePath).length;
 
-    console.log(`Regular bundle: ${(regularSize / 1024).toFixed(1)}KB`);
-    console.log(`Mini bundle: ${(miniSize / 1024).toFixed(1)}KB`);
-    console.log(
-      `Difference: ${((miniSize - regularSize) / 1024).toFixed(1)}KB`
-    );
+    console.log(`Optimized bundle: ${(bundleSize / 1024).toFixed(1)}KB`);
 
-    // Verify both bundles exist and have reasonable sizes (updated for optimized bundles)
-    expect(regularSize).toBeGreaterThan(50 * 1024); // > 50KB
-    expect(miniSize).toBeGreaterThan(10 * 1024); // > 10KB (optimized with function consolidation)
-    expect(regularSize).toBeLessThan(200 * 1024); // < 200KB
-    expect(miniSize).toBeLessThan(50 * 1024); // < 50KB (much smaller due to tree-shaking)
-
-    // Mini bundle should be smaller than regular bundle
-    expect(miniSize).toBeLessThan(regularSize);
+    // Verify bundle exists and has reasonable size for tree-shakable static functions
+    expect(bundleSize).toBeGreaterThan(10 * 1024); // > 10KB (reasonable minimum)
+    expect(bundleSize).toBeLessThan(100 * 1024); // < 100KB (should be smaller due to tree-shaking optimization)
   });
 });

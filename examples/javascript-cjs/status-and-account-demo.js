@@ -7,7 +7,14 @@
  * 3. Run `node examples/javascript-cjs/status-and-account-demo.js` from the root of the repository.
  */
 
-const { NearRpcClient } = require('@near-js/jsonrpc-client');
+const {
+  NearRpcClient,
+  status,
+  block,
+  gasPrice,
+  health,
+  viewAccount,
+} = require('@near-js/jsonrpc-client');
 
 async function testClient() {
   console.log('🚀 Testing NEAR RPC Client...\n');
@@ -21,35 +28,37 @@ async function testClient() {
   try {
     // Test 1: Get node status
     console.log('\n📊 Testing status() method...');
-    const status = await client.status();
+    const statusResult = await status(client);
     console.log(
-      `✅ Node status: ${status.chainId} (${status.version?.version || 'unknown'})`
+      `✅ Node status: ${statusResult.chainId} (${statusResult.version?.version || 'unknown'})`
     );
     console.log(
-      `   Block height: ${status.syncInfo?.latestBlockHeight || 'unknown'}`
+      `   Block height: ${statusResult.syncInfo?.latestBlockHeight || 'unknown'}`
     );
 
     // Test 2: Get latest block
     console.log('\n🧱 Testing block() method...');
-    const block = await client.block({ finality: 'final' });
-    console.log(`✅ Latest block: ${block.header?.height || 'unknown'}`);
+    const blockResult = await block(client, { finality: 'final' });
+    console.log(`✅ Latest block: ${blockResult.header?.height || 'unknown'}`);
     console.log(
-      `   Hash: ${block.header?.hash?.substring(0, 16) || 'unknown'}...`
+      `   Hash: ${blockResult.header?.hash?.substring(0, 16) || 'unknown'}...`
     );
 
-    // Test 3: Skip gas price for now (needs array params)
-    console.log('\n⛽ Skipping gasPrice() - needs parameter format fix');
+    // Test 3: Test gas price
+    console.log('\n⛽ Testing gasPrice() method...');
+    const gasPriceResult = await gasPrice(client, [null]);
+    console.log(`✅ Gas price: ${gasPriceResult.gasPrice} yoctoNEAR`);
 
     // Test 4: Test health endpoint
     console.log('\n🏥 Testing health() method...');
-    const health = await client.health();
+    const healthResult = await health(client);
     console.log(
-      `✅ Health check: ${health === null ? 'OK' : 'Issues detected'}`
+      `✅ Health check: ${healthResult === null ? 'OK' : 'Issues detected'}`
     );
 
     // Test 5: Test a view account call
     console.log('\n👤 Testing viewAccount() method...');
-    const account = await client.viewAccount({
+    const account = await viewAccount(client, {
       accountId: 'testnet',
       finality: 'final',
     });

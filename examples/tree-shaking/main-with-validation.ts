@@ -6,10 +6,10 @@ import {
   viewAccount,
   NearRpcClient,
   enableValidation,
-} from '@near-js/jsonrpc-client/mini';
+} from '@near-js/jsonrpc-client';
 
 // Import specific schema for manual validation
-import { RpcBlockRequestSchema } from '@near-js/jsonrpc-types/mini';
+import { RpcBlockRequestSchema } from '@near-js/jsonrpc-types';
 
 // Enable validation - this will include Zod schemas in the bundle
 const validation = enableValidation();

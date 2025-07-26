@@ -34,7 +34,7 @@ jobs:
 
       - name: Build packages
         run: pnpm build
-        
+
       - name: Check TypeScript examples for errors
         run: cd examples && pnpm test:typescript
 

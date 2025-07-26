@@ -567,8 +567,8 @@ export async function ${mapping.clientMethodName}(
     ]),
   ].sort();
 
-  const importStatement = `import type {\n  ${allTypes.join(',\n  ')}\n} from '@near-js/jsonrpc-types/mini';
-import type { NearRpcClient } from './client.mini';`;
+  const importStatement = `import type {\n  ${allTypes.join(',\n  ')}\n} from '@near-js/jsonrpc-types';
+import type { NearRpcClient } from './client';`;
 
   const interfaces = `
 // Dynamic RPC methods interface with proper typing
@@ -646,21 +646,14 @@ export async function generateClientInterface(
   );
   console.log(`   Found ${mappings.length} RPC methods to generate`);
 
-  // Generate the interface
-  const generated = generateInterfaceContent(mappings);
-
-  // Also generate static functions for mini version
+  // Generate static functions (mini is now the default and only version)
   const staticFunctionsContent = generateStaticFunctions(mappings);
 
   // Ensure output directory exists
   await fs.mkdir(dirname(outputPath), { recursive: true });
 
-  // Write the generated interface
-  await fs.writeFile(outputPath, generated.content, 'utf8');
-
-  // Write static functions for mini version
-  const miniOutputPath = outputPath.replace('.ts', '.mini.ts');
-  await fs.writeFile(miniOutputPath, staticFunctionsContent, 'utf8');
+  // Write static functions as the main and only file
+  await fs.writeFile(outputPath, staticFunctionsContent, 'utf8');
 
   // Generate a separate export file for functions
   const functionExports = mappings.map(m => m.clientMethodName).join(',\n  ');
@@ -670,28 +663,31 @@ export async function generateClientInterface(
 
 export {
   ${functionExports}
-} from './generated-types.mini';
+} from './generated-types';
 
 // Re-export convenience functions
-export { viewAccount, viewFunction, viewAccessKey } from './convenience.mini';
+export { viewAccount, viewFunction, viewAccessKey } from './convenience';
 `;
 
   const functionsExportPath = join(
     dirname(outputPath),
-    'generated-functions.mini.ts'
+    'generated-functions.ts'
   );
   await fs.writeFile(functionsExportPath, functionsExportContent, 'utf8');
 
-  console.log(`✅ Generated client interface at ${outputPath}`);
-  console.log(`✅ Generated mini static functions at ${miniOutputPath}`);
+  console.log(`✅ Generated static functions at ${outputPath}`);
   console.log(`✅ Generated function exports at ${functionsExportPath}`);
   console.log(
     `✅ All ${mappings.length} functions in single file for optimal tree-shaking`
   );
-  console.log(`   Methods: ${generated.methodCount}`);
-  console.log(`   Timestamp: ${generated.timestamp}`);
+  console.log(`   Methods: ${mappings.length}`);
+  console.log(`   Timestamp: ${new Date().toISOString()}`);
 
-  return generated;
+  return {
+    content: staticFunctionsContent,
+    methodCount: mappings.length,
+    timestamp: new Date().toISOString(),
+  };
 }
 
 // CLI entry point

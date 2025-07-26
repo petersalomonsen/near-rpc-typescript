@@ -2,13 +2,13 @@
 import {
   JsonRpcRequestSchema,
   JsonRpcResponseSchema,
-} from '@near-js/jsonrpc-types/mini';
+} from '@near-js/jsonrpc-types';
 import {
   JsonRpcRequest,
   JsonRpcResponse,
   JsonRpcClientError,
   JsonRpcNetworkError,
-} from './client.mini.js';
+} from './client.js';
 
 export interface ValidationResult {
   validateRequest: (request: JsonRpcRequest) => void;

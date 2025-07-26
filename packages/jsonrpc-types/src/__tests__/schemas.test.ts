@@ -15,7 +15,7 @@ describe('JsonRpcRequestSchema', () => {
       params: { finality: 'final' },
     };
 
-    const result = JsonRpcRequestSchema.safeParse(validRequest);
+    const result = JsonRpcRequestSchema().safeParse(validRequest);
     expect(result.success).toBe(true);
   });
 
@@ -25,7 +25,7 @@ describe('JsonRpcRequestSchema', () => {
       method: 'block',
     };
 
-    const result = JsonRpcRequestSchema.safeParse(invalidRequest);
+    const result = JsonRpcRequestSchema().safeParse(invalidRequest);
     expect(result.success).toBe(false);
   });
 
@@ -36,7 +36,7 @@ describe('JsonRpcRequestSchema', () => {
       method: 'block',
     };
 
-    const result = JsonRpcRequestSchema.safeParse(invalidRequest);
+    const result = JsonRpcRequestSchema().safeParse(invalidRequest);
     expect(result.success).toBe(false);
   });
 
@@ -46,7 +46,7 @@ describe('JsonRpcRequestSchema', () => {
       method: 'block',
     };
 
-    const result = JsonRpcRequestSchema.safeParse(invalidRequest);
+    const result = JsonRpcRequestSchema().safeParse(invalidRequest);
     expect(result.success).toBe(false);
   });
 
@@ -56,7 +56,7 @@ describe('JsonRpcRequestSchema', () => {
       id: 'test-id',
     };
 
-    const result = JsonRpcRequestSchema.safeParse(invalidRequest);
+    const result = JsonRpcRequestSchema().safeParse(invalidRequest);
     expect(result.success).toBe(false);
   });
 
@@ -67,7 +67,7 @@ describe('JsonRpcRequestSchema', () => {
       method: 'block',
     };
 
-    const result = JsonRpcRequestSchema.safeParse(validRequest);
+    const result = JsonRpcRequestSchema().safeParse(validRequest);
     expect(result.success).toBe(true);
   });
 
@@ -78,7 +78,7 @@ describe('JsonRpcRequestSchema', () => {
     ];
 
     testCases.forEach(request => {
-      const result = JsonRpcRequestSchema.safeParse(request);
+      const result = JsonRpcRequestSchema().safeParse(request);
       expect(result.success).toBe(true);
     });
   });
@@ -92,7 +92,7 @@ describe('JsonRpcResponseSchema', () => {
       result: { someData: 'value' },
     };
 
-    const result = JsonRpcResponseSchema.safeParse(validResponse);
+    const result = JsonRpcResponseSchema().safeParse(validResponse);
     expect(result.success).toBe(true);
   });
 
@@ -106,7 +106,7 @@ describe('JsonRpcResponseSchema', () => {
       },
     };
 
-    const result = JsonRpcResponseSchema.safeParse(validResponse);
+    const result = JsonRpcResponseSchema().safeParse(validResponse);
     expect(result.success).toBe(true);
   });
 
@@ -116,7 +116,7 @@ describe('JsonRpcResponseSchema', () => {
       result: { someData: 'value' },
     };
 
-    const result = JsonRpcResponseSchema.safeParse(invalidResponse);
+    const result = JsonRpcResponseSchema().safeParse(invalidResponse);
     expect(result.success).toBe(false);
   });
 
@@ -127,7 +127,7 @@ describe('JsonRpcResponseSchema', () => {
       result: { someData: 'value' },
     };
 
-    const result = JsonRpcResponseSchema.safeParse(invalidResponse);
+    const result = JsonRpcResponseSchema().safeParse(invalidResponse);
     expect(result.success).toBe(false);
   });
 
@@ -137,7 +137,7 @@ describe('JsonRpcResponseSchema', () => {
       result: { someData: 'value' },
     };
 
-    const result = JsonRpcResponseSchema.safeParse(invalidResponse);
+    const result = JsonRpcResponseSchema().safeParse(invalidResponse);
     expect(result.success).toBe(false);
   });
 
@@ -149,7 +149,7 @@ describe('JsonRpcResponseSchema', () => {
       error: { code: -32601, message: 'Method not found' },
     };
 
-    const result = JsonRpcResponseSchema.safeParse(responseWithBoth);
+    const result = JsonRpcResponseSchema().safeParse(responseWithBoth);
     // Current schema allows both - this is technically against JSON-RPC spec but matches our schema
     expect(result.success).toBe(true);
   });
@@ -160,7 +160,7 @@ describe('JsonRpcResponseSchema', () => {
       id: 'test-id',
     };
 
-    const result = JsonRpcResponseSchema.safeParse(responseWithNeither);
+    const result = JsonRpcResponseSchema().safeParse(responseWithNeither);
     // Current schema allows this - both result and error are optional
     expect(result.success).toBe(true);
   });
@@ -173,7 +173,7 @@ describe('JsonRpcErrorSchema', () => {
       message: 'Method not found',
     };
 
-    const result = JsonRpcErrorSchema.safeParse(validError);
+    const result = JsonRpcErrorSchema().safeParse(validError);
     expect(result.success).toBe(true);
   });
 
@@ -184,7 +184,7 @@ describe('JsonRpcErrorSchema', () => {
       data: { details: 'Missing required parameter' },
     };
 
-    const result = JsonRpcErrorSchema.safeParse(validError);
+    const result = JsonRpcErrorSchema().safeParse(validError);
     expect(result.success).toBe(true);
   });
 
@@ -193,7 +193,7 @@ describe('JsonRpcErrorSchema', () => {
       message: 'Method not found',
     };
 
-    const result = JsonRpcErrorSchema.safeParse(invalidError);
+    const result = JsonRpcErrorSchema().safeParse(invalidError);
     expect(result.success).toBe(false);
   });
 
@@ -202,7 +202,7 @@ describe('JsonRpcErrorSchema', () => {
       code: -32601,
     };
 
-    const result = JsonRpcErrorSchema.safeParse(invalidError);
+    const result = JsonRpcErrorSchema().safeParse(invalidError);
     expect(result.success).toBe(false);
   });
 
@@ -217,7 +217,7 @@ describe('JsonRpcErrorSchema', () => {
     ];
 
     testCases.forEach(error => {
-      const result = JsonRpcErrorSchema.safeParse(error);
+      const result = JsonRpcErrorSchema().safeParse(error);
       expect(result.success).toBe(true);
     });
   });
