@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v0.5.0...jsonrpc-client-v1.0.0) (2025-07-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* Client now uses static functions instead of instance methods. Instead of client.block(), use block(client, params).
+
+### Features
+
+* make mini client the default implementation ([#32](https://github.com/petersalomonsen/near-rpc-typescript/issues/32)) ([5afbf92](https://github.com/petersalomonsen/near-rpc-typescript/commit/5afbf92249f93f52fa456882539cb7fadd8c93d2))
+
 ## [0.5.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v0.4.0...jsonrpc-client-v0.5.0) (2025-07-25)
 
 
