@@ -146,9 +146,8 @@ test.describe('NEAR RPC One-Liner Browser Tests', () => {
 
     // Test various RPC methods that can be called in one-liner style
     const result = await page.evaluate(async () => {
-      const { NearRpcClient, block, status, gasPrice, viewAccount } = await import(
-        'http://localhost:3000/browser-standalone.js'
-      );
+      const { NearRpcClient, block, status, gasPrice, viewAccount } =
+        await import('http://localhost:3000/browser-standalone.js');
       const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
 
       // Get latest block for height
@@ -160,7 +159,10 @@ test.describe('NEAR RPC One-Liner Browser Tests', () => {
         block(client, { blockId: targetHeight }),
         status(client),
         gasPrice(client, {}),
-        viewAccount(client, { accountId: 'example.testnet', finality: 'final' }),
+        viewAccount(client, {
+          accountId: 'example.testnet',
+          finality: 'final',
+        }),
       ]);
 
       return {
