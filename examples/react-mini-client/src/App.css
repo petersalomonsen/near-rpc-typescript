@@ -123,25 +123,25 @@
   .app-header p {
     color: #aaa;
   }
-  
+
   .network-card,
   .account-card,
   .features {
     background: #1a1a1a;
     border: 1px solid #333;
   }
-  
+
   .network-card h2,
   .account-card h2,
   .features h2 {
     color: #fff;
   }
-  
+
   .network-info strong,
   .account-info strong {
     color: #7c7cff;
   }
-  
+
   .features li {
     color: #ccc;
   }
@@ -152,11 +152,11 @@
   .app {
     padding: 1rem;
   }
-  
+
   .app-header h1 {
     font-size: 2rem;
   }
-  
+
   .network-card,
   .account-card,
   .features {

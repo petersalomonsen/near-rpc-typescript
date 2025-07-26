@@ -7,14 +7,14 @@
  * 3. Run `pnpm tsx examples/typescript/get-latest-block.ts` from the root of the repository.
  */
 
-import { NearRpcClient } from '@near-js/jsonrpc-client';
+import { NearRpcClient, block } from '@near-js/jsonrpc-client';
 
 const provider = new NearRpcClient({
   endpoint: 'https://rpc.mainnet.fastnear.com',
 });
 
-const block = await provider.block({
+const latestBlock = await block(provider, {
   finality: 'final',
 });
 
-console.log('block', block);
+console.log('block', latestBlock);

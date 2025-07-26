@@ -206,43 +206,46 @@ function formatComment(description: string): string {
 function generateZodSchema(
   schema: Schema,
   schemas: Record<string, Schema>,
-  depth = 0,
-  useMini = false
+  depth = 0
 ): string {
   if (depth > 10) return 'z.unknown()'; // Prevent infinite recursion
 
   if (schema.$ref) {
     const refName = schema.$ref.replace('#/components/schemas/', '');
-    if (useMini) {
-      return `z.lazy(() => ${pascalCase(refName)}Schema())`;
-    } else {
-      return `z.lazy(() => ${pascalCase(refName)}Schema)`;
-    }
+    return `z.lazy(() => ${pascalCase(refName)}Schema())`;
   }
 
   if (schema.oneOf) {
     const options = schema.oneOf.map(s =>
-      generateZodSchema(s, schemas, depth + 1, useMini)
+      generateZodSchema(s, schemas, depth + 1)
     );
     if (options.length === 1) {
       return options[0];
     }
-    return `z.union([${options.join(', ')}])`;
+    // Replace z.enum(["null"]) with z.null() in unions
+    const processedOptions = options.map(opt =>
+      opt === 'z.enum(["null"])' ? 'z.null()' : opt
+    );
+    return `z.union([${processedOptions.join(', ')}])`;
   }
 
   if (schema.anyOf) {
     const options = schema.anyOf.map(s =>
-      generateZodSchema(s, schemas, depth + 1, useMini)
+      generateZodSchema(s, schemas, depth + 1)
     );
     if (options.length === 1) {
       return options[0];
     }
-    return `z.union([${options.join(', ')}])`;
+    // Replace z.enum(["null"]) with z.null() in unions
+    const processedOptions = options.map(opt =>
+      opt === 'z.enum(["null"])' ? 'z.null()' : opt
+    );
+    return `z.union([${processedOptions.join(', ')}])`;
   }
 
   if (schema.allOf) {
     const allSchemas = schema.allOf.map(s =>
-      generateZodSchema(s, schemas, depth + 1, useMini)
+      generateZodSchema(s, schemas, depth + 1)
     );
     if (allSchemas.length === 1) {
       return allSchemas[0];
@@ -251,7 +254,18 @@ function generateZodSchema(
   }
 
   if (schema.enum) {
-    return `z.enum([${schema.enum.map(val => `"${val}"`).join(', ')}])`;
+    // Special handling for null values in enums
+    const enumValues = schema.enum.map(val => {
+      if (val === null || val === 'null') {
+        return 'null';
+      }
+      return `"${val}"`;
+    });
+    // If enum only contains null, just return z.null()
+    if (enumValues.length === 1 && enumValues[0] === 'null') {
+      return 'z.null()';
+    }
+    return `z.enum([${enumValues.join(', ')}])`;
   }
 
   switch (schema.type) {
@@ -264,7 +278,7 @@ function generateZodSchema(
       return 'z.boolean()';
     case 'array':
       const itemSchema = schema.items
-        ? generateZodSchema(schema.items, schemas, depth + 1, useMini)
+        ? generateZodSchema(schema.items, schemas, depth + 1)
         : 'z.unknown()';
       return `z.array(${itemSchema})`;
     case 'object':
@@ -278,8 +292,7 @@ function generateZodSchema(
           const valueSchema = generateZodSchema(
             schema.additionalProperties,
             schemas,
-            depth + 1,
-            useMini
+            depth + 1
           );
           return `z.record(z.string(), ${valueSchema})`;
         }
@@ -290,16 +303,11 @@ function generateZodSchema(
         ([key, prop]) => {
           const isOptional = !schema.required?.includes(key);
           const camelKey = snakeToCamel(key);
-          const zodSchema = generateZodSchema(
-            prop,
-            schemas,
-            depth + 1,
-            useMini
-          );
-          if (useMini && isOptional) {
+          const zodSchema = generateZodSchema(prop, schemas, depth + 1);
+          if (isOptional) {
             return `  ${camelKey}: z.optional(${zodSchema})`;
           }
-          return `  ${camelKey}: ${zodSchema}${isOptional && !useMini ? '.optional()' : ''}`;
+          return `  ${camelKey}: ${zodSchema}`;
         }
       );
 
@@ -310,10 +318,7 @@ function generateZodSchema(
 }
 
 // Add explicit types for problematic schemas
-function getSchemaExplicitType(
-  schemaName: string,
-  useMini = false
-): string | null {
+function getSchemaExplicitType(schemaName: string): string | null {
   const circularSchemas = [
     'Action',
     'DelegateAction',
@@ -322,7 +327,7 @@ function getSchemaExplicitType(
   ];
   if (circularSchemas.includes(schemaName)) {
     // zod/mini doesn't export ZodType, so we use a different approach
-    return useMini ? ': any' : ': z.ZodType<any>';
+    return ': any';
   }
   return null;
 }
@@ -346,10 +351,9 @@ export async function generateTypes() {
       `📋 Extracted ${Object.keys(PATH_TO_METHOD_MAP).length} method mappings from OpenAPI spec`
     );
 
-    // Generate TypeScript types using z.infer
+    // Generate TypeScript types using z.infer (mini only)
     console.log('🔧 Generating TypeScript types using z.infer...');
     const typeExports: string[] = [];
-    const typeDefinitions: string[] = [];
     const miniTypeDefinitions: string[] = [];
 
     // Generate types for each schema using z.infer
@@ -360,11 +364,6 @@ export async function generateTypes() {
       // Add description as JSDoc if available
       const description = formatComment(schema.description || '');
 
-      // Generate z.infer type (regular)
-      typeDefinitions.push(
-        `${description}export type ${typeName} = z.infer<typeof schemas.${schemaTypeName}>;`
-      );
-
       // Generate z.infer type (mini - using ReturnType since schemas are functions)
       miniTypeDefinitions.push(
         `${description}export type ${typeName} = z.infer<ReturnType<typeof schemas.${schemaTypeName}>>;`
@@ -374,7 +373,6 @@ export async function generateTypes() {
     });
 
     // Generate method parameter and response types using z.infer
-    const methodTypes: string[] = [];
     const miniMethodTypes: string[] = [];
     Object.entries(spec.paths).forEach(([path, pathSpec]) => {
       const methodName = PATH_TO_METHOD_MAP[path];
@@ -387,9 +385,6 @@ export async function generateTypes() {
 
       // Generate request type using z.infer
       if (post.requestBody?.content?.['application/json']?.schema) {
-        methodTypes.push(
-          `export type ${methodNamePascal}Request = z.infer<typeof schemas.${methodNamePascal}RequestSchema>;`
-        );
         miniMethodTypes.push(
           `export type ${methodNamePascal}Request = z.infer<ReturnType<typeof schemas.${methodNamePascal}RequestSchema>>;`
         );
@@ -397,38 +392,19 @@ export async function generateTypes() {
 
       // Generate response type using z.infer
       if (post.responses?.['200']?.content?.['application/json']?.schema) {
-        methodTypes.push(
-          `export type ${methodNamePascal}Response = z.infer<typeof schemas.${methodNamePascal}ResponseSchema>;`
-        );
         miniMethodTypes.push(
           `export type ${methodNamePascal}Response = z.infer<ReturnType<typeof schemas.${methodNamePascal}ResponseSchema>>;`
         );
       }
     });
 
-    const typesContent = `// Auto-generated TypeScript types from NEAR OpenAPI spec using z.infer
-// Generated on: ${new Date().toISOString()}
-// Do not edit manually - run 'pnpm generate' to regenerate
-
-import { z } from 'zod/v4';
-import * as schemas from './schemas';
-
-${typeDefinitions.join('\n\n')}
-
-// Method-specific types
-${methodTypes.join('\n\n')}
-
-// Re-exports for convenience
-export * from './schemas';
-`;
-
-    // Create mini types content
-    const miniTypesContent = `// Auto-generated TypeScript types from NEAR OpenAPI spec using z.infer (zod/mini version)
+    // Create types content (zod/mini only)
+    const typesContent = `// Auto-generated TypeScript types from NEAR OpenAPI spec using z.infer (zod/mini version)
 // Generated on: ${new Date().toISOString()}
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/mini';
-import * as schemas from './schemas.mini';
+import * as schemas from './schemas';
 
 ${miniTypeDefinitions.join('\n\n')}
 
@@ -436,19 +412,17 @@ ${miniTypeDefinitions.join('\n\n')}
 ${miniMethodTypes.join('\n\n')}
 
 // Re-exports for convenience
-export * from './schemas.mini';
+export * from './schemas';
 `;
 
-    // Generate Zod schemas (both regular and mini versions)
+    // Generate Zod schemas (mini versions only)
     console.log('🔧 Generating Zod schemas...');
     const schemaExports: string[] = [];
-    const schemaDefinitions: string[] = [];
     const miniSchemaDefinitions: string[] = [];
 
     Object.entries(schemas).forEach(([schemaName, schema]) => {
       const schemaTypeName = `${pascalCase(schemaName)}Schema`;
-      const zodSchema = generateZodSchema(schema, schemas, 0, false);
-      const zodMiniSchema = generateZodSchema(schema, schemas, 0, true);
+      const zodMiniSchema = generateZodSchema(schema, schemas, 0);
 
       // Add description as comment if available
       const description = schema.description
@@ -459,23 +433,22 @@ export * from './schemas.mini';
         : '';
 
       // Handle circular references with explicit types
-      const explicitType = getSchemaExplicitType(schemaName, false);
-      const explicitTypeMini = getSchemaExplicitType(schemaName, true);
-      const typeAnnotation = explicitType || '';
+      const explicitTypeMini = getSchemaExplicitType(schemaName);
       const typeAnnotationMini = explicitTypeMini || '';
 
-      schemaDefinitions.push(
-        `${description}export const ${schemaTypeName}${typeAnnotation} = ${zodSchema};`
-      );
       miniSchemaDefinitions.push(
         `${description}export const ${schemaTypeName}${typeAnnotationMini} = () => ${zodMiniSchema};`
       );
       schemaExports.push(schemaTypeName);
     });
 
-    // Generate method schemas
-    const methodSchemas: string[] = [];
+    // Generate method schemas and validation mapping
     const miniMethodSchemas: string[] = [];
+    const validationMapping: Record<
+      string,
+      { requestSchema?: string; responseSchema?: string }
+    > = {};
+
     Object.entries(spec.paths).forEach(([path, pathSpec]) => {
       const methodName = PATH_TO_METHOD_MAP[path];
       if (!methodName) return;
@@ -484,78 +457,56 @@ export * from './schemas.mini';
       if (!post) return;
 
       const methodNamePascal = pascalCase(methodName);
+      const methodEntry = (validationMapping[methodName] = {});
 
       // Generate request schema
       if (post.requestBody?.content?.['application/json']?.schema) {
         const requestSchema =
           post.requestBody.content['application/json'].schema;
-        const zodSchema = generateZodSchema(requestSchema, schemas, 0, false);
-        const zodMiniSchema = generateZodSchema(
-          requestSchema,
-          schemas,
-          0,
-          true
-        );
-        methodSchemas.push(
-          `export const ${methodNamePascal}RequestSchema = ${zodSchema};`
-        );
+        const zodMiniSchema = generateZodSchema(requestSchema, schemas, 0);
+        const schemaName = `${methodNamePascal}RequestSchema`;
         miniMethodSchemas.push(
-          `export const ${methodNamePascal}RequestSchema = () => ${zodMiniSchema};`
+          `export const ${schemaName} = () => ${zodMiniSchema};`
         );
+        methodEntry.requestSchema = schemaName;
       }
 
       // Generate response schema
       if (post.responses?.['200']?.content?.['application/json']?.schema) {
         const responseSchema =
           post.responses['200'].content['application/json'].schema;
-        const zodSchema = generateZodSchema(responseSchema, schemas, 0, false);
-        const zodMiniSchema = generateZodSchema(
-          responseSchema,
-          schemas,
-          0,
-          true
-        );
-        methodSchemas.push(
-          `export const ${methodNamePascal}ResponseSchema = ${zodSchema};`
-        );
+        const zodMiniSchema = generateZodSchema(responseSchema, schemas, 0);
+        const schemaName = `${methodNamePascal}ResponseSchema`;
         miniMethodSchemas.push(
-          `export const ${methodNamePascal}ResponseSchema = () => ${zodMiniSchema};`
+          `export const ${schemaName} = () => ${zodMiniSchema};`
         );
+        methodEntry.responseSchema = schemaName;
       }
     });
 
-    const schemasContent = `// Auto-generated Zod schemas from NEAR OpenAPI spec
-// Generated on: ${new Date().toISOString()}
-// Do not edit manually - run 'pnpm generate' to regenerate
+    // Generate validation mapping for use by validation system
+    const validationMappingCode = `
+// Auto-generated validation schema mapping
+// Maps RPC method names to their request/response schema functions
+export const VALIDATION_SCHEMA_MAP: Record<string, {
+  requestSchema?: () => any;
+  responseSchema?: () => any;
+}> = {
+${Object.entries(validationMapping)
+  .map(([methodName, schemas]) => {
+    const requestPart = schemas.requestSchema
+      ? `requestSchema: ${schemas.requestSchema}`
+      : '';
+    const responsePart = schemas.responseSchema
+      ? `responseSchema: ${schemas.responseSchema}`
+      : '';
+    const parts = [requestPart, responsePart].filter(Boolean).join(', ');
+    return `  '${methodName}': { ${parts} }`;
+  })
+  .join(',\n')}
+};`;
 
-import { z } from 'zod/v4';
-
-${schemaDefinitions.join('\n\n')}
-
-// Method-specific schemas
-${methodSchemas.join('\n\n')}
-
-// Utility schemas
-export const JsonRpcRequestSchema = z.object({
-  jsonrpc: z.literal('2.0'),
-  id: z.string(),
-  method: z.string(),
-  params: z.optional(z.unknown()),
-});
-
-export const JsonRpcErrorSchema = z.object({
-  code: z.number(),
-  message: z.string(),
-  data: z.optional(z.unknown()),
-});
-
-export const JsonRpcResponseSchema = z.object({
-  jsonrpc: z.literal('2.0'),
-  id: z.string(),
-  result: z.optional(z.unknown()),
-  error: z.optional(JsonRpcErrorSchema),
-});
-`;
+    miniMethodSchemas.push(validationMappingCode);
 
     // Generate method mapping
     const methodMappingContent = `// Auto-generated method mapping from NEAR OpenAPI spec
@@ -576,9 +527,8 @@ export const RPC_METHODS = Object.values(PATH_TO_METHOD_MAP);
 export type RpcMethod = typeof RPC_METHODS[number];
 `;
 
-    // Write all generated files
-    // Create mini schemas content
-    const miniSchemasContent = `// Auto-generated Zod schemas from NEAR OpenAPI spec (zod/mini version)
+    // Create schemas content (zod/mini only)
+    const schemasContent = `// Auto-generated Zod schemas from NEAR OpenAPI spec (zod/mini version)
 // Generated on: ${new Date().toISOString()}
 // Do not edit manually - run 'pnpm generate' to regenerate
 
@@ -611,22 +561,18 @@ export const JsonRpcResponseSchema = () => z.object({
 });
 `;
 
+    // Write generated files (zod/mini only)
     await fs.writeFile(join(outputDir, 'types.ts'), typesContent);
-    await fs.writeFile(join(outputDir, 'types.mini.ts'), miniTypesContent);
     await fs.writeFile(join(outputDir, 'schemas.ts'), schemasContent);
-    await fs.writeFile(join(outputDir, 'schemas.mini.ts'), miniSchemasContent);
     await fs.writeFile(join(outputDir, 'methods.ts'), methodMappingContent);
 
     console.log('✅ Type generation complete!');
     console.log('📁 Generated files:');
     console.log(
-      `  - packages/jsonrpc-types/src/types.ts (${typeExports.length} types)`
+      `  - packages/jsonrpc-types/src/types.ts (${typeExports.length} types - zod/mini)`
     );
     console.log(
-      `  - packages/jsonrpc-types/src/schemas.ts (${schemaExports.length} schemas)`
-    );
-    console.log(
-      `  - packages/jsonrpc-types/src/schemas.mini.ts (${schemaExports.length} schemas - zod/mini)`
+      `  - packages/jsonrpc-types/src/schemas.ts (${schemaExports.length} schemas - zod/mini)`
     );
     console.log(
       `  - packages/jsonrpc-types/src/methods.ts (${Object.keys(PATH_TO_METHOD_MAP).length} methods)`

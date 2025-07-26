@@ -10,7 +10,7 @@
  * 3. Run `pnpm tsx examples/typescript/call-contract-method.ts` from the root of the repository.
  */
 
-import { NearRpcClient } from '@near-js/jsonrpc-client';
+import { NearRpcClient, viewFunction, query } from '@near-js/jsonrpc-client';
 import { CallResult } from '@near-js/jsonrpc-types';
 
 const provider = new NearRpcClient({
@@ -30,7 +30,7 @@ console.log(
 console.log('📦 Approach 1: Using convenience method viewFunction()');
 console.log('✅ Pros: Clean, type-safe, no union types to handle\n');
 
-const result1 = await provider.viewFunction({
+const result1 = await viewFunction(provider, {
   accountId: contractId,
   methodName: methodName,
   argsBase64: argsBase64,
@@ -48,7 +48,7 @@ console.log('🔍 Approach 2: Using generic query() method with type guard');
 console.log('✅ Pros: Maximum flexibility, works for any query type');
 console.log('⚠️  Cons: Requires type guard to handle union types safely\n');
 
-const result2 = await provider.query({
+const result2 = await query(provider, {
   requestType: 'call_function',
   finality: 'final',
   accountId: contractId,

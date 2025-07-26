@@ -83,7 +83,7 @@ jobs:
             - [x] Linting passes
             - [x] Build succeeds
             - [x] No breaking changes detected
-            
+
             All validation steps are run automatically as part of this workflow.
           branch: update-generated-types
           delete-branch: true

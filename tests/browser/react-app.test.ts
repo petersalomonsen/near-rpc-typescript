@@ -2,13 +2,13 @@ import { test, expect } from '@playwright/test';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-test.describe('React Mini Client App Tests', () => {
+test.describe('React Client App Tests', () => {
   test('should load the React app successfully', async ({ page }) => {
     await page.goto('http://localhost:3000/react');
 
     // Wait for the main title to appear
     await expect(page.locator('h1')).toContainText(
-      'NEAR RPC Mini Client React Demo'
+      '🚀 NEAR RPC Client React Demo'
     );
 
     // Check that the subtitle is present
@@ -41,10 +41,10 @@ test.describe('React Mini Client App Tests', () => {
     await expect(page.locator('.network-card').first()).toBeVisible();
     await expect(
       page.locator('.network-card').first().locator('h2')
-    ).toContainText('Mainnet Status');
+    ).toContainText('🌐 Mainnet Status');
     await expect(
       page.locator('.network-card').nth(1).locator('h2')
-    ).toContainText('Testnet Status');
+    ).toContainText('🧪 Testnet Status');
 
     // Check that mainnet data is loaded
     const mainnetCard = page.locator('.network-card').first();
@@ -79,7 +79,7 @@ test.describe('React Mini Client App Tests', () => {
     const accountCard = page.locator('.account-card');
     await expect(accountCard).toBeVisible();
     await expect(accountCard.locator('h2')).toContainText(
-      'Account Information'
+      '👤 Account Information'
     );
 
     // Check account details
@@ -97,13 +97,13 @@ test.describe('React Mini Client App Tests', () => {
     await expect(accountCard.locator('p:has-text("bytes")')).toBeVisible();
   });
 
-  test('should display mini client features', async ({ page }) => {
+  test('should display client features', async ({ page }) => {
     await page.goto('http://localhost:3000/react');
 
     // Check features section
     const features = page.locator('.features');
     await expect(features).toBeVisible();
-    await expect(features.locator('h2')).toContainText('Mini Client Features');
+    await expect(features.locator('h2')).toContainText('✨ Client Features');
 
     // Check feature list items
     const featureList = features.locator('ul li');
@@ -127,10 +127,10 @@ test.describe('React Mini Client App Tests', () => {
 
   test('should handle errors gracefully', async ({ page }) => {
     // Mock network error by intercepting requests
-    await page.route('**/rpc.mainnet.near.org/**', route => {
+    await page.route('**/rpc.mainnet.fastnear.com/**', route => {
       route.abort('failed');
     });
-    await page.route('**/rpc.testnet.near.org/**', route => {
+    await page.route('**/rpc.testnet.fastnear.com/**', route => {
       route.abort('failed');
     });
 
@@ -188,7 +188,7 @@ test.describe('React Mini Client App Tests', () => {
       console.log(`React vendor bundle: ${(vendorSize / 1024).toFixed(1)}KB`);
 
       // Vendor bundle should be reasonable (React + NEAR client)
-      expect(vendorSize).toBeLessThan(300 * 1024); // < 300KB for React + NEAR mini client
+      expect(vendorSize).toBeLessThan(300 * 1024); // < 300KB for React + NEAR client
       expect(vendorSize).toBeGreaterThan(100 * 1024); // > 100KB (React is substantial)
     }
   });

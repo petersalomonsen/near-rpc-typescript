@@ -10,11 +10,6 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
-    },
-    "./mini": {
-      "types": "./dist/index.mini.d.ts",
-      "import": "./dist/index.mini.mjs",
-      "require": "./dist/index.mini.cjs"
     }
   },
   "files": [

@@ -1,12 +1,12 @@
 /**
- * This example demonstrates using the mini variant of @near-js/jsonrpc-client
+ * This example demonstrates using @near-js/jsonrpc-client
  * which uses static functions with a client-based architecture for optimal tree-shaking.
  *
- * The mini variant provides the same functionality as the regular client but with:
+ * The client provides:
  * - Static RPC functions instead of instance methods
  * - Function-based schemas for better tree-shaking
  * - Client object holds configuration only
- * - Identical case conversion behavior (snake_case ↔ camelCase)
+ * - Case conversion behavior (snake_case ↔ camelCase)
  *
  * To run this example:
  * 1. Make sure you have pnpm installed (https://pnpm.io/installation).
@@ -20,7 +20,7 @@ import {
   block,
   gasPrice,
   viewAccount,
-} from '@near-js/jsonrpc-client/mini';
+} from '@near-js/jsonrpc-client';
 
 // Create client instance - holds configuration only, no RPC methods
 const client = new NearRpcClient({
@@ -69,10 +69,10 @@ console.log(`Balance: ${accountResult.amount} yoctoNEAR`);
 console.log(`Storage used: ${accountResult.storageUsage} bytes`);
 console.log('');
 
-console.log('✅ Mini client demo completed successfully!');
+console.log('✅ Client demo completed successfully!');
 console.log('');
-console.log('💡 Benefits of mini client:');
+console.log('💡 Benefits of this client architecture:');
 console.log('  • Optimal tree-shaking with static functions');
-console.log('  • Same functionality as regular client');
+console.log('  • Complete NEAR RPC functionality');
 console.log('  • Client-based architecture for configuration');
 console.log('  • Perfect for bundle size-sensitive applications');
