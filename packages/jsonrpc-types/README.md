@@ -5,7 +5,7 @@ This package contains TypeScript types and Zod schemas for the NEAR Protocol JSO
 ## Installation
 
 ```bash
-pnpm add @near-js/jsonrpc-types
+npm install @near-js/jsonrpc-types
 ```
 
 ## Usage
