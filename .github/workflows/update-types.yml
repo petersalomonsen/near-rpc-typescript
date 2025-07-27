@@ -1,4 +1,4 @@
-name: Update Generated Types
+name: Update Generated Code from OpenAPI
 
 on:
   schedule:
@@ -10,8 +10,8 @@ permissions:
   pull-requests: write
 
 jobs:
-  update-types:
-    name: Update Types from OpenAPI Spec
+  update-generated-code:
+    name: Update Generated Code from OpenAPI Spec
     runs-on: ubuntu-latest
 
     steps:
@@ -34,11 +34,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Generate types
+      - name: Generate code from OpenAPI spec
         run: pnpm generate
 
       - name: Format generated code
-        run: pnpm prettier --write "packages/jsonrpc-types/src/**/*.ts"
+        run: pnpm format
 
       - name: Lint generated code
         run: pnpm lint
@@ -66,18 +66,22 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'feat: update generated types from OpenAPI spec'
+          commit-message: 'feat: update generated code from OpenAPI spec'
           committer: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'
           author: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'
-          title: 'feat: update generated types from OpenAPI spec'
+          title: 'feat: update generated code from OpenAPI spec'
           body: |
             This PR contains auto-generated updates from the NEAR Protocol OpenAPI specification.
 
             ## Changes
             - Updated TypeScript types
-            - Updated Zod schemas
+            - Updated Zod schemas  
+            - Updated RPC method mappings
+            - Updated client interfaces and functions
 
             ## Validation
+            - [x] Code generation completed successfully
+            - [x] Code formatted with prettier
             - [x] Types compile successfully
             - [x] Tests pass
             - [x] Linting passes
@@ -85,5 +89,5 @@ jobs:
             - [x] No breaking changes detected
 
             All validation steps are run automatically as part of this workflow.
-          branch: update-generated-types
+          branch: update-generated-code
           delete-branch: true

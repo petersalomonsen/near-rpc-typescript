@@ -8,6 +8,9 @@ This file contains important notes and reminders for Claude when working on this
 - Use `fix:` for bug fixes (triggers patch release)
 - Use `feat:` for new features (triggers minor release)
 - Use `chore:`, `docs:`, `test:`, `refactor:`, `perf:`, `style:` for non-releasing changes
+- **NEVER include "BREAKING CHANGE:" in commit messages unless there's an actual breaking change**
+  - Even "BREAKING CHANGE: None" will trigger a major version bump!
+  - Only use when making incompatible API changes
 - See RELEASE.md for full commit message conventions
 
 ## Testing
