@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v1.0.0...jsonrpc-client-v1.0.1) (2025-07-27)
+
+
+### Bug Fixes
+
+* correct dependency versions and improve documentation ([83ddde8](https://github.com/petersalomonsen/near-rpc-typescript/commit/83ddde8c5bbb839e9fcdc43db3ba589d1dadf4a7))
+
 ## [1.0.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v0.5.0...jsonrpc-client-v1.0.0) (2025-07-26)
 
 
