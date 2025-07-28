@@ -43,7 +43,7 @@ try {
     `✅ Found ${accountChanges.changes?.length || 0} account changes`
   );
   if (accountChanges.changes && accountChanges.changes.length > 0) {
-    accountChanges.changes.slice(0, 2).forEach((change: any, index) => {
+    accountChanges.changes.slice(0, 2).forEach((change, index) => {
       console.log(`   ${index + 1}. Account: ${change.change.accountId}`);
       console.log(`      Type: ${change.type}`);
       console.log(`      Cause: ${change.cause.type}`);
@@ -65,10 +65,12 @@ console.log(
   `✅ Found ${contractChanges.changes?.length || 0} contract code changes`
 );
 if (contractChanges.changes && contractChanges.changes.length > 0) {
-  contractChanges.changes.forEach((change: any, index) => {
-    console.log(`   ${index + 1}. Contract: ${change.change.accountId}`);
-    console.log(`      Code length: ${change.change.codeBase64?.length || 0} chars (base64)`);
-    console.log(`      Caused by: ${change.cause.type}`);
+  contractChanges.changes.forEach((change, index) => {
+    if (change.type === 'contract_code_update') {
+      console.log(`   ${index + 1}. Contract: ${change.change.accountId}`);
+      console.log(`      Code length: ${change.change.codeBase64?.length || 0} chars (base64)`);
+      console.log(`      Caused by: ${change.cause.type}`);
+    }
   });
 }
 
