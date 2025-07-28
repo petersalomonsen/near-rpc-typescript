@@ -229,7 +229,7 @@ function generateZodSchema(
       );
       unionSchema = `z.union([${processedOptions.join(', ')}])`;
     }
-    
+
     // Check if there are additional properties at the root level
     if (schema.properties && Object.keys(schema.properties).length > 0) {
       // Generate the properties object
@@ -245,11 +245,11 @@ function generateZodSchema(
         }
       );
       const propertiesSchema = `z.object({\n${properties.join(',\n')}\n})`;
-      
+
       // Merge the union schema with the properties
       return `z.intersection(${unionSchema}, ${propertiesSchema})`;
     }
-    
+
     return unionSchema;
   }
 
@@ -481,7 +481,9 @@ export * from './schemas';
       if (!post) return;
 
       const methodNamePascal = pascalCase(methodName);
-      const methodEntry = (validationMapping[methodName] = {});
+      const methodEntry: { requestSchema?: string; responseSchema?: string } =
+        {};
+      validationMapping[methodName] = methodEntry;
 
       // Generate request schema
       if (post.requestBody?.content?.['application/json']?.schema) {
