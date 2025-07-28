@@ -68,7 +68,9 @@ if (contractChanges.changes && contractChanges.changes.length > 0) {
   contractChanges.changes.forEach((change, index) => {
     if (change.type === 'contract_code_update') {
       console.log(`   ${index + 1}. Contract: ${change.change.accountId}`);
-      console.log(`      Code length: ${change.change.codeBase64?.length || 0} chars (base64)`);
+      console.log(
+        `      Code length: ${change.change.codeBase64?.length || 0} chars (base64)`
+      );
       console.log(`      Caused by: ${change.cause.type}`);
     }
   });
@@ -89,7 +91,7 @@ try {
   // First, get the latest block to use a valid block ID
   const statusResponse = await status(testnetClient);
   const latestBlockHash = statusResponse.syncInfo.latestBlockHash;
-  
+
   // Note: The stable 'changes' method works the same way as experimental
   const testnetChanges = await changes(testnetClient, {
     blockId: latestBlockHash,
@@ -117,7 +119,9 @@ try {
     console.log('   Parse error: Invalid parameters');
     console.log('   Note: Use a valid block hash or height, not "final"');
   } else if (error.message.includes('Method not found')) {
-    console.log('   This RPC provider does not support the stable changes method');
+    console.log(
+      '   This RPC provider does not support the stable changes method'
+    );
   }
 }
 
@@ -139,7 +143,9 @@ try {
   await experimentalChanges(regularTestnetClient, {
     blockId: oldBlockHeight,
     changesType: 'account_changes',
-    accountIds: ['3e2210e1184b45b64c8a434c0a7e7b23cc04ea7eb7a6c3c32520d03d4afcb8af'],
+    accountIds: [
+      '3e2210e1184b45b64c8a434c0a7e7b23cc04ea7eb7a6c3c32520d03d4afcb8af',
+    ],
   });
 } catch (error: any) {
   console.log('❌ Error occurred:', error.message);
@@ -239,29 +245,37 @@ console.log('Testing error handling with old block...');
 const result = await getChangesWithErrorHandling(regularTestnetClient, {
   blockId: 114467662, // Old testnet block
   changesType: 'account_changes',
-  accountIds: ['3e2210e1184b45b64c8a434c0a7e7b23cc04ea7eb7a6c3c32520d03d4afcb8af'],
+  accountIds: [
+    '3e2210e1184b45b64c8a434c0a7e7b23cc04ea7eb7a6c3c32520d03d4afcb8af',
+  ],
 });
 
 if (!result) {
   console.log('\n💡 Tip: For historical data, use archival endpoints:');
   console.log('   - archival-rpc.mainnet.fastnear.com');
   console.log('   - archival-rpc.testnet.fastnear.com');
-  
+
   // Show that the same request works on archival
   console.log('\n📍 Demonstrating the same request on archival testnet...');
   const archivalTestnetClient = new NearRpcClient({
     endpoint: 'https://archival-rpc.testnet.fastnear.com',
   });
-  
+
   try {
     const archivalResult = await experimentalChanges(archivalTestnetClient, {
       blockId: 114467662,
       changesType: 'account_changes',
-      accountIds: ['3e2210e1184b45b64c8a434c0a7e7b23cc04ea7eb7a6c3c32520d03d4afcb8af'],
+      accountIds: [
+        '3e2210e1184b45b64c8a434c0a7e7b23cc04ea7eb7a6c3c32520d03d4afcb8af',
+      ],
     });
-    
-    console.log(`✅ Success! Found ${archivalResult.changes?.length || 0} changes on archival RPC`);
-    console.log('   This confirms the block exists but is too old for non-archival nodes');
+
+    console.log(
+      `✅ Success! Found ${archivalResult.changes?.length || 0} changes on archival RPC`
+    );
+    console.log(
+      '   This confirms the block exists but is too old for non-archival nodes'
+    );
   } catch (archivalError: any) {
     console.log('❌ Unexpected error on archival:', archivalError.message);
   }
