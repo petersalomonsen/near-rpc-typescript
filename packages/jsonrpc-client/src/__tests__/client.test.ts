@@ -23,6 +23,7 @@ import {
   experimentalChanges,
 } from '../generated-functions';
 import { viewAccount } from '../convenience';
+import { enableValidation } from '../validation';
 
 vi.setConfig({ testTimeout: 30000 });
 
@@ -56,6 +57,7 @@ describe('NearRpcClient', () => {
   describe('live RPC method calls', () => {
     const client = new NearRpcClient({
       endpoint: 'https://rpc.mainnet.fastnear.com',
+      validation: enableValidation(),
     });
 
     it('should make status call', async () => {
@@ -212,7 +214,10 @@ describe('NearRpcClient', () => {
   });
 
   describe('response transformation', () => {
-    const client = new NearRpcClient('https://rpc.mainnet.fastnear.com');
+    const client = new NearRpcClient({
+      endpoint: 'https://rpc.mainnet.fastnear.com',
+      validation: enableValidation(),
+    });
 
     it('should transform snake_case response to camelCase', async () => {
       const result = await status(client);
@@ -238,10 +243,14 @@ describe('NearRpcClient', () => {
   });
 
   describe('experimental methods', () => {
-    const client = new NearRpcClient('https://rpc.mainnet.fastnear.com');
-    const archivalClient = new NearRpcClient(
-      'https://archival-rpc.mainnet.fastnear.com'
-    );
+    const client = new NearRpcClient({
+      endpoint: 'https://rpc.mainnet.fastnear.com',
+      validation: enableValidation(),
+    });
+    const archivalClient = new NearRpcClient({
+      endpoint: 'https://archival-rpc.mainnet.fastnear.com',
+      validation: enableValidation(),
+    });
 
     it('should call experimental protocol config method', async () => {
       const result = await experimentalProtocolConfig(client, {

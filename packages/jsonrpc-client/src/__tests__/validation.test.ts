@@ -206,7 +206,7 @@ describe('Auto-Generated Validation Tests', () => {
       });
 
       // Should work without validation
-      const result = await client.makeRequest('status', 'null');
+      const result = await client.makeRequest('status', null);
       expect(result).toEqual({ any: 'data' });
     });
 
@@ -223,7 +223,7 @@ describe('Auto-Generated Validation Tests', () => {
 
       // Should throw when validation fails
       await expect(
-        clientWithValidation.makeRequest('status', 'null')
+        clientWithValidation.makeRequest('status', null)
       ).rejects.toThrow();
     });
   });
