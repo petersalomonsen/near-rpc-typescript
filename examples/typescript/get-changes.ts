@@ -243,11 +243,12 @@ console.log('\n\n=== Example: Detecting archival vs non-archival nodes ===\n');
 
 async function isArchivalNode(client: NearRpcClient): Promise<boolean> {
   try {
-    // Try to query a very old block
+    // Try to query an old block that exists on archival but not regular nodes
+    // Block 132553777 is old enough to not be on regular nodes but exists on archival
     await experimentalChanges(client, {
-      blockId: 1000, // Early block (block 1 might not have changes)
+      blockId: 132553777,
       changesType: 'account_changes',
-      accountIds: ['near'],
+      accountIds: ['treasury-factory.near'],
     });
     return true; // If it succeeds, it's archival
   } catch (error: any) {
