@@ -219,14 +219,38 @@ function generateZodSchema(
     const options = schema.oneOf.map(s =>
       generateZodSchema(s, schemas, depth + 1)
     );
+    let unionSchema: string;
     if (options.length === 1) {
-      return options[0];
+      unionSchema = options[0];
+    } else {
+      // Replace z.enum(["null"]) with z.null() in unions
+      const processedOptions = options.map(opt =>
+        opt === 'z.enum(["null"])' ? 'z.null()' : opt
+      );
+      unionSchema = `z.union([${processedOptions.join(', ')}])`;
     }
-    // Replace z.enum(["null"]) with z.null() in unions
-    const processedOptions = options.map(opt =>
-      opt === 'z.enum(["null"])' ? 'z.null()' : opt
-    );
-    return `z.union([${processedOptions.join(', ')}])`;
+
+    // Check if there are additional properties at the root level
+    if (schema.properties && Object.keys(schema.properties).length > 0) {
+      // Generate the properties object
+      const properties = Object.entries(schema.properties).map(
+        ([key, prop]) => {
+          const isOptional = !schema.required?.includes(key);
+          const camelKey = snakeToCamel(key);
+          const zodSchema = generateZodSchema(prop, schemas, depth + 1);
+          if (isOptional) {
+            return `  ${camelKey}: z.optional(${zodSchema})`;
+          }
+          return `  ${camelKey}: ${zodSchema}`;
+        }
+      );
+      const propertiesSchema = `z.object({\n${properties.join(',\n')}\n})`;
+
+      // Merge the union schema with the properties
+      return `z.intersection(${unionSchema}, ${propertiesSchema})`;
+    }
+
+    return unionSchema;
   }
 
   if (schema.anyOf) {
@@ -457,7 +481,9 @@ export * from './schemas';
       if (!post) return;
 
       const methodNamePascal = pascalCase(methodName);
-      const methodEntry = (validationMapping[methodName] = {});
+      const methodEntry: { requestSchema?: string; responseSchema?: string } =
+        {};
+      validationMapping[methodName] = methodEntry;
 
       // Generate request schema
       if (post.requestBody?.content?.['application/json']?.schema) {

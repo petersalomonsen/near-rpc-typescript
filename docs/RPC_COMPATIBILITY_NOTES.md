@@ -1,0 +1,135 @@
+# NEAR RPC Version Compatibility Notes
+
+This document captures important observations about NEAR RPC version differences across providers and how they affect method availability.
+
+## The Evolution from `EXPERIMENTAL_changes` to `changes`
+
+### Timeline
+- **Before June 2025**: Only `EXPERIMENTAL_changes` existed
+- **June 19, 2025**: Commit [fdba1905](https://github.com/near/nearcore/commit/fdba19051ff3c177d69b7066d7d0be709d32a5b4) added stable `changes` endpoint
+- **July 3, 2025**: Version 2.6.5 released (without `changes`)
+- **Current**: Version 2.7.0-rc.x includes `changes` but only on testnet
+
+### Current Status (as of July 2025)
+
+#### Mainnet RPC Providers
+All major mainnet providers run version 2.6.5 or older:
+- `rpc.mainnet.near.org`: 2.6.5 ❌ No `changes` support
+- `rpc.mainnet.fastnear.com`: 2.6.5 ❌ No `changes` support
+- `near.lava.build`: 2.6.1 ❌ No `changes` support
+- `1rpc.io/near`: 2.6.5 ❌ No `changes` support
+- `near.blockpi.network`: 2.6.4 ❌ No `changes` support
+
+#### Testnet RPC Providers
+Some testnet providers run 2.7.0-rc.x:
+- `rpc.testnet.near.org`: 2.7.0-rc.2 ✅ Has `changes` method
+- `rpc.testnet.fastnear.com`: 2.7.0-rc.2 ✅ Has `changes` method
+- `archival-rpc.testnet.fastnear.com`: ✅ Has `changes` method and historical data
+
+### Understanding Block References
+
+Both `changes` and `EXPERIMENTAL_changes` follow the same OpenAPI specification for block references. You can specify blocks using either:
+
+1. **block_id** parameter:
+   - Numeric block height: `"block_id": 186278611`
+   - Block hash string: `"block_id": "CpWTCVU5sF7gc6CyM2cKYGpvhUYXdWNMkghktXjz5Qe8"`
+
+2. **finality** parameter:
+   - For latest blocks: `"finality": "final"` or `"finality": "optimistic"`
+
+Common mistake: Using `"block_id": "final"` will fail because "final" is neither a valid block height nor a block hash. Use the `finality` parameter instead.
+
+### TypeScript Client Usage
+
+The TypeScript client correctly follows the OpenAPI spec:
+
+```typescript
+// Using block height
+await changes(client, {
+  blockId: 186278611,
+  changesType: 'account_changes',
+  accountIds: ['account.near']
+});
+
+// Using block hash
+await changes(client, {
+  blockId: 'CpWTCVU5sF7gc6CyM2cKYGpvhUYXdWNMkghktXjz5Qe8',
+  changesType: 'account_changes',
+  accountIds: ['account.near']
+});
+
+// For finality, the TypeScript interface might need adjustment
+// Current: blockId: 'final' sends block_id: 'final' which fails
+// The OpenAPI spec expects finality as a separate parameter
+```
+
+## Why Version Awareness Matters
+
+This situation highlights important considerations when using NEAR RPC:
+
+1. **Version Differences**: Different RPC providers run different versions of NEAR node software
+2. **Method Availability**: Newer methods like `changes` are only available on newer versions (2.7.0+)
+3. **Gradual Rollout**: Testnet typically gets new features before mainnet
+4. **Provider Choice**: Consider which provider to use based on your version requirements
+
+## Recommendations
+
+### For Library Users
+1. **Check RPC provider versions** - Use the `status` method to check what version a provider is running
+2. **Use `experimentalChanges` for mainnet compatibility** - Until mainnet providers upgrade to 2.7.0+
+3. **Test against your target RPC provider** - Don't assume all providers are on the same version
+4. **Implement version-aware fallbacks** - Try newer methods first, fall back to experimental versions
+
+### For Library Maintainers
+1. **Keep both method versions** - The generator correctly includes both from the spec
+2. **Document version requirements** - Make it clear which methods need which NEAR node versions
+3. **Test against multiple providers** - Ensure compatibility across different versions
+4. **Track provider versions** - Monitor when major providers upgrade
+
+## Example Fallback Pattern
+
+```typescript
+async function getChangesWithFallback(
+  client: NearRpcClient,
+  params: any
+): Promise<RpcStateChangesInBlockResponse> {
+  try {
+    // Try stable method (future-proof)
+    return await changes(client, params);
+  } catch (error: any) {
+    if (error.message.includes('Method not found')) {
+      // Fall back to experimental
+      return await experimentalChanges(client, params);
+    }
+    throw error;
+  }
+}
+```
+
+## Other Observations
+
+### RPC Provider Reliability
+- FastNEAR endpoints tend to be more up-to-date and reliable
+- Official near.org endpoints may have stricter rate limits
+- Testnet often runs newer versions than mainnet
+
+### Understanding Error Messages
+- "Method not found" - The RPC provider doesn't support this method (version too old)
+- "Parse error" - Parameters don't match the expected format per OpenAPI spec
+- "UNKNOWN_BLOCK" - The requested block doesn't exist on this RPC provider
+
+### OpenAPI Spec and Production Reality
+- The OpenAPI spec reflects the latest NEAR node capabilities
+- Production RPC providers may run older versions
+- Always check version compatibility for newer methods
+
+## Testing Methodology
+
+These observations were gathered through:
+1. Direct curl requests to multiple RPC endpoints
+2. Comparing responses between different providers
+3. Testing both mainnet and testnet
+4. Analyzing the OpenAPI spec history
+5. Running the TypeScript client against real endpoints
+
+Last updated: July 2025

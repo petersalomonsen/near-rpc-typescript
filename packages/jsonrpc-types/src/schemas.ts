@@ -1,5 +1,5 @@
 // Auto-generated Zod schemas from NEAR OpenAPI spec (zod/mini version)
-// Generated on: 2025-07-26T17:05:02.199Z
+// Generated on: 2025-07-28T13:29:54.287Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/mini';
@@ -1635,245 +1635,383 @@ export const JsonRpcRequestForValidatorsSchema = () =>
   });
 
 export const JsonRpcResponseFor_ArrayOf_RangeOfUint64And_RpcErrorSchema = () =>
-  z.union([
+  z.intersection(
+    z.union([
+      z.object({
+        result: z.array(z.lazy(() => RangeOfUint64Schema())),
+      }),
+      z.object({
+        error: z.lazy(() => RpcErrorSchema()),
+      }),
+    ]),
     z.object({
-      result: z.array(z.lazy(() => RangeOfUint64Schema())),
-    }),
-    z.object({
-      error: z.lazy(() => RpcErrorSchema()),
-    }),
-  ]);
+      id: z.string(),
+      jsonrpc: z.string(),
+    })
+  );
 
 export const JsonRpcResponseFor_ArrayOf_ValidatorStakeViewAnd_RpcErrorSchema =
   () =>
+    z.intersection(
+      z.union([
+        z.object({
+          result: z.array(z.lazy(() => ValidatorStakeViewSchema())),
+        }),
+        z.object({
+          error: z.lazy(() => RpcErrorSchema()),
+        }),
+      ]),
+      z.object({
+        id: z.string(),
+        jsonrpc: z.string(),
+      })
+    );
+
+export const JsonRpcResponseFor_CryptoHashAnd_RpcErrorSchema = () =>
+  z.intersection(
     z.union([
       z.object({
-        result: z.array(z.lazy(() => ValidatorStakeViewSchema())),
+        result: z.lazy(() => CryptoHashSchema()),
       }),
       z.object({
         error: z.lazy(() => RpcErrorSchema()),
       }),
-    ]);
-
-export const JsonRpcResponseFor_CryptoHashAnd_RpcErrorSchema = () =>
-  z.union([
+    ]),
     z.object({
-      result: z.lazy(() => CryptoHashSchema()),
-    }),
-    z.object({
-      error: z.lazy(() => RpcErrorSchema()),
-    }),
-  ]);
+      id: z.string(),
+      jsonrpc: z.string(),
+    })
+  );
 
 export const JsonRpcResponseFor_GenesisConfigAnd_RpcErrorSchema = () =>
-  z.union([
+  z.intersection(
+    z.union([
+      z.object({
+        result: z.lazy(() => GenesisConfigSchema()),
+      }),
+      z.object({
+        error: z.lazy(() => RpcErrorSchema()),
+      }),
+    ]),
     z.object({
-      result: z.lazy(() => GenesisConfigSchema()),
-    }),
-    z.object({
-      error: z.lazy(() => RpcErrorSchema()),
-    }),
-  ]);
+      id: z.string(),
+      jsonrpc: z.string(),
+    })
+  );
 
 export const JsonRpcResponseFor_Nullable_RpcHealthResponseAnd_RpcErrorSchema =
   () =>
+    z.intersection(
+      z.union([
+        z.object({
+          result: z.union([z.lazy(() => RpcHealthResponseSchema()), z.null()]),
+        }),
+        z.object({
+          error: z.lazy(() => RpcErrorSchema()),
+        }),
+      ]),
+      z.object({
+        id: z.string(),
+        jsonrpc: z.string(),
+      })
+    );
+
+export const JsonRpcResponseFor_RpcBlockResponseAnd_RpcErrorSchema = () =>
+  z.intersection(
     z.union([
       z.object({
-        result: z.union([z.lazy(() => RpcHealthResponseSchema()), z.null()]),
+        result: z.lazy(() => RpcBlockResponseSchema()),
       }),
       z.object({
         error: z.lazy(() => RpcErrorSchema()),
       }),
-    ]);
-
-export const JsonRpcResponseFor_RpcBlockResponseAnd_RpcErrorSchema = () =>
-  z.union([
+    ]),
     z.object({
-      result: z.lazy(() => RpcBlockResponseSchema()),
-    }),
-    z.object({
-      error: z.lazy(() => RpcErrorSchema()),
-    }),
-  ]);
+      id: z.string(),
+      jsonrpc: z.string(),
+    })
+  );
 
 export const JsonRpcResponseFor_RpcChunkResponseAnd_RpcErrorSchema = () =>
-  z.union([
+  z.intersection(
+    z.union([
+      z.object({
+        result: z.lazy(() => RpcChunkResponseSchema()),
+      }),
+      z.object({
+        error: z.lazy(() => RpcErrorSchema()),
+      }),
+    ]),
     z.object({
-      result: z.lazy(() => RpcChunkResponseSchema()),
-    }),
-    z.object({
-      error: z.lazy(() => RpcErrorSchema()),
-    }),
-  ]);
+      id: z.string(),
+      jsonrpc: z.string(),
+    })
+  );
 
 export const JsonRpcResponseFor_RpcClientConfigResponseAnd_RpcErrorSchema =
   () =>
-    z.union([
+    z.intersection(
+      z.union([
+        z.object({
+          result: z.lazy(() => RpcClientConfigResponseSchema()),
+        }),
+        z.object({
+          error: z.lazy(() => RpcErrorSchema()),
+        }),
+      ]),
       z.object({
-        result: z.lazy(() => RpcClientConfigResponseSchema()),
-      }),
-      z.object({
-        error: z.lazy(() => RpcErrorSchema()),
-      }),
-    ]);
+        id: z.string(),
+        jsonrpc: z.string(),
+      })
+    );
 
 export const JsonRpcResponseFor_RpcCongestionLevelResponseAnd_RpcErrorSchema =
   () =>
+    z.intersection(
+      z.union([
+        z.object({
+          result: z.lazy(() => RpcCongestionLevelResponseSchema()),
+        }),
+        z.object({
+          error: z.lazy(() => RpcErrorSchema()),
+        }),
+      ]),
+      z.object({
+        id: z.string(),
+        jsonrpc: z.string(),
+      })
+    );
+
+export const JsonRpcResponseFor_RpcGasPriceResponseAnd_RpcErrorSchema = () =>
+  z.intersection(
     z.union([
       z.object({
-        result: z.lazy(() => RpcCongestionLevelResponseSchema()),
+        result: z.lazy(() => RpcGasPriceResponseSchema()),
       }),
       z.object({
         error: z.lazy(() => RpcErrorSchema()),
       }),
-    ]);
-
-export const JsonRpcResponseFor_RpcGasPriceResponseAnd_RpcErrorSchema = () =>
-  z.union([
+    ]),
     z.object({
-      result: z.lazy(() => RpcGasPriceResponseSchema()),
-    }),
-    z.object({
-      error: z.lazy(() => RpcErrorSchema()),
-    }),
-  ]);
+      id: z.string(),
+      jsonrpc: z.string(),
+    })
+  );
 
 export const JsonRpcResponseFor_RpcLightClientBlockProofResponseAnd_RpcErrorSchema =
   () =>
-    z.union([
+    z.intersection(
+      z.union([
+        z.object({
+          result: z.lazy(() => RpcLightClientBlockProofResponseSchema()),
+        }),
+        z.object({
+          error: z.lazy(() => RpcErrorSchema()),
+        }),
+      ]),
       z.object({
-        result: z.lazy(() => RpcLightClientBlockProofResponseSchema()),
-      }),
-      z.object({
-        error: z.lazy(() => RpcErrorSchema()),
-      }),
-    ]);
+        id: z.string(),
+        jsonrpc: z.string(),
+      })
+    );
 
 export const JsonRpcResponseFor_RpcLightClientExecutionProofResponseAnd_RpcErrorSchema =
   () =>
-    z.union([
+    z.intersection(
+      z.union([
+        z.object({
+          result: z.lazy(() => RpcLightClientExecutionProofResponseSchema()),
+        }),
+        z.object({
+          error: z.lazy(() => RpcErrorSchema()),
+        }),
+      ]),
       z.object({
-        result: z.lazy(() => RpcLightClientExecutionProofResponseSchema()),
-      }),
-      z.object({
-        error: z.lazy(() => RpcErrorSchema()),
-      }),
-    ]);
+        id: z.string(),
+        jsonrpc: z.string(),
+      })
+    );
 
 export const JsonRpcResponseFor_RpcLightClientNextBlockResponseAnd_RpcErrorSchema =
   () =>
+    z.intersection(
+      z.union([
+        z.object({
+          result: z.lazy(() => RpcLightClientNextBlockResponseSchema()),
+        }),
+        z.object({
+          error: z.lazy(() => RpcErrorSchema()),
+        }),
+      ]),
+      z.object({
+        id: z.string(),
+        jsonrpc: z.string(),
+      })
+    );
+
+export const JsonRpcResponseFor_RpcNetworkInfoResponseAnd_RpcErrorSchema = () =>
+  z.intersection(
     z.union([
       z.object({
-        result: z.lazy(() => RpcLightClientNextBlockResponseSchema()),
+        result: z.lazy(() => RpcNetworkInfoResponseSchema()),
       }),
       z.object({
         error: z.lazy(() => RpcErrorSchema()),
       }),
-    ]);
-
-export const JsonRpcResponseFor_RpcNetworkInfoResponseAnd_RpcErrorSchema = () =>
-  z.union([
+    ]),
     z.object({
-      result: z.lazy(() => RpcNetworkInfoResponseSchema()),
-    }),
-    z.object({
-      error: z.lazy(() => RpcErrorSchema()),
-    }),
-  ]);
+      id: z.string(),
+      jsonrpc: z.string(),
+    })
+  );
 
 export const JsonRpcResponseFor_RpcProtocolConfigResponseAnd_RpcErrorSchema =
   () =>
+    z.intersection(
+      z.union([
+        z.object({
+          result: z.lazy(() => RpcProtocolConfigResponseSchema()),
+        }),
+        z.object({
+          error: z.lazy(() => RpcErrorSchema()),
+        }),
+      ]),
+      z.object({
+        id: z.string(),
+        jsonrpc: z.string(),
+      })
+    );
+
+export const JsonRpcResponseFor_RpcQueryResponseAnd_RpcErrorSchema = () =>
+  z.intersection(
     z.union([
       z.object({
-        result: z.lazy(() => RpcProtocolConfigResponseSchema()),
+        result: z.lazy(() => RpcQueryResponseSchema()),
       }),
       z.object({
         error: z.lazy(() => RpcErrorSchema()),
       }),
-    ]);
-
-export const JsonRpcResponseFor_RpcQueryResponseAnd_RpcErrorSchema = () =>
-  z.union([
+    ]),
     z.object({
-      result: z.lazy(() => RpcQueryResponseSchema()),
-    }),
-    z.object({
-      error: z.lazy(() => RpcErrorSchema()),
-    }),
-  ]);
+      id: z.string(),
+      jsonrpc: z.string(),
+    })
+  );
 
 export const JsonRpcResponseFor_RpcReceiptResponseAnd_RpcErrorSchema = () =>
-  z.union([
+  z.intersection(
+    z.union([
+      z.object({
+        result: z.lazy(() => RpcReceiptResponseSchema()),
+      }),
+      z.object({
+        error: z.lazy(() => RpcErrorSchema()),
+      }),
+    ]),
     z.object({
-      result: z.lazy(() => RpcReceiptResponseSchema()),
-    }),
-    z.object({
-      error: z.lazy(() => RpcErrorSchema()),
-    }),
-  ]);
+      id: z.string(),
+      jsonrpc: z.string(),
+    })
+  );
 
 export const JsonRpcResponseFor_RpcSplitStorageInfoResponseAnd_RpcErrorSchema =
   () =>
-    z.union([
+    z.intersection(
+      z.union([
+        z.object({
+          result: z.lazy(() => RpcSplitStorageInfoResponseSchema()),
+        }),
+        z.object({
+          error: z.lazy(() => RpcErrorSchema()),
+        }),
+      ]),
       z.object({
-        result: z.lazy(() => RpcSplitStorageInfoResponseSchema()),
-      }),
-      z.object({
-        error: z.lazy(() => RpcErrorSchema()),
-      }),
-    ]);
+        id: z.string(),
+        jsonrpc: z.string(),
+      })
+    );
 
 export const JsonRpcResponseFor_RpcStateChangesInBlockByTypeResponseAnd_RpcErrorSchema =
   () =>
-    z.union([
+    z.intersection(
+      z.union([
+        z.object({
+          result: z.lazy(() => RpcStateChangesInBlockByTypeResponseSchema()),
+        }),
+        z.object({
+          error: z.lazy(() => RpcErrorSchema()),
+        }),
+      ]),
       z.object({
-        result: z.lazy(() => RpcStateChangesInBlockByTypeResponseSchema()),
-      }),
-      z.object({
-        error: z.lazy(() => RpcErrorSchema()),
-      }),
-    ]);
+        id: z.string(),
+        jsonrpc: z.string(),
+      })
+    );
 
 export const JsonRpcResponseFor_RpcStateChangesInBlockResponseAnd_RpcErrorSchema =
   () =>
+    z.intersection(
+      z.union([
+        z.object({
+          result: z.lazy(() => RpcStateChangesInBlockResponseSchema()),
+        }),
+        z.object({
+          error: z.lazy(() => RpcErrorSchema()),
+        }),
+      ]),
+      z.object({
+        id: z.string(),
+        jsonrpc: z.string(),
+      })
+    );
+
+export const JsonRpcResponseFor_RpcStatusResponseAnd_RpcErrorSchema = () =>
+  z.intersection(
     z.union([
       z.object({
-        result: z.lazy(() => RpcStateChangesInBlockResponseSchema()),
+        result: z.lazy(() => RpcStatusResponseSchema()),
       }),
       z.object({
         error: z.lazy(() => RpcErrorSchema()),
       }),
-    ]);
-
-export const JsonRpcResponseFor_RpcStatusResponseAnd_RpcErrorSchema = () =>
-  z.union([
+    ]),
     z.object({
-      result: z.lazy(() => RpcStatusResponseSchema()),
-    }),
-    z.object({
-      error: z.lazy(() => RpcErrorSchema()),
-    }),
-  ]);
+      id: z.string(),
+      jsonrpc: z.string(),
+    })
+  );
 
 export const JsonRpcResponseFor_RpcTransactionResponseAnd_RpcErrorSchema = () =>
-  z.union([
+  z.intersection(
+    z.union([
+      z.object({
+        result: z.lazy(() => RpcTransactionResponseSchema()),
+      }),
+      z.object({
+        error: z.lazy(() => RpcErrorSchema()),
+      }),
+    ]),
     z.object({
-      result: z.lazy(() => RpcTransactionResponseSchema()),
-    }),
-    z.object({
-      error: z.lazy(() => RpcErrorSchema()),
-    }),
-  ]);
+      id: z.string(),
+      jsonrpc: z.string(),
+    })
+  );
 
 export const JsonRpcResponseFor_RpcValidatorResponseAnd_RpcErrorSchema = () =>
-  z.union([
+  z.intersection(
+    z.union([
+      z.object({
+        result: z.lazy(() => RpcValidatorResponseSchema()),
+      }),
+      z.object({
+        error: z.lazy(() => RpcErrorSchema()),
+      }),
+    ]),
     z.object({
-      result: z.lazy(() => RpcValidatorResponseSchema()),
-    }),
-    z.object({
-      error: z.lazy(() => RpcErrorSchema()),
-    }),
-  ]);
+      id: z.string(),
+      jsonrpc: z.string(),
+    })
+  );
 
 //
 // Information about a Producer: its account name, peer_id and a list of
@@ -2252,20 +2390,29 @@ export const RpcCongestionLevelResponseSchema = () =>
 // [RpcBlockError](crate::types::blocks::RpcBlockError)
 
 export const RpcErrorSchema = () =>
-  z.union([
+  z.intersection(
+    z.union([
+      z.object({
+        cause: z.lazy(() => RpcRequestValidationErrorKindSchema()),
+        name: z.enum(['REQUEST_VALIDATION_ERROR']),
+      }),
+      z.object({
+        cause: z.unknown(),
+        name: z.enum(['HANDLER_ERROR']),
+      }),
+      z.object({
+        cause: z.unknown(),
+        name: z.enum(['INTERNAL_ERROR']),
+      }),
+    ]),
     z.object({
-      cause: z.lazy(() => RpcRequestValidationErrorKindSchema()),
-      name: z.enum(['REQUEST_VALIDATION_ERROR']),
-    }),
-    z.object({
-      cause: z.unknown(),
-      name: z.enum(['HANDLER_ERROR']),
-    }),
-    z.object({
-      cause: z.unknown(),
-      name: z.enum(['INTERNAL_ERROR']),
-    }),
-  ]);
+      cause: z.optional(z.unknown()),
+      code: z.number(),
+      data: z.optional(z.unknown()),
+      message: z.string(),
+      name: z.optional(z.unknown()),
+    })
+  );
 
 export const RpcGasPriceRequestSchema = () =>
   z.object({
@@ -2301,18 +2448,23 @@ export const RpcLightClientBlockProofResponseSchema = () =>
   });
 
 export const RpcLightClientExecutionProofRequestSchema = () =>
-  z.union([
+  z.intersection(
+    z.union([
+      z.object({
+        senderId: z.lazy(() => AccountIdSchema()),
+        transactionHash: z.lazy(() => CryptoHashSchema()),
+        type: z.enum(['transaction']),
+      }),
+      z.object({
+        receiptId: z.lazy(() => CryptoHashSchema()),
+        receiverId: z.lazy(() => AccountIdSchema()),
+        type: z.enum(['receipt']),
+      }),
+    ]),
     z.object({
-      senderId: z.lazy(() => AccountIdSchema()),
-      transactionHash: z.lazy(() => CryptoHashSchema()),
-      type: z.enum(['transaction']),
-    }),
-    z.object({
-      receiptId: z.lazy(() => CryptoHashSchema()),
-      receiverId: z.lazy(() => AccountIdSchema()),
-      type: z.enum(['receipt']),
-    }),
-  ]);
+      lightClientHead: z.lazy(() => CryptoHashSchema()),
+    })
+  );
 
 export const RpcLightClientExecutionProofResponseSchema = () =>
   z.object({
@@ -3232,98 +3384,103 @@ export const StateChangeKindViewSchema = () =>
   ]);
 
 export const StateChangeWithCauseViewSchema = () =>
-  z.union([
-    z.object({
-      change: z.object({
-        accountId: z.lazy(() => AccountIdSchema()),
-        amount: z.string(),
-        codeHash: z.lazy(() => CryptoHashSchema()),
-        globalContractAccountId: z.optional(
-          z.union([z.lazy(() => AccountIdSchema()), z.null()])
-        ),
-        globalContractHash: z.optional(
-          z.union([z.lazy(() => CryptoHashSchema()), z.null()])
-        ),
-        locked: z.string(),
-        storagePaidAt: z.optional(z.number()),
-        storageUsage: z.number(),
+  z.intersection(
+    z.union([
+      z.object({
+        change: z.object({
+          accountId: z.lazy(() => AccountIdSchema()),
+          amount: z.string(),
+          codeHash: z.lazy(() => CryptoHashSchema()),
+          globalContractAccountId: z.optional(
+            z.union([z.lazy(() => AccountIdSchema()), z.null()])
+          ),
+          globalContractHash: z.optional(
+            z.union([z.lazy(() => CryptoHashSchema()), z.null()])
+          ),
+          locked: z.string(),
+          storagePaidAt: z.optional(z.number()),
+          storageUsage: z.number(),
+        }),
+        type: z.enum(['account_update']),
       }),
-      type: z.enum(['account_update']),
-    }),
-    z.object({
-      change: z.object({
-        accountId: z.lazy(() => AccountIdSchema()),
+      z.object({
+        change: z.object({
+          accountId: z.lazy(() => AccountIdSchema()),
+        }),
+        type: z.enum(['account_deletion']),
       }),
-      type: z.enum(['account_deletion']),
-    }),
-    z.object({
-      change: z.object({
-        accessKey: z.lazy(() => AccessKeyViewSchema()),
-        accountId: z.lazy(() => AccountIdSchema()),
-        publicKey: z.lazy(() => PublicKeySchema()),
+      z.object({
+        change: z.object({
+          accessKey: z.lazy(() => AccessKeyViewSchema()),
+          accountId: z.lazy(() => AccountIdSchema()),
+          publicKey: z.lazy(() => PublicKeySchema()),
+        }),
+        type: z.enum(['access_key_update']),
       }),
-      type: z.enum(['access_key_update']),
-    }),
-    z.object({
-      change: z.object({
-        accountId: z.lazy(() => AccountIdSchema()),
-        publicKey: z.lazy(() => PublicKeySchema()),
+      z.object({
+        change: z.object({
+          accountId: z.lazy(() => AccountIdSchema()),
+          publicKey: z.lazy(() => PublicKeySchema()),
+        }),
+        type: z.enum(['access_key_deletion']),
       }),
-      type: z.enum(['access_key_deletion']),
-    }),
-    z.object({
-      change: z.object({
-        accountId: z.lazy(() => AccountIdSchema()),
-        gasKey: z.lazy(() => GasKeyViewSchema()),
-        publicKey: z.lazy(() => PublicKeySchema()),
+      z.object({
+        change: z.object({
+          accountId: z.lazy(() => AccountIdSchema()),
+          gasKey: z.lazy(() => GasKeyViewSchema()),
+          publicKey: z.lazy(() => PublicKeySchema()),
+        }),
+        type: z.enum(['gas_key_update']),
       }),
-      type: z.enum(['gas_key_update']),
-    }),
-    z.object({
-      change: z.object({
-        accountId: z.lazy(() => AccountIdSchema()),
-        index: z.number(),
-        nonce: z.number(),
-        publicKey: z.lazy(() => PublicKeySchema()),
+      z.object({
+        change: z.object({
+          accountId: z.lazy(() => AccountIdSchema()),
+          index: z.number(),
+          nonce: z.number(),
+          publicKey: z.lazy(() => PublicKeySchema()),
+        }),
+        type: z.enum(['gas_key_nonce_update']),
       }),
-      type: z.enum(['gas_key_nonce_update']),
-    }),
-    z.object({
-      change: z.object({
-        accountId: z.lazy(() => AccountIdSchema()),
-        publicKey: z.lazy(() => PublicKeySchema()),
+      z.object({
+        change: z.object({
+          accountId: z.lazy(() => AccountIdSchema()),
+          publicKey: z.lazy(() => PublicKeySchema()),
+        }),
+        type: z.enum(['gas_key_deletion']),
       }),
-      type: z.enum(['gas_key_deletion']),
-    }),
-    z.object({
-      change: z.object({
-        accountId: z.lazy(() => AccountIdSchema()),
-        keyBase64: z.lazy(() => StoreKeySchema()),
-        valueBase64: z.lazy(() => StoreValueSchema()),
+      z.object({
+        change: z.object({
+          accountId: z.lazy(() => AccountIdSchema()),
+          keyBase64: z.lazy(() => StoreKeySchema()),
+          valueBase64: z.lazy(() => StoreValueSchema()),
+        }),
+        type: z.enum(['data_update']),
       }),
-      type: z.enum(['data_update']),
-    }),
-    z.object({
-      change: z.object({
-        accountId: z.lazy(() => AccountIdSchema()),
-        keyBase64: z.lazy(() => StoreKeySchema()),
+      z.object({
+        change: z.object({
+          accountId: z.lazy(() => AccountIdSchema()),
+          keyBase64: z.lazy(() => StoreKeySchema()),
+        }),
+        type: z.enum(['data_deletion']),
       }),
-      type: z.enum(['data_deletion']),
-    }),
-    z.object({
-      change: z.object({
-        accountId: z.lazy(() => AccountIdSchema()),
-        codeBase64: z.string(),
+      z.object({
+        change: z.object({
+          accountId: z.lazy(() => AccountIdSchema()),
+          codeBase64: z.string(),
+        }),
+        type: z.enum(['contract_code_update']),
       }),
-      type: z.enum(['contract_code_update']),
-    }),
-    z.object({
-      change: z.object({
-        accountId: z.lazy(() => AccountIdSchema()),
+      z.object({
+        change: z.object({
+          accountId: z.lazy(() => AccountIdSchema()),
+        }),
+        type: z.enum(['contract_code_deletion']),
       }),
-      type: z.enum(['contract_code_deletion']),
-    }),
-  ]);
+    ]),
+    z.object({
+      cause: z.lazy(() => StateChangeCauseViewSchema()),
+    })
+  );
 
 //
 // Item of the state, key and value are serialized in base64 and proof for

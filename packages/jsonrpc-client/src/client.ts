@@ -94,7 +94,8 @@ export class JsonRpcClientError extends Error {
 export class JsonRpcNetworkError extends Error {
   constructor(
     message: string,
-    public originalError?: Error
+    public originalError?: Error,
+    public responseBody?: unknown
   ) {
     super(message);
     this.name = 'JsonRpcNetworkError';
@@ -176,33 +177,44 @@ export class NearRpcClient {
 
         clearTimeout(timeoutId);
 
-        if (!response.ok) {
-          throw new JsonRpcNetworkError(
-            `HTTP error! status: ${response.status}`
-          );
-        }
-
         let jsonResponse;
         try {
           jsonResponse = await response.json();
         } catch (parseError) {
+          // If we can't parse JSON and it's not a 2xx response, include status info
+          if (!response.ok) {
+            throw new JsonRpcNetworkError(
+              `HTTP error! status: ${response.status} - Failed to parse JSON response`,
+              parseError as Error
+            );
+          }
           throw new JsonRpcNetworkError(
             'Failed to parse JSON response',
             parseError as Error
           );
         }
 
-        // Validate basic JSON-RPC response structure first
-        if (this.validation) {
-          this.validation.validateResponse(jsonResponse);
-        }
-
+        // Check for JSON-RPC error in the response
         if (jsonResponse.error) {
           throw new JsonRpcClientError(
             jsonResponse.error.message,
             jsonResponse.error.code,
             jsonResponse.error.data
           );
+        }
+
+        // If it's not a 2xx status and no JSON-RPC error, throw network error with body
+        if (!response.ok) {
+          throw new JsonRpcNetworkError(
+            `HTTP error! status: ${response.status}`,
+            undefined,
+            jsonResponse
+          );
+        }
+
+        // Validate basic JSON-RPC response structure
+        if (this.validation) {
+          this.validation.validateResponse(jsonResponse);
         }
 
         // Convert snake_case response back to camelCase
