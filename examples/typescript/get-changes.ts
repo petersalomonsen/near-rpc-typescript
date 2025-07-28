@@ -67,7 +67,8 @@ console.log(
 if (contractChanges.changes && contractChanges.changes.length > 0) {
   contractChanges.changes.forEach((change: any, index) => {
     console.log(`   ${index + 1}. Contract: ${change.change.accountId}`);
-    console.log(`      Code hash: ${change.change.codeHash}`);
+    console.log(`      Code length: ${change.change.codeBase64?.length || 0} chars (base64)`);
+    console.log(`      Caused by: ${change.cause.type}`);
   });
 }
 
