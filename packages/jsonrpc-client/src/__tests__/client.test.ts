@@ -83,7 +83,7 @@ describe('NearRpcClient', () => {
     });
 
     it('should make gasPrice call', async () => {
-      const result = await gasPrice(client, [null]);
+      const result = await gasPrice(client, { blockId: null });
       expect(result).toHaveProperty('gasPrice');
     });
 

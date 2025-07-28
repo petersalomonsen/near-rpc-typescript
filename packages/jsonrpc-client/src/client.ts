@@ -112,7 +112,7 @@ export class NearRpcClient {
   public readonly headers: Record<string, string>;
   public readonly timeout: number;
   public readonly retries: number;
-  private readonly validation?: ValidationResult;
+  private readonly validation: ValidationResult | undefined;
 
   constructor(config: string | ClientConfig) {
     if (typeof config === 'string') {
@@ -140,7 +140,10 @@ export class NearRpcClient {
     params?: TParams
   ): Promise<TResult> {
     // Convert camelCase params to snake_case for the RPC call
-    const snakeCaseParams = params ? convertKeysToSnakeCase(params) : params;
+    // Also convert undefined to null for methods that expect null params
+    const snakeCaseParams = params !== undefined 
+      ? convertKeysToSnakeCase(params) 
+      : null;
 
     const request: JsonRpcRequest<TParams | undefined> = {
       jsonrpc: '2.0',
