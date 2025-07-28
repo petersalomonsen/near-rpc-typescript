@@ -121,22 +121,22 @@ try {
 // Example 3: Handling UNKNOWN_BLOCK errors on non-archival nodes
 console.log('\n\n=== Example: Handling old blocks on non-archival RPC ===\n');
 
-const regularMainnetClient = new NearRpcClient({
-  endpoint: 'https://rpc.mainnet.fastnear.com', // Non-archival, only recent blocks
+const regularTestnetClient = new NearRpcClient({
+  endpoint: 'https://rpc.testnet.fastnear.com', // Non-archival, only recent blocks
 });
 
 // Try to query an old block that won't exist on non-archival nodes
-const oldBlockHeight = 50000000; // This is too old for non-archival nodes
+const oldBlockHeight = 114467662; // Real testnet block that's too old for non-archival nodes
 
 console.log(
-  `🔍 Attempting to query old block ${oldBlockHeight} on non-archival RPC...`
+  `🔍 Attempting to query old block ${oldBlockHeight} on non-archival testnet RPC...`
 );
 
 try {
-  await experimentalChanges(regularMainnetClient, {
+  await experimentalChanges(regularTestnetClient, {
     blockId: oldBlockHeight,
     changesType: 'account_changes',
-    accountIds: ['near'],
+    accountIds: ['3e2210e1184b45b64c8a434c0a7e7b23cc04ea7eb7a6c3c32520d03d4afcb8af'],
   });
 } catch (error: any) {
   console.log('❌ Error occurred:', error.message);
@@ -233,16 +233,35 @@ function handleRpcError(error: any): null {
 
 // Test with a block that's likely too old for non-archival
 console.log('Testing error handling with old block...');
-const result = await getChangesWithErrorHandling(regularMainnetClient, {
-  blockId: 10000000, // Very old block
+const result = await getChangesWithErrorHandling(regularTestnetClient, {
+  blockId: 114467662, // Old testnet block
   changesType: 'account_changes',
-  accountIds: ['near'],
+  accountIds: ['3e2210e1184b45b64c8a434c0a7e7b23cc04ea7eb7a6c3c32520d03d4afcb8af'],
 });
 
 if (!result) {
   console.log('\n💡 Tip: For historical data, use archival endpoints:');
   console.log('   - archival-rpc.mainnet.fastnear.com');
   console.log('   - archival-rpc.testnet.fastnear.com');
+  
+  // Show that the same request works on archival
+  console.log('\n📍 Demonstrating the same request on archival testnet...');
+  const archivalTestnetClient = new NearRpcClient({
+    endpoint: 'https://archival-rpc.testnet.fastnear.com',
+  });
+  
+  try {
+    const archivalResult = await experimentalChanges(archivalTestnetClient, {
+      blockId: 114467662,
+      changesType: 'account_changes',
+      accountIds: ['3e2210e1184b45b64c8a434c0a7e7b23cc04ea7eb7a6c3c32520d03d4afcb8af'],
+    });
+    
+    console.log(`✅ Success! Found ${archivalResult.changes?.length || 0} changes on archival RPC`);
+    console.log('   This confirms the block exists but is too old for non-archival nodes');
+  } catch (archivalError: any) {
+    console.log('❌ Unexpected error on archival:', archivalError.message);
+  }
 }
 
 // Example 5: Checking if a node is archival
@@ -273,6 +292,12 @@ async function isArchivalNode(client: NearRpcClient): Promise<boolean> {
 }
 
 console.log('Checking if nodes are archival...');
+
+// Create a regular mainnet client for comparison
+const regularMainnetClient = new NearRpcClient({
+  endpoint: 'https://rpc.mainnet.fastnear.com',
+});
+
 const isMainnetArchival = await isArchivalNode(regularMainnetClient);
 console.log(
   `Regular mainnet RPC: ${isMainnetArchival ? '✅ Archival' : '❌ Non-archival'}`
