@@ -57,6 +57,27 @@ jobs:
       - name: Run TypeScript mini-client-usage example
         run: pnpm tsx examples/typescript/mini-client-usage.ts
 
+      - name: Run TypeScript get-changes example
+        run: pnpm tsx examples/typescript/get-changes.ts
+
+      - name: Run TypeScript block-id-params example
+        run: pnpm tsx examples/typescript/block-id-params.ts
+
+      - name: Run TypeScript get-chunk example
+        run: pnpm tsx examples/typescript/get-chunk.ts
+
+      - name: Run TypeScript get-network-info example
+        run: pnpm tsx examples/typescript/get-network-info.ts
+
+      - name: Run TypeScript get-transaction-status example
+        run: pnpm tsx examples/typescript/get-transaction-status.ts
+
+      - name: Run TypeScript get-validators example
+        run: pnpm tsx examples/typescript/get-validators.ts
+
+      - name: Run TypeScript check-rpc-versions example
+        run: pnpm tsx examples/typescript/check-rpc-versions.ts
+
       # ESM JavaScript examples
       - name: Run ESM basic-usage example
         run: node examples/javascript-esm/basic-usage.js
