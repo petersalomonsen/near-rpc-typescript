@@ -14,6 +14,7 @@ import {
   NearRpcClient,
   experimentalChanges,
   changes,
+  status,
 } from '@near-js/jsonrpc-client';
 import type { RpcStateChangesInBlockResponse } from '@near-js/jsonrpc-types';
 
@@ -82,9 +83,13 @@ const testnetClient = new NearRpcClient({
 console.log('🔍 Getting recent changes on testnet...');
 
 try {
-  // Note: The stable 'changes' method works the same way
+  // First, get the latest block to use a valid block ID
+  const statusResponse = await status(testnetClient);
+  const latestBlockHash = statusResponse.syncInfo.latestBlockHash;
+  
+  // Note: The stable 'changes' method works the same way as experimental
   const testnetChanges = await changes(testnetClient, {
-    blockId: 'final',
+    blockId: latestBlockHash,
     changesType: 'account_changes',
     accountIds: ['test.near', 'testnet'],
   });
@@ -95,7 +100,7 @@ try {
 
   // Try with a specific account that likely has changes
   const activeAccount = await changes(testnetClient, {
-    blockId: 'final',
+    blockId: latestBlockHash,
     changesType: 'all_access_key_changes',
     accountIds: ['testnet'],
   });
@@ -105,10 +110,12 @@ try {
   );
 } catch (error: any) {
   console.error('❌ Error with stable changes method:', error.message);
-  console.log('   Note: This might be due to parameter format differences');
-  console.log(
-    '   The stable endpoint is available on testnet 2.7.0+ but may have different parameter requirements'
-  );
+  if (error.code === -32700) {
+    console.log('   Parse error: Invalid parameters');
+    console.log('   Note: Use a valid block hash or height, not "final"');
+  } else if (error.message.includes('Method not found')) {
+    console.log('   This RPC provider does not support the stable changes method');
+  }
 }
 
 // Example 3: Handling UNKNOWN_BLOCK errors on non-archival nodes
