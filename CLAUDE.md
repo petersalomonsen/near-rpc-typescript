@@ -59,3 +59,11 @@ This file contains important notes and reminders for Claude when working on this
 - Release Please only considers "user facing" commits for releases
 - Automated commits from bots may not trigger releases by default
 - Type generation updates should use `feat:` prefix to trigger releases
+
+## RPC Version Compatibility Notes
+
+- **Different RPC providers run different versions of NEAR node software**
+- Example: `changes` method is available in 2.7.0+ (currently on testnet), while `EXPERIMENTAL_changes` works on all versions
+- **Always check RPC provider versions** when using newer methods - use the `status` method
+- **The OpenAPI spec reflects the latest capabilities** - production providers may run older versions
+- See docs/RPC_COMPATIBILITY_NOTES.md for detailed version compatibility information
