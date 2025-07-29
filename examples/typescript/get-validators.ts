@@ -7,12 +7,13 @@
  * 3. Run `pnpm tsx examples/typescript/get-validators.ts` from the root of the repository.
  */
 
-import { NearRpcClient, validators } from '@near-js/jsonrpc-client';
+import { NearRpcClient, validators, enableValidation } from '@near-js/jsonrpc-client';
 import type { RpcValidatorResponse } from '@near-js/jsonrpc-types';
 
 // Initialize client
 const client = new NearRpcClient({
   endpoint: 'https://rpc.mainnet.fastnear.com',
+  validation: enableValidation(),
 });
 
 // Example 1: Get current validators
