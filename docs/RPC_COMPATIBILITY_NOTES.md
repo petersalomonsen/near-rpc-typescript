@@ -113,47 +113,150 @@ async function getChangesWithFallback(
 The `gas_price` method underwent a parameter format change between versions:
 
 #### Old Format (2.6.5 and earlier - current mainnet)
-- Expects array parameters: `[blockId]` or `[null]`
-- Example: `{"method": "gas_price", "params": [157347609]}`
-- Error with object params: "Failed parsing args: invalid type: map, expected a tuple of size 1"
+Mainnet expects array parameters:
+```json
+// Request
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "method": "gas_price", 
+  "params": [157347609]  // Array format
+}
+
+// Response (successful)
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "result": {
+    "gas_price": "100000000"
+  }
+}
+
+// Error when using object format on mainnet
+{
+  "error": {
+    "code": -32700,
+    "message": "Parse error",
+    "data": "Failed parsing args: invalid type: map, expected a tuple of size 1"
+  }
+}
+```
 
 #### New Format (2.7.0+ - current testnet and OpenAPI spec)
-- Expects object parameters: `{ blockId: ... }` or `{}`
-- Example: `{"method": "gas_price", "params": { "blockId": 157347609 }}`
-- Follows the standard pattern of other RPC methods
+The [OpenAPI schema](https://github.com/near/nearcore/blob/master/chain/jsonrpc/openapi/openapi.json#L10477-L10493) defines object parameters:
+```json
+// Schema definition
+"RpcGasPriceRequest": {
+  "properties": {
+    "block_id": {
+      "anyOf": [
+        { "$ref": "#/components/schemas/BlockId" },
+        { "enum": [null], "nullable": true }
+      ]
+    }
+  },
+  "type": "object"  // Object format, not array
+}
 
-**Important Note**: The OpenAPI specification was only added to nearcore on May 26, 2025 (commit 800da6e7), which is after version 2.6.5 was released. This means:
+// Request (as per OpenAPI spec)
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "method": "gas_price",
+  "params": { "block_id": 157347609 }  // Object format
+}
+```
+
+**Important Note**: The OpenAPI specification was only added to nearcore on May 26, 2025 (commit [800da6e7](https://github.com/near/nearcore/commit/800da6e7ea502cbacac82dd02a30de77341587ff)), which is after version 2.6.5 was released. This means:
 - There was no OpenAPI spec to generate from for older versions
 - Our validation schemas are based on the newer format
 - Validation will fail on mainnet for gas_price until mainnet upgrades to 2.7.0+
 
-### experimentalProtocolConfig Missing Optional Fields
+### experimentalProtocolConfig Field Mismatch Issues
 
-The `experimentalProtocolConfig` method returns responses with undefined fields that the schema expects to be present:
+The `experimentalProtocolConfig` method has version-dependent fields that cause validation failures.
 
-#### Affected Fields in VMConfigView
-- `globalContractHostFns`: Returns `undefined`, schema expects `boolean`
-- `reftypesBulkMemory`: Returns `undefined`, schema expects `boolean`
-- `saturatingFloatToInt`: Returns `undefined`, schema expects `boolean`
+#### Field Availability by Network
+
+**Testnet Response** (version 2.7.0-rc.2):
+```json
+{
+  "result": {
+    "runtime_config": {
+      "wasm_config": {
+        "global_contract_host_fns": true,    // ✅ Present on testnet
+        "saturating_float_to_int": true,     // ✅ Present on testnet
+        // "reftype_bulk_memory": ???        // ❌ Missing on both networks!
+        // ... other fields ...
+      }
+    }
+  }
+}
+```
+
+**Mainnet Response** (version 2.6.5):
+```json
+{
+  "result": {
+    "runtime_config": {
+      "wasm_config": {
+        // "global_contract_host_fns": ???   // ❌ Not present on mainnet
+        // "saturating_float_to_int": ???    // ❌ Not present on mainnet
+        // "reftype_bulk_memory": ???        // ❌ Missing on both networks!
+        "alt_bn128": true,                   // ✅ Only on mainnet
+        "math_extension": true,              // ✅ Only on mainnet
+        // ... other fields ...
+      }
+    }
+  }
+}
+```
+
+#### OpenAPI Schema Definition
+The schema at [VMConfigView](https://github.com/near/nearcore/blob/master/chain/jsonrpc/openapi/openapi.json#L13725-L13771) requires all three fields:
+
+```json
+"VMConfigView": {
+  "properties": {
+    "global_contract_host_fns": {
+      "type": "boolean"
+    },
+    "reftype_bulk_memory": {      // This field doesn't exist in any response!
+      "type": "boolean"
+    },
+    "saturating_float_to_int": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "global_contract_host_fns",
+    "reftype_bulk_memory",         // Required but never returned
+    "saturating_float_to_int"
+  ]
+}
+```
 
 #### Impact
-- Validation fails on both mainnet and testnet with "invalid_type" errors
-- The method works fine without validation enabled
-- These fields appear to be optional in practice but required in the schema
+- **API Call**: Succeeds and returns valid data
+- **Zod Validation**: Fails because:
+  - On mainnet: `global_contract_host_fns` and `saturating_float_to_int` are missing
+  - On testnet: `reftype_bulk_memory` is missing (doesn't exist in any version)
+  - On both: After camelCase conversion, the schema looks for `reftypesBulkMemory` which is never present
+- **Error Source**: This is a Zod validation error, NOT an API error
 
-#### Example Error
+#### Example Validation Error (from Zod)
 ```
 Invalid EXPERIMENTAL_protocol_config response: [
   {
     "expected": "boolean",
     "code": "invalid_type", 
     "path": ["result", "runtimeConfig", "wasmConfig", "reftypesBulkMemory"],
-    "message": "Invalid input"
+    "message": "Invalid input"  // This is Zod's generic error message
   }
 ]
 ```
 
-This is similar to the nullable fields issue - the OpenAPI spec doesn't accurately reflect that these fields can be undefined in actual RPC responses.
+The OpenAPI spec appears to be out of sync with actual RPC implementations. The `reftype_bulk_memory` field is defined in the spec but not returned by any RPC node version.
 
 ## Other Observations
 
