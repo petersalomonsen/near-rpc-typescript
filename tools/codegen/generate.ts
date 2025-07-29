@@ -430,6 +430,9 @@ export async function generateTypes() {
 
     // Generate method parameter and response types using z.infer
     const miniMethodTypes: string[] = [];
+    // Track already exported type names to avoid duplicates
+    const exportedTypeNames = new Set(typeExports);
+
     Object.entries(spec.paths).forEach(([path, pathSpec]) => {
       const methodName = PATH_TO_METHOD_MAP[path];
       if (!methodName) return;
@@ -441,16 +444,26 @@ export async function generateTypes() {
 
       // Generate request type using z.infer
       if (post.requestBody?.content?.['application/json']?.schema) {
-        miniMethodTypes.push(
-          `export type ${methodNamePascal}Request = z.infer<ReturnType<typeof schemas.${methodNamePascal}RequestSchema>>;`
-        );
+        const typeName = `${methodNamePascal}Request`;
+        // Check if this type already exists in the main types
+        if (!exportedTypeNames.has(typeName)) {
+          miniMethodTypes.push(
+            `export type ${typeName} = z.infer<ReturnType<typeof schemas.${methodNamePascal}RequestSchema>>;`
+          );
+          exportedTypeNames.add(typeName);
+        }
       }
 
       // Generate response type using z.infer
       if (post.responses?.['200']?.content?.['application/json']?.schema) {
-        miniMethodTypes.push(
-          `export type ${methodNamePascal}Response = z.infer<ReturnType<typeof schemas.${methodNamePascal}ResponseSchema>>;`
-        );
+        const typeName = `${methodNamePascal}Response`;
+        // Check if this type already exists in the main types
+        if (!exportedTypeNames.has(typeName)) {
+          miniMethodTypes.push(
+            `export type ${typeName} = z.infer<ReturnType<typeof schemas.${methodNamePascal}ResponseSchema>>;`
+          );
+          exportedTypeNames.add(typeName);
+        }
       }
     });
 
@@ -505,6 +518,9 @@ export * from './schemas';
       { requestSchema?: string; responseSchema?: string }
     > = {};
 
+    // Track already exported schema names to avoid duplicates
+    const exportedSchemaNames = new Set(schemaExports);
+
     Object.entries(spec.paths).forEach(([path, pathSpec]) => {
       const methodName = PATH_TO_METHOD_MAP[path];
       if (!methodName) return;
@@ -521,11 +537,16 @@ export * from './schemas';
       if (post.requestBody?.content?.['application/json']?.schema) {
         const requestSchema =
           post.requestBody.content['application/json'].schema;
-        const zodMiniSchema = generateZodSchema(requestSchema, schemas, 0);
         const schemaName = `${methodNamePascal}RequestSchema`;
-        miniMethodSchemas.push(
-          `export const ${schemaName} = () => ${zodMiniSchema};`
-        );
+
+        // Check if this schema already exists in the main schemas
+        if (!exportedSchemaNames.has(schemaName)) {
+          const zodMiniSchema = generateZodSchema(requestSchema, schemas, 0);
+          miniMethodSchemas.push(
+            `export const ${schemaName} = () => ${zodMiniSchema};`
+          );
+          exportedSchemaNames.add(schemaName);
+        }
         methodEntry.requestSchema = schemaName;
       }
 
@@ -533,11 +554,16 @@ export * from './schemas';
       if (post.responses?.['200']?.content?.['application/json']?.schema) {
         const responseSchema =
           post.responses['200'].content['application/json'].schema;
-        const zodMiniSchema = generateZodSchema(responseSchema, schemas, 0);
         const schemaName = `${methodNamePascal}ResponseSchema`;
-        miniMethodSchemas.push(
-          `export const ${schemaName} = () => ${zodMiniSchema};`
-        );
+
+        // Check if this schema already exists in the main schemas
+        if (!exportedSchemaNames.has(schemaName)) {
+          const zodMiniSchema = generateZodSchema(responseSchema, schemas, 0);
+          miniMethodSchemas.push(
+            `export const ${schemaName} = () => ${zodMiniSchema};`
+          );
+          exportedSchemaNames.add(schemaName);
+        }
         methodEntry.responseSchema = schemaName;
       }
     });
