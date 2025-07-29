@@ -17,7 +17,10 @@ async function checkNodeVersion(name: string, endpoint: string) {
       `  Protocol Version: ${result.latestProtocolVersion || 'Unknown'}`
     );
   } catch (error) {
-    console.error(`Failed to get status for ${name}:`, error.message);
+    console.error(
+      `Failed to get status for ${name}:`,
+      error instanceof Error ? error.message : String(error)
+    );
   }
 }
 
