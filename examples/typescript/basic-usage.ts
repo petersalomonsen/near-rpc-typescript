@@ -7,7 +7,12 @@
  * 3. Run `pnpm tsx examples/typescript/basic-usage.ts` from the root of the repository.
  */
 
-import { NearRpcClient, block, viewAccount, enableValidation } from '@near-js/jsonrpc-client';
+import {
+  NearRpcClient,
+  block,
+  viewAccount,
+  enableValidation,
+} from '@near-js/jsonrpc-client';
 
 const client = new NearRpcClient({
   endpoint: 'https://rpc.testnet.fastnear.com',

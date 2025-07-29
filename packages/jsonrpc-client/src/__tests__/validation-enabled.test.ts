@@ -21,7 +21,7 @@ describe('RPC Methods with Validation Enabled', () => {
   describe('Simple RPC methods', () => {
     it('should validate status request and response', async () => {
       const result = await status(client);
-      
+
       // Verify response structure
       expect(result).toHaveProperty('chainId');
       expect(result).toHaveProperty('syncInfo');
@@ -31,7 +31,7 @@ describe('RPC Methods with Validation Enabled', () => {
 
     it('should validate health request and response', async () => {
       const result = await health(client);
-      
+
       // Health returns null on success
       expect(result).toBeNull();
     });
@@ -39,7 +39,6 @@ describe('RPC Methods with Validation Enabled', () => {
     it.skip('should validate gasPrice request and response', async () => {
       // Skip due to schema mismatch - schema expects object but API expects array
       // const result = await gasPrice(client, { blockId: null });
-      
       // Verify response structure
       // expect(result).toHaveProperty('gasPrice');
       // expect(typeof result.gasPrice).toBe('string');
@@ -49,12 +48,12 @@ describe('RPC Methods with Validation Enabled', () => {
       // Get a recent block first
       const blockResult = await block(client, { finality: 'final' });
       const blockHeight = blockResult.header.height;
-      
+
       // Query gas price at specific block
       // Note: Currently the API expects array format, not object
       // This is a known issue with the schema
       // const result = await gasPrice(client, { blockId: blockHeight });
-      
+
       // For now, skip this test due to schema mismatch
       expect(true).toBe(true);
     });
@@ -63,7 +62,7 @@ describe('RPC Methods with Validation Enabled', () => {
   describe('Complex RPC methods', () => {
     it('should validate block request and response', async () => {
       const result = await block(client, { finality: 'final' });
-      
+
       // Verify response structure
       expect(result).toHaveProperty('header');
       expect(result).toHaveProperty('chunks');
@@ -76,7 +75,7 @@ describe('RPC Methods with Validation Enabled', () => {
     it.skip('should validate networkInfo request and response', async () => {
       // Skip due to schema mismatch - addr field expects string but API returns null
       const result = await networkInfo(client);
-      
+
       // Verify response structure
       expect(result).toHaveProperty('activeNodes');
       expect(result).toHaveProperty('knownProducers');
@@ -88,7 +87,7 @@ describe('RPC Methods with Validation Enabled', () => {
     it('should validate validators request and response', async () => {
       // Use 'latest' string instead of object
       const result = await validators(client, 'latest');
-      
+
       // Verify response structure
       expect(result).toHaveProperty('currentValidators');
       expect(result).toHaveProperty('epochHeight');

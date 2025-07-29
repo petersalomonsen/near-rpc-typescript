@@ -84,7 +84,8 @@ try {
   await block(invalidClient, { finality: 'not-a-valid-finality' });
   console.log('❌ Should not reach here - validation should have failed');
 } catch (error) {
-  console.log('✅ Validation correctly caught invalid parameter:', 
+  console.log(
+    '✅ Validation correctly caught invalid parameter:',
     error instanceof Error ? error.message : String(error)
   );
 }
@@ -100,7 +101,8 @@ try {
   // @ts-expect-error - Intentionally passing invalid parameter
   await block(nonValidatedClient, { finality: 'not-a-valid-finality' });
 } catch (error) {
-  console.log('✅ Non-validated client error from server:', 
+  console.log(
+    '✅ Non-validated client error from server:',
     error instanceof Error ? error.message : String(error)
   );
 }

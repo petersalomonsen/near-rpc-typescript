@@ -158,9 +158,8 @@ export class NearRpcClient {
 
     // Convert camelCase params to snake_case for the RPC call
     // Also convert undefined to null for methods that expect null params
-    const snakeCaseParams = params !== undefined 
-      ? convertKeysToSnakeCase(params) 
-      : null;
+    const snakeCaseParams =
+      params !== undefined ? convertKeysToSnakeCase(params) : null;
 
     const request: JsonRpcRequest<TParams | undefined> = {
       jsonrpc: '2.0',
