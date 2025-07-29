@@ -14,7 +14,6 @@ import {
   status,
   health,
   block,
-  networkInfo,
   validators,
 } from '@near-js/jsonrpc-client';
 import { viewAccount } from '@near-js/jsonrpc-client';
