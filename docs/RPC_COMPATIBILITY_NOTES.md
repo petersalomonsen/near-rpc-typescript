@@ -127,6 +127,34 @@ The `gas_price` method underwent a parameter format change between versions:
 - Our validation schemas are based on the newer format
 - Validation will fail on mainnet for gas_price until mainnet upgrades to 2.7.0+
 
+### experimentalProtocolConfig Missing Optional Fields
+
+The `experimentalProtocolConfig` method returns responses with undefined fields that the schema expects to be present:
+
+#### Affected Fields in VMConfigView
+- `globalContractHostFns`: Returns `undefined`, schema expects `boolean`
+- `reftypesBulkMemory`: Returns `undefined`, schema expects `boolean`
+- `saturatingFloatToInt`: Returns `undefined`, schema expects `boolean`
+
+#### Impact
+- Validation fails on both mainnet and testnet with "invalid_type" errors
+- The method works fine without validation enabled
+- These fields appear to be optional in practice but required in the schema
+
+#### Example Error
+```
+Invalid EXPERIMENTAL_protocol_config response: [
+  {
+    "expected": "boolean",
+    "code": "invalid_type", 
+    "path": ["result", "runtimeConfig", "wasmConfig", "reftypesBulkMemory"],
+    "message": "Invalid input"
+  }
+]
+```
+
+This is similar to the nullable fields issue - the OpenAPI spec doesn't accurately reflect that these fields can be undefined in actual RPC responses.
+
 ## Other Observations
 
 ### RPC Provider Reliability
