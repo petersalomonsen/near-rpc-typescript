@@ -72,15 +72,14 @@ describe('RPC Methods with Validation Enabled', () => {
       expect(Array.isArray(result.chunks)).toBe(true);
     });
 
-    it.skip('should validate networkInfo request and response', async () => {
-      // Skip due to schema mismatch - addr field expects string but API returns null
+    it('should validate networkInfo request and response', async () => {
       const result = await networkInfo(client);
 
       // Verify response structure
-      expect(result).toHaveProperty('activeNodes');
+      expect(result).toHaveProperty('activePeers');
       expect(result).toHaveProperty('knownProducers');
-      expect(result).toHaveProperty('numActiveNodes');
-      expect(Array.isArray(result.activeNodes)).toBe(true);
+      expect(result).toHaveProperty('numActivePeers');
+      expect(Array.isArray(result.activePeers)).toBe(true);
       expect(Array.isArray(result.knownProducers)).toBe(true);
     });
 
