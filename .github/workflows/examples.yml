@@ -78,6 +78,12 @@ jobs:
       - name: Run TypeScript check-rpc-versions example
         run: pnpm tsx examples/typescript/check-rpc-versions.ts
 
+      - name: Run TypeScript check-node-versions example
+        run: pnpm tsx examples/typescript/check-node-versions.ts
+
+      - name: Run TypeScript validation-demo example
+        run: pnpm tsx examples/typescript/validation-demo.ts
+
       # ESM JavaScript examples
       - name: Run ESM basic-usage example
         run: node examples/javascript-esm/basic-usage.js
