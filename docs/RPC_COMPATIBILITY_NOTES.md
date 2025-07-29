@@ -106,6 +106,27 @@ async function getChangesWithFallback(
 }
 ```
 
+## Method-Specific Compatibility Issues
+
+### gas_price Parameter Format Change
+
+The `gas_price` method underwent a parameter format change between versions:
+
+#### Old Format (2.6.5 and earlier - current mainnet)
+- Expects array parameters: `[blockId]` or `[null]`
+- Example: `{"method": "gas_price", "params": [157347609]}`
+- Error with object params: "Failed parsing args: invalid type: map, expected a tuple of size 1"
+
+#### New Format (2.7.0+ - current testnet and OpenAPI spec)
+- Expects object parameters: `{ blockId: ... }` or `{}`
+- Example: `{"method": "gas_price", "params": { "blockId": 157347609 }}`
+- Follows the standard pattern of other RPC methods
+
+**Important Note**: The OpenAPI specification was only added to nearcore on May 26, 2025 (commit 800da6e7), which is after version 2.6.5 was released. This means:
+- There was no OpenAPI spec to generate from for older versions
+- Our validation schemas are based on the newer format
+- Validation will fail on mainnet for gas_price until mainnet upgrades to 2.7.0+
+
 ## Other Observations
 
 ### RPC Provider Reliability
