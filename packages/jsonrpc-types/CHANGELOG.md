@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-types-v1.0.3...jsonrpc-types-v1.1.0) (2025-07-30)
+
+
+### Features
+
+* update generated code from OpenAPI spec ([#42](https://github.com/petersalomonsen/near-rpc-typescript/issues/42)) ([4e77e67](https://github.com/petersalomonsen/near-rpc-typescript/commit/4e77e67591411f8b1cf5ae191e580dd378e53b97))
+
 ## [1.0.3](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-types-v1.0.2...jsonrpc-types-v1.0.3) (2025-07-30)
 
 
