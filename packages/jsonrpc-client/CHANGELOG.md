@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v1.0.3...jsonrpc-client-v1.0.4) (2025-07-30)
+
+
+### Bug Fixes
+
+* handle non-standard error responses in RPC results ([#49](https://github.com/petersalomonsen/near-rpc-typescript/issues/49)) ([fc1a943](https://github.com/petersalomonsen/near-rpc-typescript/commit/fc1a9430c72c9b2d2908c3a48f351953587fb010))
+
 ## [1.0.3](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v1.0.2...jsonrpc-client-v1.0.3) (2025-07-30)
 
 
