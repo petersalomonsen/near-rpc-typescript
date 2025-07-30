@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-types-v1.0.2...jsonrpc-types-v1.0.3) (2025-07-30)
+
+
+### Bug Fixes
+
+* enable validation to work with convenience helpers and nullable fields ([#45](https://github.com/petersalomonsen/near-rpc-typescript/issues/45)) ([41b26fd](https://github.com/petersalomonsen/near-rpc-typescript/commit/41b26fdfeee1be69a5596ecfb5298b15863acd74))
+
 ## [1.0.2](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-types-v1.0.1...jsonrpc-types-v1.0.2) (2025-07-28)
 
 
