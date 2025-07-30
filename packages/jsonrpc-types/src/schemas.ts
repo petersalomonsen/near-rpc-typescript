@@ -1,5 +1,5 @@
 // Auto-generated Zod schemas from NEAR OpenAPI spec (zod/mini version)
-// Generated on: 2025-07-28T13:29:54.287Z
+// Generated on: 2025-07-29T20:18:25.403Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/mini';
@@ -56,7 +56,9 @@ export const AccessKeyPermissionViewSchema = () =>
     z.enum(['FullAccess']),
     z.object({
       FunctionCall: z.object({
-        allowance: z.optional(z.string()),
+        allowance: z.optional(
+          z.union([z.union([z.string(), z.null()]), z.null()])
+        ),
         methodNames: z.array(z.string()),
         receiverId: z.string(),
       }),
@@ -199,7 +201,7 @@ export const ActionCreationConfigViewSchema = () =>
 // An error happened during Action execution
 export const ActionErrorSchema = () =>
   z.object({
-    index: z.optional(z.number()),
+    index: z.optional(z.union([z.union([z.number(), z.null()]), z.null()])),
     kind: z.lazy(() => ActionErrorKindSchema()),
   });
 
@@ -530,10 +532,14 @@ export const BlockHeaderViewSchema = () =>
       z.union([z.lazy(() => CryptoHashSchema()), z.null()])
     ),
     blockMerkleRoot: z.lazy(() => CryptoHashSchema()),
-    blockOrdinal: z.optional(z.number()),
+    blockOrdinal: z.optional(
+      z.union([z.union([z.number(), z.null()]), z.null()])
+    ),
     challengesResult: z.array(z.lazy(() => SlashedValidatorSchema())),
     challengesRoot: z.lazy(() => CryptoHashSchema()),
-    chunkEndorsements: z.optional(z.array(z.array(z.number()))),
+    chunkEndorsements: z.optional(
+      z.union([z.union([z.array(z.array(z.number())), z.null()]), z.null()])
+    ),
     chunkHeadersRoot: z.lazy(() => CryptoHashSchema()),
     chunkMask: z.array(z.boolean()),
     chunkReceiptsRoot: z.lazy(() => CryptoHashSchema()),
@@ -553,7 +559,9 @@ export const BlockHeaderViewSchema = () =>
     nextEpochId: z.lazy(() => CryptoHashSchema()),
     outcomeRoot: z.lazy(() => CryptoHashSchema()),
     prevHash: z.lazy(() => CryptoHashSchema()),
-    prevHeight: z.optional(z.number()),
+    prevHeight: z.optional(
+      z.union([z.union([z.number(), z.null()]), z.null()])
+    ),
     prevStateRoot: z.lazy(() => CryptoHashSchema()),
     randomValue: z.lazy(() => CryptoHashSchema()),
     rentPaid: z.string(),
@@ -799,12 +807,19 @@ export const DirectionSchema = () => z.enum(['Left', 'Right']);
 // Configures how to dump state to external storage.
 export const DumpConfigSchema = () =>
   z.object({
-    credentialsFile: z.optional(z.string()),
+    credentialsFile: z.optional(
+      z.union([z.union([z.string(), z.null()]), z.null()])
+    ),
     iterationDelay: z.optional(
       z.union([z.lazy(() => DurationAsStdSchemaProviderSchema()), z.null()])
     ),
     location: z.lazy(() => ExternalStorageLocationSchema()),
-    restartDumpForShards: z.optional(z.array(z.lazy(() => ShardIdSchema()))),
+    restartDumpForShards: z.optional(
+      z.union([
+        z.union([z.array(z.lazy(() => ShardIdSchema())), z.null()]),
+        z.null(),
+      ])
+    ),
   });
 
 export const DurationAsStdSchemaProviderSchema = () =>
@@ -830,7 +845,12 @@ export const EpochSyncConfigSchema = () =>
 
 export const ExecutionMetadataViewSchema = () =>
   z.object({
-    gasProfile: z.optional(z.array(z.lazy(() => CostGasUsedSchema()))),
+    gasProfile: z.optional(
+      z.union([
+        z.union([z.array(z.lazy(() => CostGasUsedSchema())), z.null()]),
+        z.null(),
+      ])
+    ),
     version: z.number(),
   });
 
@@ -1099,7 +1119,7 @@ export const FunctionCallErrorSchema = () =>
 
 export const FunctionCallPermissionSchema = () =>
   z.object({
-    allowance: z.optional(z.string()),
+    allowance: z.optional(z.union([z.union([z.string(), z.null()]), z.null()])),
     methodNames: z.array(z.string()),
     receiverId: z.string(),
   });
@@ -1514,6 +1534,14 @@ export const JsonRpcRequestForBlockSchema = () =>
     params: z.lazy(() => RpcBlockRequestSchema()),
   });
 
+export const JsonRpcRequestForBlockEffectsSchema = () =>
+  z.object({
+    id: z.string(),
+    jsonrpc: z.string(),
+    method: z.enum(['block_effects']),
+    params: z.lazy(() => RpcStateChangesInBlockRequestSchema()),
+  });
+
 export const JsonRpcRequestForBroadcastTxAsyncSchema = () =>
   z.object({
     id: z.string(),
@@ -1562,6 +1590,14 @@ export const JsonRpcRequestForGasPriceSchema = () =>
     params: z.lazy(() => RpcGasPriceRequestSchema()),
   });
 
+export const JsonRpcRequestForGenesisConfigSchema = () =>
+  z.object({
+    id: z.string(),
+    jsonrpc: z.string(),
+    method: z.enum(['genesis_config']),
+    params: z.lazy(() => GenesisConfigRequestSchema()),
+  });
+
 export const JsonRpcRequestForHealthSchema = () =>
   z.object({
     id: z.string(),
@@ -1576,6 +1612,14 @@ export const JsonRpcRequestForLightClientProofSchema = () =>
     jsonrpc: z.string(),
     method: z.enum(['light_client_proof']),
     params: z.lazy(() => RpcLightClientExecutionProofRequestSchema()),
+  });
+
+export const JsonRpcRequestForMaintenanceWindowsSchema = () =>
+  z.object({
+    id: z.string(),
+    jsonrpc: z.string(),
+    method: z.enum(['maintenance_windows']),
+    params: z.lazy(() => RpcMaintenanceWindowsRequestSchema()),
   });
 
 export const JsonRpcRequestForNetworkInfoSchema = () =>
@@ -2020,7 +2064,12 @@ export const JsonRpcResponseFor_RpcValidatorResponseAnd_RpcErrorSchema = () =>
 export const KnownProducerViewSchema = () =>
   z.object({
     accountId: z.lazy(() => AccountIdSchema()),
-    nextHops: z.optional(z.array(z.lazy(() => PublicKeySchema()))),
+    nextHops: z.optional(
+      z.union([
+        z.union([z.array(z.lazy(() => PublicKeySchema())), z.null()]),
+        z.null(),
+      ])
+    ),
     peerId: z.lazy(() => PublicKeySchema()),
   });
 
@@ -2044,13 +2093,17 @@ export const LimitConfigSchema = () =>
     maxActionsPerReceipt: z.number(),
     maxArgumentsLength: z.number(),
     maxContractSize: z.number(),
-    maxFunctionsNumberPerContract: z.optional(z.number()),
+    maxFunctionsNumberPerContract: z.optional(
+      z.union([z.union([z.number(), z.null()]), z.null()])
+    ),
     maxGasBurnt: z.number(),
     maxLengthMethodName: z.number(),
     maxLengthReturnedData: z.number(),
     maxLengthStorageKey: z.number(),
     maxLengthStorageValue: z.number(),
-    maxLocalsPerContract: z.optional(z.number()),
+    maxLocalsPerContract: z.optional(
+      z.union([z.union([z.number(), z.null()]), z.null()])
+    ),
     maxMemoryPages: z.number(),
     maxNumberBytesMethodNames: z.number(),
     maxNumberInputDataDependencies: z.number(),
@@ -2141,7 +2194,7 @@ export const PeerInfoViewSchema = () =>
       z.union([z.lazy(() => CryptoHashSchema()), z.null()])
     ),
     connectionEstablishedTimeMillis: z.number(),
-    height: z.optional(z.number()),
+    height: z.optional(z.union([z.union([z.number(), z.null()]), z.null()])),
     isHighestBlockInvalid: z.boolean(),
     isOutboundPeer: z.boolean(),
     lastTimePeerRequestedMillis: z.number(),
@@ -2190,7 +2243,7 @@ export const ReceiptEnumViewSchema = () =>
     }),
     z.object({
       Data: z.object({
-        data: z.optional(z.string()),
+        data: z.optional(z.union([z.union([z.string(), z.null()]), z.null()])),
         dataId: z.lazy(() => CryptoHashSchema()),
         isPromiseResume: z.optional(z.boolean()),
       }),
@@ -2314,6 +2367,7 @@ export const RpcClientConfigResponseSchema = () =>
       z.union([z.lazy(() => ChunkDistributionNetworkConfigSchema()), z.null()])
     ),
     chunkRequestRetryPeriod: z.array(z.number()),
+    chunkValidationThreads: z.number(),
     chunkWaitMult: z.array(z.number()),
     clientBackgroundMigrationThreads: z.number(),
     doomslugStepPeriod: z.array(z.number()),
@@ -2331,7 +2385,9 @@ export const RpcClientConfigResponseSchema = () =>
     logSummaryStyle: z.lazy(() => LogSummaryStyleSchema()),
     maxBlockProductionDelay: z.array(z.number()),
     maxBlockWaitDelay: z.array(z.number()),
-    maxGasBurntView: z.optional(z.number()),
+    maxGasBurntView: z.optional(
+      z.union([z.union([z.number(), z.null()]), z.null()])
+    ),
     minBlockProductionDelay: z.array(z.number()),
     minNumPeers: z.number(),
     numBlockProducerSeats: z.number(),
@@ -2340,12 +2396,15 @@ export const RpcClientConfigResponseSchema = () =>
     produceChunkAddTransactionsTimeLimit: z.string(),
     produceEmptyBlocks: z.boolean(),
     reshardingConfig: z.lazy(() => MutableConfigValueSchema()),
-    rpcAddr: z.optional(z.string()),
+    rpcAddr: z.optional(z.union([z.union([z.string(), z.null()]), z.null()])),
     saveInvalidWitnesses: z.boolean(),
     saveLatestWitnesses: z.boolean(),
     saveTrieChanges: z.boolean(),
     saveTxOutcomes: z.boolean(),
     skipSyncWait: z.boolean(),
+    stateRequestServerThreads: z.number(),
+    stateRequestThrottlePeriod: z.array(z.number()),
+    stateRequestsPerThrottlePeriod: z.number(),
     stateSync: z.lazy(() => StateSyncConfigSchema()),
     stateSyncEnabled: z.boolean(),
     stateSyncExternalBackoff: z.array(z.number()),
@@ -2357,15 +2416,17 @@ export const RpcClientConfigResponseSchema = () =>
     syncMaxBlockRequests: z.number(),
     syncStepPeriod: z.array(z.number()),
     trackedShardsConfig: z.lazy(() => TrackedShardsConfigSchema()),
-    transactionPoolSizeLimit: z.optional(z.number()),
+    transactionPoolSizeLimit: z.optional(
+      z.union([z.union([z.number(), z.null()]), z.null()])
+    ),
     transactionRequestHandlerThreads: z.number(),
-    trieViewerStateSizeLimit: z.optional(z.number()),
+    trieViewerStateSizeLimit: z.optional(
+      z.union([z.union([z.number(), z.null()]), z.null()])
+    ),
     ttlAccountIdRouter: z.array(z.number()),
     txRoutingHeightHorizon: z.number(),
     version: z.lazy(() => VersionSchema()),
-    viewClientNumStateRequestsPerThrottlePeriod: z.number(),
     viewClientThreads: z.number(),
-    viewClientThrottlePeriod: z.array(z.number()),
   });
 
 export const RpcCongestionLevelRequestSchema = () =>
@@ -2431,7 +2492,7 @@ export const RpcHealthResponseSchema = () => z.null();
 export const RpcKnownProducerSchema = () =>
   z.object({
     accountId: z.lazy(() => AccountIdSchema()),
-    addr: z.optional(z.string()),
+    addr: z.optional(z.union([z.union([z.string(), z.null()]), z.null()])),
     peerId: z.lazy(() => PeerIdSchema()),
   });
 
@@ -2491,7 +2552,12 @@ export const RpcLightClientNextBlockResponseSchema = () =>
     innerLite: z.optional(z.lazy(() => BlockHeaderInnerLiteViewSchema())),
     innerRestHash: z.optional(z.lazy(() => CryptoHashSchema())),
     nextBlockInnerHash: z.optional(z.lazy(() => CryptoHashSchema())),
-    nextBps: z.optional(z.array(z.lazy(() => ValidatorStakeViewSchema()))),
+    nextBps: z.optional(
+      z.union([
+        z.union([z.array(z.lazy(() => ValidatorStakeViewSchema())), z.null()]),
+        z.null(),
+      ])
+    ),
     prevBlockHash: z.optional(z.lazy(() => CryptoHashSchema())),
   });
 
@@ -2515,7 +2581,7 @@ export const RpcNetworkInfoResponseSchema = () =>
 export const RpcPeerInfoSchema = () =>
   z.object({
     accountId: z.optional(z.union([z.lazy(() => AccountIdSchema()), z.null()])),
-    addr: z.optional(z.string()),
+    addr: z.optional(z.union([z.union([z.string(), z.null()]), z.null()])),
     id: z.lazy(() => PeerIdSchema()),
   });
 
@@ -2856,10 +2922,16 @@ export const RpcSplitStorageInfoRequestSchema = () =>
 // Contains the split storage information.
 export const RpcSplitStorageInfoResponseSchema = () =>
   z.object({
-    coldHeadHeight: z.optional(z.number()),
-    finalHeadHeight: z.optional(z.number()),
-    headHeight: z.optional(z.number()),
-    hotDbKind: z.optional(z.string()),
+    coldHeadHeight: z.optional(
+      z.union([z.union([z.number(), z.null()]), z.null()])
+    ),
+    finalHeadHeight: z.optional(
+      z.union([z.union([z.number(), z.null()]), z.null()])
+    ),
+    headHeight: z.optional(
+      z.union([z.union([z.number(), z.null()]), z.null()])
+    ),
+    hotDbKind: z.optional(z.union([z.union([z.string(), z.null()]), z.null()])),
   });
 
 //
@@ -3101,7 +3173,7 @@ export const RpcStatusResponseSchema = () =>
     nodeKey: z.optional(z.union([z.lazy(() => PublicKeySchema()), z.null()])),
     nodePublicKey: z.lazy(() => PublicKeySchema()),
     protocolVersion: z.number(),
-    rpcAddr: z.optional(z.string()),
+    rpcAddr: z.optional(z.union([z.union([z.string(), z.null()]), z.null()])),
     syncInfo: z.lazy(() => StatusSyncInfoSchema()),
     uptimeSec: z.number(),
     validatorAccountId: z.optional(
@@ -3233,8 +3305,18 @@ export const ShardLayoutV0Schema = () =>
 export const ShardLayoutV1Schema = () =>
   z.object({
     boundaryAccounts: z.array(z.lazy(() => AccountIdSchema())),
-    shardsSplitMap: z.optional(z.array(z.array(z.lazy(() => ShardIdSchema())))),
-    toParentShardMap: z.optional(z.array(z.lazy(() => ShardIdSchema()))),
+    shardsSplitMap: z.optional(
+      z.union([
+        z.union([z.array(z.array(z.lazy(() => ShardIdSchema()))), z.null()]),
+        z.null(),
+      ])
+    ),
+    toParentShardMap: z.optional(
+      z.union([
+        z.union([z.array(z.lazy(() => ShardIdSchema())), z.null()]),
+        z.null(),
+      ])
+    ),
     version: z.number(),
   });
 
@@ -3252,13 +3334,25 @@ export const ShardLayoutV2Schema = () =>
     ),
     shardIds: z.array(z.lazy(() => ShardIdSchema())),
     shardsParentMap: z.optional(
-      z.record(
-        z.string(),
-        z.lazy(() => ShardIdSchema())
-      )
+      z.union([
+        z.union([
+          z.record(
+            z.string(),
+            z.lazy(() => ShardIdSchema())
+          ),
+          z.null(),
+        ]),
+        z.null(),
+      ])
     ),
     shardsSplitMap: z.optional(
-      z.record(z.string(), z.array(z.lazy(() => ShardIdSchema())))
+      z.union([
+        z.union([
+          z.record(z.string(), z.array(z.lazy(() => ShardIdSchema()))),
+          z.null(),
+        ]),
+        z.null(),
+      ])
     ),
     version: z.number(),
   });
@@ -3504,10 +3598,16 @@ export const StatusSyncInfoSchema = () =>
     earliestBlockHash: z.optional(
       z.union([z.lazy(() => CryptoHashSchema()), z.null()])
     ),
-    earliestBlockHeight: z.optional(z.number()),
-    earliestBlockTime: z.optional(z.string()),
+    earliestBlockHeight: z.optional(
+      z.union([z.union([z.number(), z.null()]), z.null()])
+    ),
+    earliestBlockTime: z.optional(
+      z.union([z.union([z.string(), z.null()]), z.null()])
+    ),
     epochId: z.optional(z.union([z.lazy(() => EpochIdSchema()), z.null()])),
-    epochStartHeight: z.optional(z.number()),
+    epochStartHeight: z.optional(
+      z.union([z.union([z.number(), z.null()]), z.null()])
+    ),
     latestBlockHash: z.lazy(() => CryptoHashSchema()),
     latestBlockHeight: z.number(),
     latestBlockTime: z.string(),
@@ -3865,6 +3965,14 @@ export const BlockRequestSchema = () =>
 export const BlockResponseSchema = () =>
   z.lazy(() => JsonRpcResponseFor_RpcBlockResponseAnd_RpcErrorSchema());
 
+export const BlockEffectsRequestSchema = () =>
+  z.lazy(() => JsonRpcRequestForBlockEffectsSchema());
+
+export const BlockEffectsResponseSchema = () =>
+  z.lazy(() =>
+    JsonRpcResponseFor_RpcStateChangesInBlockByTypeResponseAnd_RpcErrorSchema()
+  );
+
 export const BroadcastTxAsyncRequestSchema = () =>
   z.lazy(() => JsonRpcRequestForBroadcastTxAsyncSchema());
 
@@ -3903,6 +4011,9 @@ export const GasPriceRequestSchema = () =>
 export const GasPriceResponseSchema = () =>
   z.lazy(() => JsonRpcResponseFor_RpcGasPriceResponseAnd_RpcErrorSchema());
 
+export const GenesisConfigResponseSchema = () =>
+  z.lazy(() => JsonRpcResponseFor_GenesisConfigAnd_RpcErrorSchema());
+
 export const HealthRequestSchema = () =>
   z.lazy(() => JsonRpcRequestForHealthSchema());
 
@@ -3918,6 +4029,12 @@ export const LightClientProofResponseSchema = () =>
   z.lazy(() =>
     JsonRpcResponseFor_RpcLightClientExecutionProofResponseAnd_RpcErrorSchema()
   );
+
+export const MaintenanceWindowsRequestSchema = () =>
+  z.lazy(() => JsonRpcRequestForMaintenanceWindowsSchema());
+
+export const MaintenanceWindowsResponseSchema = () =>
+  z.lazy(() => JsonRpcResponseFor_ArrayOf_RangeOfUint64And_RpcErrorSchema());
 
 export const NetworkInfoRequestSchema = () =>
   z.lazy(() => JsonRpcRequestForNetworkInfoSchema());
@@ -4023,6 +4140,10 @@ export const VALIDATION_SCHEMA_MAP: Record<
     requestSchema: BlockRequestSchema,
     responseSchema: BlockResponseSchema,
   },
+  block_effects: {
+    requestSchema: BlockEffectsRequestSchema,
+    responseSchema: BlockEffectsResponseSchema,
+  },
   broadcast_tx_async: {
     requestSchema: BroadcastTxAsyncRequestSchema,
     responseSchema: BroadcastTxAsyncResponseSchema,
@@ -4047,6 +4168,10 @@ export const VALIDATION_SCHEMA_MAP: Record<
     requestSchema: GasPriceRequestSchema,
     responseSchema: GasPriceResponseSchema,
   },
+  genesis_config: {
+    requestSchema: GenesisConfigRequestSchema,
+    responseSchema: GenesisConfigResponseSchema,
+  },
   health: {
     requestSchema: HealthRequestSchema,
     responseSchema: HealthResponseSchema,
@@ -4054,6 +4179,10 @@ export const VALIDATION_SCHEMA_MAP: Record<
   light_client_proof: {
     requestSchema: LightClientProofRequestSchema,
     responseSchema: LightClientProofResponseSchema,
+  },
+  maintenance_windows: {
+    requestSchema: MaintenanceWindowsRequestSchema,
+    responseSchema: MaintenanceWindowsResponseSchema,
   },
   network_info: {
     requestSchema: NetworkInfoRequestSchema,

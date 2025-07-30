@@ -14,63 +14,53 @@ import {
   gasPrice,
   health,
   viewAccount,
+  enableValidation,
 } from '@near-js/jsonrpc-client';
 
-async function testClient() {
-  console.log('🚀 Testing NEAR RPC Client...\n');
+console.log('🚀 Testing NEAR RPC Client with validation...\n');
 
-  // Create client instance
-  const client = new NearRpcClient({
-    endpoint: 'https://rpc.testnet.fastnear.com',
-  });
-  console.log('✅ Client created for testnet');
+// Create client instance with validation enabled
+const client = new NearRpcClient({
+  endpoint: 'https://rpc.testnet.fastnear.com',
+  validation: enableValidation(),
+});
+console.log('✅ Client created for testnet with validation enabled');
 
-  try {
-    // Test 1: Get node status
-    console.log('\n📊 Testing status() method...');
-    const statusResult = await status(client);
-    console.log(
-      `✅ Node status: ${statusResult.chainId} (${statusResult.version?.version})`
-    );
-    console.log(`   Block height: ${statusResult.syncInfo?.latestBlockHeight}`);
+// Test 1: Get node status
+console.log('\n📊 Testing status() method...');
+const statusResult = await status(client);
+console.log(
+  `✅ Node status: ${statusResult.chainId} (${statusResult.version?.version})`
+);
+console.log(`   Block height: ${statusResult.syncInfo?.latestBlockHeight}`);
 
-    // Test 2: Get latest block
-    console.log('\n🧱 Testing block() method...');
-    const blockResult = await block(client, { finality: 'final' });
-    console.log(`✅ Latest block: ${blockResult.header?.height}`);
-    console.log(`   Hash: ${blockResult.header?.hash?.substring(0, 16)}...`);
+// Test 2: Get latest block
+console.log('\n🧱 Testing block() method...');
+const blockResult = await block(client, { finality: 'final' });
+console.log(`✅ Latest block: ${blockResult.header?.height}`);
+console.log(`   Hash: ${blockResult.header?.hash?.substring(0, 16)}...`);
 
-    // Test 3: Test gas price
-    console.log('\n⛽ Testing gasPrice() method...');
-    const gasPriceResult = await gasPrice(client, {
-      blockId: blockResult.header.height,
-    });
-    console.log(`✅ Gas price: ${gasPriceResult.gasPrice} yoctoNEAR`);
+// Test 3: Test gas price
+console.log('\n⛽ Testing gasPrice() method...');
+const gasPriceResult = await gasPrice(client, {
+  blockId: blockResult.header.height,
+});
+console.log(`✅ Gas price: ${gasPriceResult.gasPrice} yoctoNEAR`);
 
-    // Test 4: Test health endpoint
-    console.log('\n🏥 Testing health() method...');
-    const healthResult = await health(client);
-    console.log(
-      `✅ Health check: ${healthResult === null ? 'OK' : 'Issues detected'}`
-    );
+// Test 4: Test health endpoint
+console.log('\n🏥 Testing health() method...');
+const healthResult = await health(client);
+console.log(
+  `✅ Health check: ${healthResult === null ? 'OK' : 'Issues detected'}`
+);
 
-    // Test 5: Test a view account call
-    console.log('\n👤 Testing viewAccount() method...');
-    const account = await viewAccount(client, {
-      accountId: 'testnet',
-      finality: 'final',
-    });
-    console.log(`✅ Account balance: ${account.amount} yoctoNEAR`);
-    console.log(`   Storage used: ${account.storageUsage} bytes`);
+// Test 5: Test a view account call
+console.log('\n👤 Testing viewAccount() method...');
+const account = await viewAccount(client, {
+  accountId: 'testnet',
+  finality: 'final',
+});
+console.log(`✅ Account balance: ${account.amount} yoctoNEAR`);
+console.log(`   Storage used: ${account.storageUsage} bytes`);
 
-    console.log('\n🎉 All tests passed! Client is working correctly.');
-  } catch (error) {
-    console.error('\n❌ Test failed:', (error as Error).message);
-    if ('code' in (error as any)) {
-      console.error(`   RPC Error Code: ${(error as any).code}`);
-    }
-  }
-}
-
-// Run the test
-testClient().catch(console.error);
+console.log('\n🎉 All tests passed! Client is working correctly.');

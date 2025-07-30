@@ -112,7 +112,7 @@ export class NearRpcClient {
   public readonly headers: Record<string, string>;
   public readonly timeout: number;
   public readonly retries: number;
-  private readonly validation?: ValidationResult;
+  private readonly validation: ValidationResult | undefined;
 
   constructor(config: string | ClientConfig) {
     if (typeof config === 'string') {
@@ -139,8 +139,27 @@ export class NearRpcClient {
     method: string,
     params?: TParams
   ): Promise<TResult> {
+    // Create request with original camelCase params for validation
+    const requestForValidation: JsonRpcRequest<TParams | null> = {
+      jsonrpc: '2.0',
+      id: REQUEST_ID,
+      method,
+      params: params !== undefined ? params : null,
+    };
+
+    // Validate request if validation is enabled (before snake_case conversion)
+    if (this.validation) {
+      if ('validateMethodRequest' in this.validation) {
+        this.validation.validateMethodRequest(method, requestForValidation);
+      } else {
+        this.validation.validateRequest(requestForValidation);
+      }
+    }
+
     // Convert camelCase params to snake_case for the RPC call
-    const snakeCaseParams = params ? convertKeysToSnakeCase(params) : params;
+    // Also convert undefined to null for methods that expect null params
+    const snakeCaseParams =
+      params !== undefined ? convertKeysToSnakeCase(params) : null;
 
     const request: JsonRpcRequest<TParams | undefined> = {
       jsonrpc: '2.0',
@@ -148,15 +167,6 @@ export class NearRpcClient {
       method,
       params: snakeCaseParams as TParams | undefined,
     };
-
-    // Validate request if validation is enabled
-    if (this.validation) {
-      if ('validateMethodRequest' in this.validation) {
-        this.validation.validateMethodRequest(method, request);
-      } else {
-        this.validation.validateRequest(request);
-      }
-    }
 
     let lastError: Error | null = null;
 

@@ -7,17 +7,24 @@
  * 3. Run `pnpm tsx examples/typescript/call-contract-method-view-function.ts` from the root of the repository.
  */
 
-import { NearRpcClient, viewFunction } from '@near-js/jsonrpc-client';
+import {
+  NearRpcClient,
+  viewFunction,
+  enableValidation,
+} from '@near-js/jsonrpc-client';
 
 const provider = new NearRpcClient({
   endpoint: 'https://rpc.mainnet.fastnear.com',
+  validation: enableValidation(),
 });
 
 const result = await viewFunction(provider, {
   accountId: 'intents.near',
   methodName: 'mt_tokens_for_owner',
   argsBase64: Buffer.from(
-    JSON.stringify({ account_id: 'webassemblymusic-treasury.sputnik-dao.near' })
+    JSON.stringify({
+      account_id: 'webassemblymusic-treasury.sputnik-dao.near',
+    })
   ).toString('base64'),
   finality: 'final',
 });

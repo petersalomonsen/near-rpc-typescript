@@ -7,12 +7,17 @@
  * 3. Run `pnpm tsx examples/typescript/get-network-info.ts` from the root of the repository.
  */
 
-import { NearRpcClient, networkInfo } from '@near-js/jsonrpc-client';
+import {
+  NearRpcClient,
+  networkInfo,
+  enableValidation,
+} from '@near-js/jsonrpc-client';
 import type { RpcNetworkInfoResponse } from '@near-js/jsonrpc-types';
 
 // Initialize client
 const client = new NearRpcClient({
-  endpoint: 'https://rpc.mainnet.fastnear.com',
+  endpoint: 'https://rpc.testnet.fastnear.com',
+  validation: enableValidation(),
 });
 
 // Get network information

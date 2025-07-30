@@ -1,5 +1,5 @@
 // Auto-generated TypeScript types from NEAR OpenAPI spec using z.infer (zod/mini version)
-// Generated on: 2025-07-28T13:29:54.283Z
+// Generated on: 2025-07-29T20:18:25.375Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/mini';
@@ -496,6 +496,10 @@ export type JsonRpcRequestForBlock = z.infer<
   ReturnType<typeof schemas.JsonRpcRequestForBlockSchema>
 >;
 
+export type JsonRpcRequestForBlockEffects = z.infer<
+  ReturnType<typeof schemas.JsonRpcRequestForBlockEffectsSchema>
+>;
+
 export type JsonRpcRequestForBroadcastTxAsync = z.infer<
   ReturnType<typeof schemas.JsonRpcRequestForBroadcastTxAsyncSchema>
 >;
@@ -520,12 +524,20 @@ export type JsonRpcRequestForGasPrice = z.infer<
   ReturnType<typeof schemas.JsonRpcRequestForGasPriceSchema>
 >;
 
+export type JsonRpcRequestForGenesisConfig = z.infer<
+  ReturnType<typeof schemas.JsonRpcRequestForGenesisConfigSchema>
+>;
+
 export type JsonRpcRequestForHealth = z.infer<
   ReturnType<typeof schemas.JsonRpcRequestForHealthSchema>
 >;
 
 export type JsonRpcRequestForLightClientProof = z.infer<
   ReturnType<typeof schemas.JsonRpcRequestForLightClientProofSchema>
+>;
+
+export type JsonRpcRequestForMaintenanceWindows = z.infer<
+  ReturnType<typeof schemas.JsonRpcRequestForMaintenanceWindowsSchema>
 >;
 
 export type JsonRpcRequestForNetworkInfo = z.infer<
@@ -1332,6 +1344,14 @@ export type BlockResponse = z.infer<
   ReturnType<typeof schemas.BlockResponseSchema>
 >;
 
+export type BlockEffectsRequest = z.infer<
+  ReturnType<typeof schemas.BlockEffectsRequestSchema>
+>;
+
+export type BlockEffectsResponse = z.infer<
+  ReturnType<typeof schemas.BlockEffectsResponseSchema>
+>;
+
 export type BroadcastTxAsyncRequest = z.infer<
   ReturnType<typeof schemas.BroadcastTxAsyncRequestSchema>
 >;
@@ -1380,6 +1400,10 @@ export type GasPriceResponse = z.infer<
   ReturnType<typeof schemas.GasPriceResponseSchema>
 >;
 
+export type GenesisConfigResponse = z.infer<
+  ReturnType<typeof schemas.GenesisConfigResponseSchema>
+>;
+
 export type HealthRequest = z.infer<
   ReturnType<typeof schemas.HealthRequestSchema>
 >;
@@ -1394,6 +1418,14 @@ export type LightClientProofRequest = z.infer<
 
 export type LightClientProofResponse = z.infer<
   ReturnType<typeof schemas.LightClientProofResponseSchema>
+>;
+
+export type MaintenanceWindowsRequest = z.infer<
+  ReturnType<typeof schemas.MaintenanceWindowsRequestSchema>
+>;
+
+export type MaintenanceWindowsResponse = z.infer<
+  ReturnType<typeof schemas.MaintenanceWindowsResponseSchema>
 >;
 
 export type NetworkInfoRequest = z.infer<

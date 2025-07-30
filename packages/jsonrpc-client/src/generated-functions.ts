@@ -1,5 +1,5 @@
 // Auto-generated exports for tree-shakable functions
-// Generated at: 2025-07-28T13:29:57.104Z
+// Generated at: 2025-07-29T20:18:38.222Z
 // Do not edit manually - changes will be overwritten
 
 export {
@@ -16,14 +16,17 @@ export {
   experimentalTxStatus,
   experimentalValidatorsOrdered,
   block,
+  blockEffects,
   broadcastTxAsync,
   broadcastTxCommit,
   changes,
   chunk,
   clientConfig,
   gasPrice,
+  genesisConfig,
   health,
   lightClientProof,
+  maintenanceWindows,
   networkInfo,
   nextLightClientBlock,
   query,
