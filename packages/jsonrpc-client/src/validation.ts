@@ -73,6 +73,21 @@ export function enableValidation(): ValidationResult {
         // First validate basic JSON-RPC structure
         responseSchema.parse(response);
 
+        // Check if the result contains an error field before validating the schema
+        // This provides a better error message when NEAR RPC returns non-standard errors
+        if (
+          response.result &&
+          typeof response.result === 'object' &&
+          'error' in response.result
+        ) {
+          const serverError = (response.result as any).error;
+          throw new JsonRpcClientError(
+            `Server error: ${serverError}`,
+            -32000,
+            response.result
+          );
+        }
+
         // Then validate method-specific response structure if schema exists
         const methodSchemas = VALIDATION_SCHEMA_MAP[method];
         if (methodSchemas?.responseSchema) {
@@ -80,6 +95,12 @@ export function enableValidation(): ValidationResult {
           methodResponseSchema.parse(response);
         }
       } catch (error) {
+        // If it's already a JsonRpcClientError (from server error check), re-throw it
+        if (error instanceof JsonRpcClientError) {
+          throw error;
+        }
+
+        // Otherwise, it's a validation error
         throw new JsonRpcClientError(
           `Invalid ${method} response: ${error instanceof Error ? error.message : 'Unknown error'}`
         );

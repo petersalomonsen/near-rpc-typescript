@@ -232,6 +232,21 @@ export class NearRpcClient {
           ? convertKeysToCamelCase(jsonResponse.result)
           : jsonResponse.result;
 
+        // Check if the result contains an error field (non-standard NEAR RPC error response)
+        // This happens when validation is disabled and certain RPC errors occur
+        if (
+          camelCaseResult &&
+          typeof camelCaseResult === 'object' &&
+          'error' in camelCaseResult
+        ) {
+          const errorMessage = (camelCaseResult as any).error;
+          throw new JsonRpcClientError(
+            `RPC Error: ${errorMessage}`,
+            -32000, // Generic RPC error code
+            camelCaseResult
+          );
+        }
+
         // Validate method-specific response structure after camelCase conversion
         if (this.validation && 'validateMethodResponse' in this.validation) {
           // Create a camelCase version of the response for validation
