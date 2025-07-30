@@ -84,6 +84,12 @@ jobs:
       - name: Run TypeScript validation-demo example
         run: pnpm tsx examples/typescript/validation-demo.ts
 
+      - name: Run TypeScript error-handling-demo example
+        run: pnpm tsx examples/typescript/error-handling-demo.ts
+
+      - name: Run TypeScript convenience-functions-error-handling example
+        run: pnpm tsx examples/typescript/convenience-functions-error-handling.ts
+
       # ESM JavaScript examples
       - name: Run ESM basic-usage example
         run: node examples/javascript-esm/basic-usage.js
