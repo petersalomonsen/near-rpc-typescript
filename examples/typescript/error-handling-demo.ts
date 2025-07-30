@@ -1,6 +1,6 @@
 /**
  * Error Handling Example
- * 
+ *
  * This example demonstrates how the NEAR RPC client handles errors
  * when calling non-existent contract methods, both with and without
  * validation enabled.
@@ -11,28 +11,32 @@
  * 3. Run `pnpm tsx examples/typescript/error-handling-demo.ts` from the root of the repository.
  */
 
-import { NearRpcClient, viewFunction, enableValidation } from '@near-js/jsonrpc-client';
+import {
+  NearRpcClient,
+  viewFunction,
+  enableValidation,
+} from '@near-js/jsonrpc-client';
 
-console.log("=== NEAR RPC Error Handling Example ===\n");
+console.log('=== NEAR RPC Error Handling Example ===\n');
 
 // Example 1: Error handling without validation
-console.log("1. Calling non-existent method WITHOUT validation:");
-console.log("   (Errors are now properly thrown)\n");
+console.log('1. Calling non-existent method WITHOUT validation:');
+console.log('   (Errors are now properly thrown)\n');
 
-const clientWithoutValidation = new NearRpcClient({ 
-  endpoint: "https://rpc.mainnet.fastnear.com"
+const clientWithoutValidation = new NearRpcClient({
+  endpoint: 'https://rpc.mainnet.fastnear.com',
 });
 
 try {
   await viewFunction(clientWithoutValidation, {
-    accountId: "webassemblymusic-treasury.sputnik-dao.near",        
-    methodName: "get_last_proposal_id_" // non-existent method
+    accountId: 'webassemblymusic-treasury.sputnik-dao.near',
+    methodName: 'get_last_proposal_id_', // non-existent method
   });
   // If we reach here, the test failed - error was not thrown
-  console.error("❌ FAIL: Expected error was not thrown!");
+  console.error('❌ FAIL: Expected error was not thrown!');
   process.exit(1);
-} catch(error: any) {
-  console.log("✓ Error correctly thrown:");
+} catch (error: any) {
+  console.log('✓ Error correctly thrown:');
   console.log(`  Type: ${error.name}`);
   console.log(`  Message: ${error.message}`);
   if (error.data) {
@@ -41,27 +45,27 @@ try {
   }
 }
 
-console.log("\n" + "=".repeat(50) + "\n");
+console.log('\n' + '='.repeat(50) + '\n');
 
 // Example 2: Error handling with validation enabled
-console.log("2. Calling non-existent method WITH validation:");
-console.log("   (Server errors are now properly displayed)\n");
+console.log('2. Calling non-existent method WITH validation:');
+console.log('   (Server errors are now properly displayed)\n');
 
-const clientWithValidation = new NearRpcClient({ 
-  endpoint: "https://rpc.mainnet.fastnear.com", 
-  validation: enableValidation() 
+const clientWithValidation = new NearRpcClient({
+  endpoint: 'https://rpc.mainnet.fastnear.com',
+  validation: enableValidation(),
 });
 
 try {
   await viewFunction(clientWithValidation, {
-    accountId: "webassemblymusic-treasury.sputnik-dao.near",        
-    methodName: "get_last_proposal_id_" // non-existent method
+    accountId: 'webassemblymusic-treasury.sputnik-dao.near',
+    methodName: 'get_last_proposal_id_', // non-existent method
   });
   // If we reach here, the test failed - error was not thrown
-  console.error("❌ FAIL: Expected error was not thrown!");
+  console.error('❌ FAIL: Expected error was not thrown!');
   process.exit(1);
-} catch(error: any) {
-  console.log("✓ Error correctly thrown with clear message:");
+} catch (error: any) {
+  console.log('✓ Error correctly thrown with clear message:');
   console.log(`  Type: ${error.name}`);
   console.log(`  Message: ${error.message}`);
   if (error.data) {
@@ -69,4 +73,4 @@ try {
   }
 }
 
-console.log("\n=== Error handling working correctly in both cases! ===");
+console.log('\n=== Error handling working correctly in both cases! ===');
