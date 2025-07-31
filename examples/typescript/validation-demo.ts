@@ -1,5 +1,5 @@
 /**
- * This example demonstrates using the NEAR RPC client with validation enabled.
+ * This example demonstrates the built-in validation in NEAR RPC client functions.
  * It shows how validation catches errors and ensures type safety.
  *
  * To run this example:
@@ -10,21 +10,22 @@
 
 import {
   NearRpcClient,
-  enableValidation,
   status,
   health,
   block,
   validators,
+  viewAccount,
 } from '@near-js/jsonrpc-client';
-import { viewAccount } from '@near-js/jsonrpc-client';
 
-// Create client with validation enabled
+// Import no-validation versions for comparison
+import { block as blockNoValidation } from '@near-js/jsonrpc-client/no-validation';
+
+// Create client (functions have built-in validation by default)
 const client = new NearRpcClient({
   endpoint: 'https://rpc.testnet.fastnear.com',
-  validation: enableValidation(),
 });
 
-console.log('=== NEAR RPC Client with Validation Demo ===\n');
+console.log('=== NEAR RPC Client Validation Demo ===\n');
 
 // Example 1: Methods with no parameters (testing undefined to null conversion)
 console.log('1. Testing methods with no parameters:');
@@ -74,14 +75,10 @@ try {
 
 // Example 3: Demonstrate validation catching invalid parameters
 console.log('\n3. Testing validation with invalid parameters:');
-const invalidClient = new NearRpcClient({
-  endpoint: 'https://rpc.testnet.fastnear.com',
-  validation: enableValidation(),
-});
 
 try {
   // @ts-expect-error - Intentionally passing invalid parameter to test validation
-  await block(invalidClient, { finality: 'not-a-valid-finality' });
+  await block(client, { finality: 'not-a-valid-finality' });
   console.log('❌ Should not reach here - validation should have failed');
 } catch (error) {
   console.log(
@@ -90,25 +87,36 @@ try {
   );
 }
 
-// Example 4: Compare with non-validated client
-console.log('\n4. Comparing validated vs non-validated client:');
-const nonValidatedClient = new NearRpcClient({
-  endpoint: 'https://rpc.testnet.fastnear.com',
-});
+// Example 4: Compare with no-validation import
+console.log('\n4. Comparing validated vs no-validation imports:');
 
+console.log('Using default import (with validation):');
 try {
-  // Non-validated client won't catch schema issues until the server responds
   // @ts-expect-error - Intentionally passing invalid parameter
-  await block(nonValidatedClient, { finality: 'not-a-valid-finality' });
+  await block(client, { finality: 'not-a-valid-finality' });
 } catch (error) {
   console.log(
-    '✅ Non-validated client error from server:',
+    '✅ Validated function caught error before network call:',
+    error instanceof Error
+      ? error.message.substring(0, 50) + '...'
+      : String(error)
+  );
+}
+
+console.log('\nUsing no-validation import:');
+try {
+  // @ts-expect-error - Intentionally passing invalid parameter
+  await blockNoValidation(client, { finality: 'not-a-valid-finality' });
+} catch (error) {
+  console.log(
+    '✅ No-validation function error from server:',
     error instanceof Error ? error.message : String(error)
   );
 }
 
 console.log('\n=== Demo complete! ===');
-console.log('Validation ensures:');
+console.log('Built-in validation ensures:');
 console.log('- Type safety for requests and responses');
 console.log('- Early error detection before network calls');
 console.log('- Better developer experience with clear error messages');
+console.log('- Optimal bundle size through per-function validation');

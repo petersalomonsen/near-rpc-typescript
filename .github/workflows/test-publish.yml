@@ -33,6 +33,9 @@ jobs:
       - name: Test prepared packages
         run: node scripts/test-published-packages.js
 
+      - name: Test TypeScript definitions
+        run: npx tsx scripts/test-published-typescript.ts
+
       - name: Verify package contents
         run: |
           echo "📦 Checking package contents..."

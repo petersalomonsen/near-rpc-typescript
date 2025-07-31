@@ -43,7 +43,7 @@ function replaceInFiles(
   dir,
   searchText,
   replaceText,
-  extensions = ['.js', '.mjs', '.d.ts', '.json']
+  extensions = ['.js', '.mjs', '.d.ts', '.d.mts', '.json']
 ) {
   const items = readdirSync(dir, { withFileTypes: true });
 
@@ -53,8 +53,9 @@ function replaceInFiles(
     if (item.isDirectory()) {
       replaceInFiles(fullPath, searchText, replaceText, extensions);
     } else if (item.isFile()) {
-      const ext = item.name.substring(item.name.lastIndexOf('.'));
-      if (extensions.includes(ext)) {
+      // Check if file matches any of the extensions
+      const matches = extensions.some(ext => item.name.endsWith(ext));
+      if (matches) {
         try {
           let content = readFileSync(fullPath, 'utf8');
           if (content.includes(searchText)) {
@@ -63,7 +64,7 @@ function replaceInFiles(
             console.log(`✅ Updated ${fullPath}`);
           }
         } catch (e) {
-          // Skip binary files or files we can't read
+          console.warn(`⚠️  Could not process ${fullPath}: ${e.message}`);
         }
       }
     }

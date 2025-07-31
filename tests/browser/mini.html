@@ -216,7 +216,7 @@
       async function testGasPrice() {
         displayLoading('gasPriceResult');
         try {
-          const gasPriceResult = await gasPrice(client, [null]); // Use null for latest
+          const gasPriceResult = await gasPrice(client, { blockId: null }); // Use null for latest
           const result = {
             gasPrice: gasPriceResult.gasPrice,
           };

@@ -8,7 +8,8 @@
     "build:validation": "rollup -c rollup.validation.config.js",
     "build:validation:min": "rollup -c rollup.validation.config.min.js",
     "build:all": "pnpm build && pnpm build:min && pnpm build:validation && pnpm build:validation:min",
-    "analyze": "rollup -c rollup.config.js --bundleConfigAsCjs"
+    "analyze": "rollup -c rollup.config.js --bundleConfigAsCjs",
+    "test": "vitest run"
   },
   "dependencies": {
     "@near-js/jsonrpc-client": "workspace:*",
@@ -20,6 +21,7 @@
     "@rollup/plugin-typescript": "^11.1.6",
     "rollup": "^4.45.1",
     "rollup-plugin-analyzer": "^4.0.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^1.6.1"
   }
 }

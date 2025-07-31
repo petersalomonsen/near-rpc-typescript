@@ -5,6 +5,7 @@ import { promises as fs } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { generateClientInterface } from './generate-client-interface.js';
+import { generateValidationWrappers } from './generate-validation-wrappers.js';
 
 // OpenAPI spec types
 interface OpenAPISpec {
@@ -678,6 +679,21 @@ export const JsonRpcResponseSchema = () => z.object({
     );
     console.log(
       '  - packages/jsonrpc-client/src/generated-types.ts (client interface)'
+    );
+
+    // Generate validation wrappers
+    console.log('\n🔧 Generating validation wrappers...');
+    const validatedOutputPath = join(
+      projectRoot,
+      'packages/jsonrpc-client/src/validated/index.ts'
+    );
+    await generateValidationWrappers(
+      PATH_TO_METHOD_MAP,
+      spec,
+      validatedOutputPath
+    );
+    console.log(
+      '  - packages/jsonrpc-client/src/validated/index.ts (validation wrappers)'
     );
   } catch (error) {
     console.error('❌ Generation failed:', error);

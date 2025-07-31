@@ -10,6 +10,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
+    },
+    "./no-validation": {
+      "types": "./dist/no-validation/index.d.ts",
+      "import": "./dist/no-validation/index.mjs",
+      "require": "./dist/no-validation/index.js"
     }
   },
   "files": [

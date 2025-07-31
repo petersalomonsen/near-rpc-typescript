@@ -11,24 +11,25 @@
  * 3. Run `pnpm tsx examples/typescript/error-handling-demo.ts` from the root of the repository.
  */
 
+import { NearRpcClient, viewFunction } from '@near-js/jsonrpc-client';
+
 import {
-  NearRpcClient,
-  viewFunction,
-  enableValidation,
-} from '@near-js/jsonrpc-client';
+  NearRpcClient as NearRpcClientNoValidation,
+  viewFunction as viewFunctionNoValidation,
+} from '@near-js/jsonrpc-client/no-validation';
 
 console.log('=== NEAR RPC Error Handling Example ===\n');
 
 // Example 1: Error handling without validation
 console.log('1. Calling non-existent method WITHOUT validation:');
-console.log('   (Errors are now properly thrown)\n');
+console.log('   (Using no-validation export)\n');
 
-const clientWithoutValidation = new NearRpcClient({
+const clientWithoutValidation = new NearRpcClientNoValidation({
   endpoint: 'https://rpc.mainnet.fastnear.com',
 });
 
 try {
-  await viewFunction(clientWithoutValidation, {
+  await viewFunctionNoValidation(clientWithoutValidation, {
     accountId: 'webassemblymusic-treasury.sputnik-dao.near',
     methodName: 'get_last_proposal_id_', // non-existent method
   });
@@ -49,11 +50,10 @@ console.log('\n' + '='.repeat(50) + '\n');
 
 // Example 2: Error handling with validation enabled
 console.log('2. Calling non-existent method WITH validation:');
-console.log('   (Server errors are now properly displayed)\n');
+console.log('   (Using default export with built-in validation)\n');
 
 const clientWithValidation = new NearRpcClient({
   endpoint: 'https://rpc.mainnet.fastnear.com',
-  validation: enableValidation(),
 });
 
 try {

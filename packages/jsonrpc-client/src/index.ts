@@ -23,10 +23,10 @@ export {
 // Re-export RPC methods
 export { RPC_METHODS } from '@near-js/jsonrpc-types';
 
-// Export individual tree-shakable functions
-export * from './generated-functions';
+// Export individual tree-shakable functions WITH validation
+export * from './validated/index.js';
 
-// Export optional validation (only gets included if imported)
+// Export optional global validation (for backward compatibility)
 export { enableValidation } from './validation.js';
 
 // Default export for convenience
