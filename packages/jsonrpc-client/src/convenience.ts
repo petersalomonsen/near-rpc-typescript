@@ -82,3 +82,23 @@ export async function viewAccessKey(
 
   return query(client, queryParams) as Promise<AccessKeyView>;
 }
+
+export function parseCallResultToJson<T = unknown>(callResult: CallResult): T {
+  const bytes = new Uint8Array(callResult.result);
+  const text = new TextDecoder().decode(bytes);
+  return JSON.parse(text) as T;
+}
+
+export async function viewFunctionAsJson<T = unknown>(
+  client: NearRpcClient,
+  params: {
+    accountId: string;
+    methodName: string;
+    argsBase64?: string;
+    finality?: 'final' | 'near-final' | 'optimistic';
+    blockId?: string | number;
+  }
+): Promise<T> {
+  const result = await viewFunction(client, params);
+  return parseCallResultToJson<T>(result);
+}

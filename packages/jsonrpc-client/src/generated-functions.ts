@@ -37,4 +37,10 @@ export {
 } from './generated-types';
 
 // Re-export convenience functions
-export { viewAccount, viewFunction, viewAccessKey } from './convenience';
+export {
+  viewAccount,
+  viewFunction,
+  viewAccessKey,
+  parseCallResultToJson,
+  viewFunctionAsJson,
+} from './convenience';
