@@ -15,11 +15,11 @@ import * as baseConvenience from '../convenience.js';
 
 // Import specific validation schemas
 import {
-  BlockRequestSchema,
+  RpcBlockRequestSchema,
   BlockResponseSchema,
-  StatusRequestSchema,
+  RpcStatusRequestSchema,
   StatusResponseSchema,
-  QueryRequestSchema,
+  RpcQueryRequestSchema,
   QueryResponseSchema,
 } from '@near-js/jsonrpc-types';
 
@@ -29,7 +29,7 @@ export async function block(
   params?: RpcBlockRequest
 ): Promise<RpcBlockResponse> {
   // Validate request
-  const blockRequestSchema = BlockRequestSchema();
+  const blockRequestSchema = RpcBlockRequestSchema();
   if (params) {
     blockRequestSchema.parse(params);
   }
@@ -55,7 +55,7 @@ export async function status(
   params?: RpcStatusRequest
 ): Promise<RpcStatusResponse> {
   // Validate request
-  const statusRequestSchema = StatusRequestSchema();
+  const statusRequestSchema = RpcStatusRequestSchema();
   if (params) {
     statusRequestSchema.parse(params);
   }
@@ -125,7 +125,7 @@ export async function viewAccount(
       validateResponse: () => {}, // No-op for general validation
       validateMethodRequest: (method: string, request: any) => {
         if (method === 'query' && request.params) {
-          const queryRequestSchema = QueryRequestSchema();
+          const queryRequestSchema = RpcQueryRequestSchema();
           queryRequestSchema.parse(request.params);
         }
       },
