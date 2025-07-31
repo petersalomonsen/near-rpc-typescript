@@ -2,7 +2,8 @@
 // This uses the new per-function validation approach
 // Only the schemas for the functions actually used will be included
 
-import { block, viewAccount, NearRpcClient } from '@near-js/jsonrpc-client';
+import { block, viewAccount } from '@near-js/jsonrpc-client';
+import { NearRpcClient } from '@near-js/jsonrpc-client';
 
 // Import specific schema for manual validation
 import { RpcBlockRequestSchema } from '@near-js/jsonrpc-types';

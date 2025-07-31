@@ -48,7 +48,7 @@ describe('Tree-shaking Bundle Tests', () => {
   it('should have appropriate bundle sizes', () => {
     const bundles = {
       'bundle-no-validation.js': { min: 5000, max: 15000 }, // ~7.4KB
-      'bundle-with-validation.js': { min: 50000, max: 80000 }, // ~63KB
+      'bundle-with-validation.js': { min: 40000, max: 80000 }, // ~49KB with per-function validation
       'bundle.js': { min: 40000, max: 70000 }, // ~56KB
     };
 
@@ -93,11 +93,11 @@ describe('Tree-shaking Bundle Tests', () => {
     const bundlePath = path.join(distDir, 'bundle-with-validation.js');
     const content = fs.readFileSync(bundlePath, 'utf-8');
 
-    // Should contain schemas for block and query (used by viewAccount)
-    expect(content).toContain('BlockRequestSchema');
-    expect(content).toContain('BlockResponseSchema');
-    expect(content).toContain('QueryRequestSchema');
-    expect(content).toContain('QueryResponseSchema');
+    // Should contain schemas for block (directly used) and query (used by viewAccount)
+    expect(content).toContain('RpcBlockRequestSchema');
+    expect(content).toContain('RpcBlockResponseSchema');
+    expect(content).toContain('RpcQueryRequestSchema');
+    expect(content).toContain('RpcQueryResponseSchema');
 
     // Should NOT contain schemas for unused functions
     const unusedSchemas = [
@@ -124,8 +124,8 @@ describe('Tree-shaking Bundle Tests', () => {
     const content = fs.readFileSync(bundlePath, 'utf-8');
 
     // main.ts uses status, so it should contain Status schemas
-    expect(content).toContain('StatusRequestSchema');
-    expect(content).toContain('StatusResponseSchema');
+    expect(content).toContain('RpcStatusRequestSchema');
+    expect(content).toContain('RpcStatusResponseSchema');
 
     // Should NOT contain schemas for unused functions
     const unusedSchemas = [
