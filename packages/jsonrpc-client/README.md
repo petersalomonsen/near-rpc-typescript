@@ -51,8 +51,10 @@ getLatestBlock();
 The client includes convenience methods for common query operations:
 
 ```typescript
+import { viewAccount, viewFunction, viewAccessKey } from '@near-js/jsonrpc-client';
+
 // View account information
-const account = await client.viewAccount({
+const account = await viewAccount(client, {
   accountId: 'example.near',
   finality: 'final',
 });
@@ -60,31 +62,66 @@ console.log('Account balance:', account.amount);
 console.log('Storage used:', account.storageUsage);
 
 // Call view functions
-const result = await client.viewFunction({
+const result = await viewFunction(client, {
   accountId: 'contract.near',
   methodName: 'get_balance',
   finality: 'final',
 });
 
 // View access keys
-const accessKey = await client.viewAccessKey({
+const accessKey = await viewAccessKey(client, {
   accountId: 'example.near',
   publicKey: 'ed25519:...',
   finality: 'final',
 });
 ```
 
-## Runtime Validation
+### JSON Parsing Utilities
 
-The client supports runtime validation using Zod schemas to ensure both request parameters and server responses conform to the NEAR RPC specification. **We strongly recommend enabling validation** to catch errors early and ensure data integrity.
+Many NEAR contracts return JSON data as byte arrays. We provide convenient utilities to parse these:
 
 ```typescript
-import { NearRpcClient, status, block, enableValidation } from '@near-js/jsonrpc-client';
+import { viewFunction, viewFunctionAsJson, parseCallResultToJson } from '@near-js/jsonrpc-client';
 
-// Create client with validation enabled (recommended)
+// Manual parsing
+const result = await viewFunction(client, {
+  accountId: 'contract.near',
+  methodName: 'get_status',
+});
+const data = parseCallResultToJson(result); // Converts byte array to JSON
+
+// Or use the convenience function that does both
+const data = await viewFunctionAsJson(client, {
+  accountId: 'contract.near', 
+  methodName: 'get_status',
+});
+
+// With TypeScript types
+interface Status {
+  version: string;
+  uptime: number;
+}
+const status = await viewFunctionAsJson<Status>(client, {
+  accountId: 'contract.near',
+  methodName: 'get_status',
+});
+console.log(status.version); // Fully typed!
+```
+
+## Runtime Validation
+
+The client supports runtime validation using Zod schemas to ensure both request parameters and server responses conform to the NEAR RPC specification.
+
+### Default Usage (With Validation)
+
+**By default, all functions include validation for maximum safety:**
+
+```typescript
+import { NearRpcClient, status, block } from '@near-js/jsonrpc-client';
+
+// Just create a client - validation is built into the functions
 const client = new NearRpcClient({
   endpoint: 'https://rpc.mainnet.near.org',
-  validation: enableValidation()
 });
 
 // Request parameters are validated before sending
@@ -101,6 +138,30 @@ const result = await status(client);
 // You can trust that 'result' matches the expected schema
 ```
 
+### Minimal Bundle Size (No Validation)
+
+For applications where bundle size is critical, use the `/no-validation` export:
+
+```typescript
+import { NearRpcClient, status, block } from '@near-js/jsonrpc-client/no-validation';
+
+// Same API, but no runtime validation
+const client = new NearRpcClient({
+  endpoint: 'https://rpc.mainnet.near.org'
+});
+
+// No validation = smaller bundle size
+await block(client, { finality: 'final' });
+```
+
+### Bundle Size Comparison
+
+The new validation approach uses **per-function schema imports** for optimal tree-shaking:
+
+- **With validation**: ~60KB for 2 functions (only includes schemas for used functions)
+- **No validation**: ~7KB (no Zod schemas included)
+- **Old approach**: ~150KB+ (included all schemas even for unused functions)
+
 ### Benefits of Validation
 
 - **Request Safety**: Catch parameter errors before making network requests
@@ -108,18 +169,7 @@ const result = await status(client);
 - **Better Error Messages**: Get clear, descriptive errors instead of cryptic failures
 - **Development Speed**: Find API usage mistakes immediately during development
 - **Runtime Protection**: Guard against malformed or unexpected server responses
-
-### Disabling Validation
-
-For applications where bundle size is critical, validation can be disabled. The validation code is tree-shakable and only included when you import `enableValidation`.
-
-```typescript
-// Client without validation (smaller bundle, but less safe)
-const client = new NearRpcClient({
-  endpoint: 'https://rpc.mainnet.near.org'
-  // No validation property = no runtime checks
-});
-```
+- **Optimal Tree-Shaking**: Only pay for validation of functions you actually use
 
 ## Features
 
