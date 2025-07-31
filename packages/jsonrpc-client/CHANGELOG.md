@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v1.1.0...jsonrpc-client-v1.2.0) (2025-07-31)
+
+
+### Features
+
+* add JSON parsing utilities and improve tree-shaking (fixes [#39](https://github.com/petersalomonsen/near-rpc-typescript/issues/39)) ([#54](https://github.com/petersalomonsen/near-rpc-typescript/issues/54)) ([a75669d](https://github.com/petersalomonsen/near-rpc-typescript/commit/a75669d8752b499c20ca6a1acb71c84df9c5c6da))
+
 ## [1.1.0](https://github.com/petersalomonsen/near-rpc-typescript/compare/jsonrpc-client-v1.0.4...jsonrpc-client-v1.1.0) (2025-07-30)
 
 
