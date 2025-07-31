@@ -114,4 +114,6 @@ if (checkForOldReferences.trim()) {
   console.log('✅ No @near-js references found in TypeScript definitions!');
 }
 
-console.log('\n🎉 All tests passed! TypeScript definitions are working correctly.');
+console.log(
+  '\n🎉 All tests passed! TypeScript definitions are working correctly.'
+);
