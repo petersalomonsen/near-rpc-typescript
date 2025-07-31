@@ -116,3 +116,6 @@ jobs:
 
       - name: Show tree-shaking bundle sizes
         run: ls -lh examples/tree-shaking/dist/
+
+      - name: Run tree-shaking tests
+        run: cd examples/tree-shaking && pnpm test
