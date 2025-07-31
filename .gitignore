@@ -120,3 +120,4 @@ test-results/
 temp-publish
 test-published-package
 test-published-packages
+temp-typescript-test
