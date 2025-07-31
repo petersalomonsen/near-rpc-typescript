@@ -7,15 +7,10 @@
  * 3. Run `pnpm tsx examples/typescript/call-contract-method-view-function.ts` from the root of the repository.
  */
 
-import {
-  NearRpcClient,
-  viewFunction,
-  enableValidation,
-} from '@near-js/jsonrpc-client';
+import { NearRpcClient, viewFunction } from '@near-js/jsonrpc-client';
 
 const provider = new NearRpcClient({
   endpoint: 'https://rpc.mainnet.fastnear.com',
-  validation: enableValidation(),
 });
 
 const result = await viewFunction(provider, {

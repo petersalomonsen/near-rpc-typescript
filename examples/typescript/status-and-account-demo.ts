@@ -14,17 +14,15 @@ import {
   gasPrice,
   health,
   viewAccount,
-  enableValidation,
 } from '@near-js/jsonrpc-client';
 
-console.log('🚀 Testing NEAR RPC Client with validation...\n');
+console.log('🚀 Testing NEAR RPC Client...\n');
 
-// Create client instance with validation enabled
+// Create client instance (validation is built into the functions)
 const client = new NearRpcClient({
   endpoint: 'https://rpc.testnet.fastnear.com',
-  validation: enableValidation(),
 });
-console.log('✅ Client created for testnet with validation enabled');
+console.log('✅ Client created for testnet');
 
 // Test 1: Get node status
 console.log('\n📊 Testing status() method...');
