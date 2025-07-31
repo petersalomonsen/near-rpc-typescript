@@ -10,7 +10,7 @@ import type {
 } from '@near-js/jsonrpc-types';
 
 // Import base functions
-import * as baseFunctions from '../generated-types.js';
+import * as baseFunctions from '../generated-functions.js';
 import * as baseConvenience from '../convenience.js';
 
 // Import specific validation schemas
@@ -33,14 +33,19 @@ export async function block(
   if (params) {
     blockRequestSchema.parse(params);
   }
-  
+
   // Call base function
   const result = await baseFunctions.block(client, params);
-  
-  // Validate response
+
+  // Validate response by creating a mock RPC response
   const blockResponseSchema = BlockResponseSchema();
-  blockResponseSchema.parse({ jsonrpc: '2.0', id: 'dontcare', result });
-  
+  try {
+    blockResponseSchema.parse({ jsonrpc: '2.0', id: 'dontcare', result });
+  } catch (error) {
+    // If validation fails, re-throw with clearer message
+    throw new Error(`Response validation failed: ${error}`);
+  }
+
   return result;
 }
 
@@ -54,14 +59,19 @@ export async function status(
   if (params) {
     statusRequestSchema.parse(params);
   }
-  
+
   // Call base function
   const result = await baseFunctions.status(client, params);
-  
-  // Validate response
+
+  // Validate response by creating a mock RPC response
   const statusResponseSchema = StatusResponseSchema();
-  statusResponseSchema.parse({ jsonrpc: '2.0', id: 'dontcare', result });
-  
+  try {
+    statusResponseSchema.parse({ jsonrpc: '2.0', id: 'dontcare', result });
+  } catch (error) {
+    // If validation fails, re-throw with clearer message
+    throw new Error(`Response validation failed: ${error}`);
+  }
+
   return result;
 }
 
@@ -97,7 +107,7 @@ export {
   sendTx,
   tx,
   validators,
-} from '../generated-types.js';
+} from '../generated-functions.js';
 
 // Add validated wrapper for viewAccount
 export async function viewAccount(
@@ -108,29 +118,28 @@ export async function viewAccount(
     blockId?: string | number;
   }
 ) {
-  // viewAccount uses query internally, so validate query params
-  const queryParams = params.blockId
-    ? {
-        requestType: 'view_account' as const,
-        accountId: params.accountId,
-        blockId: params.blockId,
-      }
-    : {
-        requestType: 'view_account' as const,
-        accountId: params.accountId,
-        finality: params.finality || ('final' as const),
-      };
-  
-  const queryRequestSchema = QueryRequestSchema();
-  queryRequestSchema.parse(queryParams);
-  
-  const result = await baseConvenience.viewAccount(client, params);
-  
-  // Validate response
-  const queryResponseSchema = QueryResponseSchema();
-  queryResponseSchema.parse({ jsonrpc: '2.0', id: 'dontcare', result });
-  
-  return result;
+  // Create a validation-enabled client for query method
+  const validatedClient = client.withConfig({
+    validation: {
+      validateRequest: () => {}, // No-op for general validation
+      validateResponse: () => {}, // No-op for general validation
+      validateMethodRequest: (method: string, request: any) => {
+        if (method === 'query' && request.params) {
+          const queryRequestSchema = QueryRequestSchema();
+          queryRequestSchema.parse(request.params);
+        }
+      },
+      validateMethodResponse: (method: string, response: any) => {
+        if (method === 'query') {
+          const queryResponseSchema = QueryResponseSchema();
+          queryResponseSchema.parse(response);
+        }
+      },
+    },
+  });
+
+  // Call base function with validated client
+  return baseConvenience.viewAccount(validatedClient, params);
 }
 
 // Export other convenience functions without validation for now

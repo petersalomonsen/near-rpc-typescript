@@ -10,10 +10,18 @@
 export { NearRpcClient, defaultClient } from '../client.js';
 
 // Re-export types
-export { NearRpcError, type RpcRequest, type RpcResponse, type RpcError } from '../types.js';
+export {
+  NearRpcError,
+  type RpcRequest,
+  type RpcResponse,
+  type RpcError,
+} from '../types.js';
 
 // Re-export all UNVALIDATED functions for optimal tree-shaking
 export * from '../generated-functions.js';
+
+// Re-export convenience functions
+export * from '../convenience.js';
 
 // Re-export interface types
 export type {

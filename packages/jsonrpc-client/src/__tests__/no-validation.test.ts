@@ -15,11 +15,12 @@ describe('No-validation exports', () => {
     expect(parseCallResultToJson).toBeDefined();
   });
 
-  it('should not export enableValidation', () => {
-    // @ts-expect-error - enableValidation should not be exported
-    import('../no-validation/index.js').then(module => {
-      expect(module.enableValidation).toBeUndefined();
-    });
+  it('should export a no-op enableValidation', async () => {
+    const module = await import('../no-validation/index.js');
+    expect(module.enableValidation).toBeDefined();
+    expect(typeof module.enableValidation).toBe('function');
+    // Should be a no-op function
+    expect(module.enableValidation()).toBeUndefined();
   });
 
   it('should create client without validation', async () => {

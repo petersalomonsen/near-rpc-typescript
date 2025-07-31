@@ -9,13 +9,14 @@ import { fileURLToPath } from 'url';
 function typeToSchemaName(typeName: string): string {
   // Handle special cases
   if (typeName === 'GenesisConfig') return 'GenesisConfigSchema';
-  if (typeName === 'GenesisConfigRequest') return 'RpcGenesisConfigRequestSchema';
-  
+  if (typeName === 'GenesisConfigRequest')
+    return 'RpcGenesisConfigRequestSchema';
+
   // Most types follow pattern: TypeName -> TypeNameSchema
   if (typeName.startsWith('Rpc')) {
     return typeName + 'Schema';
   }
-  
+
   // Add Rpc prefix if not present
   return 'Rpc' + typeName + 'Schema';
 }
@@ -30,7 +31,7 @@ interface MethodMapping {
 function generateValidatedFunction(mapping: MethodMapping): string {
   const requestSchema = typeToSchemaName(mapping.requestType);
   const responseSchema = typeToSchemaName(mapping.responseType);
-  
+
   return `
 // ${mapping.rpcMethod} function with validation
 export async function ${mapping.clientMethodName}(
@@ -67,13 +68,13 @@ export async function generateValidatedFunctions(
   const requestTypes = [...new Set(mappings.map(m => m.requestType))].sort();
   const responseTypes = [...new Set(mappings.map(m => m.responseType))].sort();
   const allTypes = [...new Set([...requestTypes, ...responseTypes])].sort();
-  
+
   // Collect all schema names
   const schemaNames = [
     ...new Set([
       ...mappings.map(m => typeToSchemaName(m.requestType)),
-      ...mappings.map(m => typeToSchemaName(m.responseType))
-    ])
+      ...mappings.map(m => typeToSchemaName(m.responseType)),
+    ]),
   ].sort();
 
   // Generate content
@@ -99,7 +100,7 @@ ${mappings.map(generateValidatedFunction).join('\n')}
 
   // Write the file
   await fs.writeFile(outputPath, content, 'utf8');
-  
+
   console.log(`✅ Generated validated functions at ${outputPath}`);
   console.log(`   Functions: ${mappings.length}`);
   console.log(`   Schemas imported: ${schemaNames.length}`);
@@ -114,22 +115,23 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         dirname(fileURLToPath(import.meta.url)),
         '../../packages/jsonrpc-client/src/generated-types.ts'
       );
-      
+
       // Read the generated file to extract mappings
       const content = await fs.readFile(generatedPath, 'utf8');
-      
+
       // Extract function definitions using regex
-      const functionRegex = /export async function (\w+)\(\s*client: NearRpcClient,\s*params\?: (\w+)\s*\): Promise<(\w+)>/g;
+      const functionRegex =
+        /export async function (\w+)\(\s*client: NearRpcClient,\s*params\?: (\w+)\s*\): Promise<(\w+)>/g;
       const mappings: MethodMapping[] = [];
-      
+
       let match;
       while ((match = functionRegex.exec(content)) !== null) {
         const [, clientMethodName, requestType, responseType] = match;
-        
+
         // Extract RPC method from the function body
         const functionBody = content.substring(match.index);
         const methodMatch = functionBody.match(/makeRequest\('([^']+)'/);
-        
+
         if (methodMatch) {
           mappings.push({
             rpcMethod: methodMatch[1],
@@ -139,21 +141,21 @@ if (import.meta.url === `file://${process.argv[1]}`) {
           });
         }
       }
-      
+
       // Output path
       const outputPath = join(
         dirname(fileURLToPath(import.meta.url)),
         '../../packages/jsonrpc-client/src/generated-validated-functions.ts'
       );
-      
+
       await generateValidatedFunctions(mappings, outputPath);
-      
+
       console.log('🎉 Validated functions generation complete!');
     } catch (error) {
       console.error('❌ Failed to generate validated functions:', error);
       process.exit(1);
     }
   }
-  
+
   main();
 }

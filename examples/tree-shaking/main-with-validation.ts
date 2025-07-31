@@ -2,11 +2,7 @@
 // This uses the new per-function validation approach
 // Only the schemas for the functions actually used will be included
 
-import {
-  block,
-  viewAccount,
-  NearRpcClient,
-} from '@near-js/jsonrpc-client';
+import { block, viewAccount, NearRpcClient } from '@near-js/jsonrpc-client';
 
 // Import specific schema for manual validation
 import { RpcBlockRequestSchema } from '@near-js/jsonrpc-types';
@@ -14,7 +10,7 @@ import { RpcBlockRequestSchema } from '@near-js/jsonrpc-types';
 // Create client without global validation
 // The functions themselves will handle validation
 const validatedClient = new NearRpcClient({
-  endpoint: 'https://rpc.mainnet.near.org',
+  endpoint: 'https://rpc.testnet.fastnear.com',
 });
 
 // Example 1: Use block function with built-in validation
