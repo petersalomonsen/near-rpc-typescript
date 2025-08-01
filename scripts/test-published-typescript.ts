@@ -46,10 +46,56 @@ async function test() {
 test().catch(console.error);
 `;
 
-writeFileSync(join(testDir, 'test.ts'), testContent);
+// Create a test file for no-validation import
+const testNoValidationContent = `
+import { NearRpcClient, block, status, viewAccount } from '@psalomo/jsonrpc-client/no-validation';
+import { RPC_METHODS, RpcBlockResponse, RpcStatusResponse } from '@psalomo/jsonrpc-types';
 
-// Create tsconfig.json
+async function test() {
+  const client = new NearRpcClient('https://rpc.testnet.fastnear.com');
+  
+  // Test type inference
+  const blockResult: RpcBlockResponse = await block(client, { finality: 'final' });
+  console.log('Block height:', blockResult.header.height);
+  
+  const statusResult: RpcStatusResponse = await status(client);
+  console.log('Chain ID:', statusResult.chainId);
+  
+  // Test convenience function
+  const account = await viewAccount(client, {
+    accountId: 'test.near',
+    finality: 'final'
+  });
+  console.log('Account balance:', account.amount);
+  
+  // Test RPC_METHODS export
+  console.log('Available methods:', RPC_METHODS.length);
+}
+
+test().catch(console.error);
+`;
+
+writeFileSync(join(testDir, 'test.ts'), testContent);
+writeFileSync(join(testDir, 'test-no-validation.ts'), testNoValidationContent);
+
+// Create tsconfig.json for modern module resolution
 const tsConfig = {
+  compilerOptions: {
+    target: 'ES2022',
+    module: 'Node16',
+    lib: ['ES2022'],
+    strict: true,
+    esModuleInterop: true,
+    skipLibCheck: true,
+    forceConsistentCasingInFileNames: true,
+    moduleResolution: 'Node16',
+    resolveJsonModule: true,
+    noEmit: true,
+  },
+};
+
+// Also create a legacy tsconfig for testing compatibility
+const tsConfigLegacy = {
   compilerOptions: {
     target: 'ES2022',
     module: 'commonjs',
@@ -91,13 +137,44 @@ writeFileSync(
 console.log('📦 Installing dependencies...');
 execSync('npm install', { cwd: testDir, stdio: 'inherit' });
 
-console.log('\n🔍 Type checking with TypeScript...');
+console.log('\n🔍 Type checking with TypeScript (Node16 module resolution)...');
+let node16Success = false;
 try {
   execSync('npx tsc --noEmit', { cwd: testDir, stdio: 'inherit' });
-  console.log('✅ TypeScript compilation successful!');
+  console.log('✅ TypeScript compilation successful with Node16 resolution!');
+  console.log('   - Main export works ✓');
+  console.log('   - /no-validation export works ✓');
+  node16Success = true;
 } catch (error) {
-  console.error('❌ TypeScript compilation failed!');
+  console.error('❌ TypeScript compilation failed with Node16 resolution!');
   process.exit(1);
+}
+
+// Test legacy config
+console.log('\n🔍 Testing legacy module resolution...');
+writeFileSync(
+  join(testDir, 'tsconfig.json'),
+  JSON.stringify(tsConfigLegacy, null, 2)
+);
+
+// Test main export with legacy resolution
+try {
+  execSync('npx tsc --noEmit test.ts', { cwd: testDir, stdio: 'inherit' });
+  console.log('✅ Main export works with legacy module resolution!');
+} catch (legacyError) {
+  console.error('❌ Main export failed with legacy resolution!');
+  process.exit(1);
+}
+
+// Test no-validation export with legacy resolution (should fail)
+console.log('\n🔍 Testing /no-validation export with legacy resolution (expected to fail)...');
+try {
+  execSync('npx tsc --noEmit test-no-validation.ts 2>&1', { cwd: testDir });
+  console.error('❌ Unexpected: /no-validation export worked with legacy resolution!');
+  process.exit(1);
+} catch (expectedError) {
+  console.log('✅ Confirmed: /no-validation export requires modern module resolution');
+  console.log('   This is expected behavior - sub-exports need Node16/NodeNext/bundler resolution');
 }
 
 console.log('\n🔍 Checking for @near-js references in node_modules...');
@@ -114,6 +191,17 @@ if (checkForOldReferences.trim()) {
   console.log('✅ No @near-js references found in TypeScript definitions!');
 }
 
+console.log('\n📊 Test Summary:');
+console.log('┌─────────────────────────────────────────────────────────────────┐');
+console.log('│ Module Resolution │ Main Export │ /no-validation Export         │');
+console.log('├─────────────────────────────────────────────────────────────────┤');
+console.log('│ Node16/NodeNext   │     ✅      │         ✅                    │');
+console.log('│ Legacy (node)     │     ✅      │         ❌ (expected)         │');
+console.log('└─────────────────────────────────────────────────────────────────┘');
+
 console.log(
   '\n🎉 All tests passed! TypeScript definitions are working correctly.'
 );
+console.log('\n📝 Note for users:');
+console.log('   - Main export works with all TypeScript configurations');
+console.log('   - /no-validation export requires "moduleResolution": "Node16" or higher');

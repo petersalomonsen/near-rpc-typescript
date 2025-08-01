@@ -154,6 +154,21 @@ const client = new NearRpcClient({
 await block(client, { finality: 'final' });
 ```
 
+#### TypeScript Configuration for Sub-exports
+
+To use the `/no-validation` sub-export, your TypeScript configuration must support the `exports` field in package.json. Update your `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "moduleResolution": "Node16", // or "NodeNext" or "bundler"
+    "module": "Node16"            // Must match moduleResolution
+  }
+}
+```
+
+The legacy `"moduleResolution": "node"` does not support package sub-exports. If you cannot update your TypeScript configuration, use the default export which includes validation.
+
 ### Bundle Size Comparison
 
 The new validation approach uses **per-function schema imports** for optimal tree-shaking:
