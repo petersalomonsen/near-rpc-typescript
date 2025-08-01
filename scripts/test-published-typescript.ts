@@ -167,14 +167,22 @@ try {
 }
 
 // Test no-validation export with legacy resolution (should fail)
-console.log('\n🔍 Testing /no-validation export with legacy resolution (expected to fail)...');
+console.log(
+  '\n🔍 Testing /no-validation export with legacy resolution (expected to fail)...'
+);
 try {
   execSync('npx tsc --noEmit test-no-validation.ts 2>&1', { cwd: testDir });
-  console.error('❌ Unexpected: /no-validation export worked with legacy resolution!');
+  console.error(
+    '❌ Unexpected: /no-validation export worked with legacy resolution!'
+  );
   process.exit(1);
 } catch (expectedError) {
-  console.log('✅ Confirmed: /no-validation export requires modern module resolution');
-  console.log('   This is expected behavior - sub-exports need Node16/NodeNext/bundler resolution');
+  console.log(
+    '✅ Confirmed: /no-validation export requires modern module resolution'
+  );
+  console.log(
+    '   This is expected behavior - sub-exports need Node16/NodeNext/bundler resolution'
+  );
 }
 
 console.log('\n🔍 Checking for @near-js references in node_modules...');
@@ -192,16 +200,30 @@ if (checkForOldReferences.trim()) {
 }
 
 console.log('\n📊 Test Summary:');
-console.log('┌─────────────────────────────────────────────────────────────────┐');
-console.log('│ Module Resolution │ Main Export │ /no-validation Export         │');
-console.log('├─────────────────────────────────────────────────────────────────┤');
-console.log('│ Node16/NodeNext   │     ✅      │         ✅                    │');
-console.log('│ Legacy (node)     │     ✅      │         ❌ (expected)         │');
-console.log('└─────────────────────────────────────────────────────────────────┘');
+console.log(
+  '┌─────────────────────────────────────────────────────────────────┐'
+);
+console.log(
+  '│ Module Resolution │ Main Export │ /no-validation Export         │'
+);
+console.log(
+  '├─────────────────────────────────────────────────────────────────┤'
+);
+console.log(
+  '│ Node16/NodeNext   │     ✅      │         ✅                    │'
+);
+console.log(
+  '│ Legacy (node)     │     ✅      │         ❌ (expected)         │'
+);
+console.log(
+  '└─────────────────────────────────────────────────────────────────┘'
+);
 
 console.log(
   '\n🎉 All tests passed! TypeScript definitions are working correctly.'
 );
 console.log('\n📝 Note for users:');
 console.log('   - Main export works with all TypeScript configurations');
-console.log('   - /no-validation export requires "moduleResolution": "Node16" or higher');
+console.log(
+  '   - /no-validation export requires "moduleResolution": "Node16" or higher'
+);

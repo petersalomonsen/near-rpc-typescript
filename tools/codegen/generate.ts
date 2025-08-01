@@ -66,9 +66,14 @@ function pascalCase(str: string): string {
 }
 
 // Fetch OpenAPI spec
-async function fetchOpenAPISpec(): Promise<OpenAPISpec> {
+async function fetchOpenAPISpec(specPath?: string): Promise<OpenAPISpec> {
   const { readFileSync } = await import('fs');
-  const spec = JSON.parse(readFileSync('/workspaces/near-rpc-typescript/tools/codegen/openapi-versions/openapi-latest.json', 'utf8'));
+  // Use provided path or default to latest spec
+  const path =
+    specPath ||
+    process.env.OPENAPI_SPEC_PATH ||
+    '/workspaces/near-rpc-typescript/tools/codegen/openapi-versions/openapi-latest.json';
+  const spec = JSON.parse(readFileSync(path, 'utf8'));
   return spec;
 }
 
@@ -384,13 +389,13 @@ function getSchemaExplicitType(schemaName: string): string | null {
   }
   return null;
 }
-export async function generateTypes() {
+export async function generateTypes(specPath?: string) {
   console.log('🔄 Starting OpenAPI spec analysis and type generation...');
 
   try {
     // Fetch the OpenAPI spec
     console.log('📥 Fetching NEAR OpenAPI specification...');
-    const spec = await fetchOpenAPISpec();
+    const spec = await fetchOpenAPISpec(specPath);
     console.log(
       `✅ Fetched spec with ${Object.keys(spec.paths).length} endpoints and ${Object.keys(spec.components.schemas).length} schemas`
     );
@@ -699,5 +704,7 @@ export const JsonRpcResponseSchema = () => z.object({
 
 // CLI execution
 if (import.meta.url === `file://${process.argv[1]}`) {
-  generateTypes().catch(console.error);
+  // Accept spec path as command line argument
+  const specPath = process.argv[2];
+  generateTypes(specPath).catch(console.error);
 }
