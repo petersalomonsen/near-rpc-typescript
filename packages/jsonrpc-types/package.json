@@ -10,6 +10,26 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
+    },
+    "./v1.1.1": {
+      "types": "./dist/v1.1.1/index.d.ts",
+      "import": "./dist/v1.1.1/index.mjs",
+      "require": "./dist/v1.1.1/index.js"
+    },
+    "./v1.1.0": {
+      "types": "./dist/v1.1.0/index.d.ts",
+      "import": "./dist/v1.1.0/index.mjs",
+      "require": "./dist/v1.1.0/index.js"
+    },
+    "./v1.0.0": {
+      "types": "./dist/v1.0.0/index.d.ts",
+      "import": "./dist/v1.0.0/index.mjs",
+      "require": "./dist/v1.0.0/index.js"
+    },
+    "./latest": {
+      "types": "./dist/latest/index.d.ts",
+      "import": "./dist/latest/index.mjs",
+      "require": "./dist/latest/index.js"
     }
   },
   "files": [

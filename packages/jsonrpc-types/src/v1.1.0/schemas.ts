@@ -1,5 +1,5 @@
 // Auto-generated Zod schemas from NEAR OpenAPI spec (zod/mini version)
-// Generated on: 2025-08-01T15:16:11.400Z
+// Generated on: 2025-08-01T15:14:52.619Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/mini';
@@ -1254,13 +1254,6 @@ export const JsonRpcRequestForBlockSchema = () => z.object({
   params: z.lazy(() => RpcBlockRequestSchema())
 });
 
-export const JsonRpcRequestForBlockEffectsSchema = () => z.object({
-  id: z.string(),
-  jsonrpc: z.string(),
-  method: z.enum(["block_effects"]),
-  params: z.lazy(() => RpcStateChangesInBlockRequestSchema())
-});
-
 export const JsonRpcRequestForBroadcastTxAsyncSchema = () => z.object({
   id: z.string(),
   jsonrpc: z.string(),
@@ -1303,13 +1296,6 @@ export const JsonRpcRequestForGasPriceSchema = () => z.object({
   params: z.lazy(() => RpcGasPriceRequestSchema())
 });
 
-export const JsonRpcRequestForGenesisConfigSchema = () => z.object({
-  id: z.string(),
-  jsonrpc: z.string(),
-  method: z.enum(["genesis_config"]),
-  params: z.lazy(() => GenesisConfigRequestSchema())
-});
-
 export const JsonRpcRequestForHealthSchema = () => z.object({
   id: z.string(),
   jsonrpc: z.string(),
@@ -1322,13 +1308,6 @@ export const JsonRpcRequestForLightClientProofSchema = () => z.object({
   jsonrpc: z.string(),
   method: z.enum(["light_client_proof"]),
   params: z.lazy(() => RpcLightClientExecutionProofRequestSchema())
-});
-
-export const JsonRpcRequestForMaintenanceWindowsSchema = () => z.object({
-  id: z.string(),
-  jsonrpc: z.string(),
-  method: z.enum(["maintenance_windows"]),
-  params: z.lazy(() => RpcMaintenanceWindowsRequestSchema())
 });
 
 export const JsonRpcRequestForNetworkInfoSchema = () => z.object({
@@ -1827,7 +1806,6 @@ export const RpcClientConfigResponseSchema = () => z.object({
   chainId: z.string(),
   chunkDistributionNetwork: z.optional(z.union([z.lazy(() => ChunkDistributionNetworkConfigSchema()), z.null()])),
   chunkRequestRetryPeriod: z.array(z.number()),
-  chunkValidationThreads: z.number(),
   chunkWaitMult: z.array(z.number()),
   clientBackgroundMigrationThreads: z.number(),
   doomslugStepPeriod: z.array(z.number()),
@@ -1860,9 +1838,6 @@ export const RpcClientConfigResponseSchema = () => z.object({
   saveTrieChanges: z.boolean(),
   saveTxOutcomes: z.boolean(),
   skipSyncWait: z.boolean(),
-  stateRequestServerThreads: z.number(),
-  stateRequestThrottlePeriod: z.array(z.number()),
-  stateRequestsPerThrottlePeriod: z.number(),
   stateSync: z.lazy(() => StateSyncConfigSchema()),
   stateSyncEnabled: z.boolean(),
   stateSyncExternalBackoff: z.array(z.number()),
@@ -1880,7 +1855,9 @@ export const RpcClientConfigResponseSchema = () => z.object({
   ttlAccountIdRouter: z.array(z.number()),
   txRoutingHeightHorizon: z.number(),
   version: z.lazy(() => VersionSchema()),
-  viewClientThreads: z.number()
+  viewClientNumStateRequestsPerThrottlePeriod: z.number(),
+  viewClientThreads: z.number(),
+  viewClientThrottlePeriod: z.array(z.number())
 });
 
 export const RpcCongestionLevelRequestSchema = () => z.union([z.object({
@@ -2924,10 +2901,6 @@ export const BlockRequestSchema = () => z.lazy(() => JsonRpcRequestForBlockSchem
 
 export const BlockResponseSchema = () => z.lazy(() => JsonRpcResponseFor_RpcBlockResponseAnd_RpcErrorSchema());
 
-export const BlockEffectsRequestSchema = () => z.lazy(() => JsonRpcRequestForBlockEffectsSchema());
-
-export const BlockEffectsResponseSchema = () => z.lazy(() => JsonRpcResponseFor_RpcStateChangesInBlockByTypeResponseAnd_RpcErrorSchema());
-
 export const BroadcastTxAsyncRequestSchema = () => z.lazy(() => JsonRpcRequestForBroadcastTxAsyncSchema());
 
 export const BroadcastTxAsyncResponseSchema = () => z.lazy(() => JsonRpcResponseFor_CryptoHashAnd_RpcErrorSchema());
@@ -2952,8 +2925,6 @@ export const GasPriceRequestSchema = () => z.lazy(() => JsonRpcRequestForGasPric
 
 export const GasPriceResponseSchema = () => z.lazy(() => JsonRpcResponseFor_RpcGasPriceResponseAnd_RpcErrorSchema());
 
-export const GenesisConfigResponseSchema = () => z.lazy(() => JsonRpcResponseFor_GenesisConfigAnd_RpcErrorSchema());
-
 export const HealthRequestSchema = () => z.lazy(() => JsonRpcRequestForHealthSchema());
 
 export const HealthResponseSchema = () => z.lazy(() => JsonRpcResponseFor_Nullable_RpcHealthResponseAnd_RpcErrorSchema());
@@ -2961,10 +2932,6 @@ export const HealthResponseSchema = () => z.lazy(() => JsonRpcResponseFor_Nullab
 export const LightClientProofRequestSchema = () => z.lazy(() => JsonRpcRequestForLightClientProofSchema());
 
 export const LightClientProofResponseSchema = () => z.lazy(() => JsonRpcResponseFor_RpcLightClientExecutionProofResponseAnd_RpcErrorSchema());
-
-export const MaintenanceWindowsRequestSchema = () => z.lazy(() => JsonRpcRequestForMaintenanceWindowsSchema());
-
-export const MaintenanceWindowsResponseSchema = () => z.lazy(() => JsonRpcResponseFor_ArrayOf_RangeOfUint64And_RpcErrorSchema());
 
 export const NetworkInfoRequestSchema = () => z.lazy(() => JsonRpcRequestForNetworkInfoSchema());
 
@@ -3014,17 +2981,14 @@ export const VALIDATION_SCHEMA_MAP: Record<string, {
   'EXPERIMENTAL_tx_status': { requestSchema: EXPERIMENTALTxStatusRequestSchema, responseSchema: EXPERIMENTALTxStatusResponseSchema },
   'EXPERIMENTAL_validators_ordered': { requestSchema: EXPERIMENTALValidatorsOrderedRequestSchema, responseSchema: EXPERIMENTALValidatorsOrderedResponseSchema },
   'block': { requestSchema: BlockRequestSchema, responseSchema: BlockResponseSchema },
-  'block_effects': { requestSchema: BlockEffectsRequestSchema, responseSchema: BlockEffectsResponseSchema },
   'broadcast_tx_async': { requestSchema: BroadcastTxAsyncRequestSchema, responseSchema: BroadcastTxAsyncResponseSchema },
   'broadcast_tx_commit': { requestSchema: BroadcastTxCommitRequestSchema, responseSchema: BroadcastTxCommitResponseSchema },
   'changes': { requestSchema: ChangesRequestSchema, responseSchema: ChangesResponseSchema },
   'chunk': { requestSchema: ChunkRequestSchema, responseSchema: ChunkResponseSchema },
   'client_config': { requestSchema: ClientConfigRequestSchema, responseSchema: ClientConfigResponseSchema },
   'gas_price': { requestSchema: GasPriceRequestSchema, responseSchema: GasPriceResponseSchema },
-  'genesis_config': { requestSchema: GenesisConfigRequestSchema, responseSchema: GenesisConfigResponseSchema },
   'health': { requestSchema: HealthRequestSchema, responseSchema: HealthResponseSchema },
   'light_client_proof': { requestSchema: LightClientProofRequestSchema, responseSchema: LightClientProofResponseSchema },
-  'maintenance_windows': { requestSchema: MaintenanceWindowsRequestSchema, responseSchema: MaintenanceWindowsResponseSchema },
   'network_info': { requestSchema: NetworkInfoRequestSchema, responseSchema: NetworkInfoResponseSchema },
   'next_light_client_block': { requestSchema: NextLightClientBlockRequestSchema, responseSchema: NextLightClientBlockResponseSchema },
   'query': { requestSchema: QueryRequestSchema, responseSchema: QueryResponseSchema },

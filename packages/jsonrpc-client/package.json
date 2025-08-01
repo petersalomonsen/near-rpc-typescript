@@ -15,6 +15,46 @@
       "types": "./dist/no-validation/index.d.ts",
       "import": "./dist/no-validation/index.mjs",
       "require": "./dist/no-validation/index.js"
+    },
+    "./v1.1.1": {
+      "types": "./dist/v1.1.1/index.d.ts",
+      "import": "./dist/v1.1.1/index.mjs",
+      "require": "./dist/v1.1.1/index.js"
+    },
+    "./v1.1.1/no-validation": {
+      "types": "./dist/v1.1.1/no-validation/index.d.ts",
+      "import": "./dist/v1.1.1/no-validation/index.mjs",
+      "require": "./dist/v1.1.1/no-validation/index.js"
+    },
+    "./v1.1.0": {
+      "types": "./dist/v1.1.0/index.d.ts",
+      "import": "./dist/v1.1.0/index.mjs",
+      "require": "./dist/v1.1.0/index.js"
+    },
+    "./v1.1.0/no-validation": {
+      "types": "./dist/v1.1.0/no-validation/index.d.ts",
+      "import": "./dist/v1.1.0/no-validation/index.mjs",
+      "require": "./dist/v1.1.0/no-validation/index.js"
+    },
+    "./v1.0.0": {
+      "types": "./dist/v1.0.0/index.d.ts",
+      "import": "./dist/v1.0.0/index.mjs",
+      "require": "./dist/v1.0.0/index.js"
+    },
+    "./v1.0.0/no-validation": {
+      "types": "./dist/v1.0.0/no-validation/index.d.ts",
+      "import": "./dist/v1.0.0/no-validation/index.mjs",
+      "require": "./dist/v1.0.0/no-validation/index.js"
+    },
+    "./latest": {
+      "types": "./dist/latest/index.d.ts",
+      "import": "./dist/latest/index.mjs",
+      "require": "./dist/latest/index.js"
+    },
+    "./latest/no-validation": {
+      "types": "./dist/latest/no-validation/index.d.ts",
+      "import": "./dist/latest/no-validation/index.mjs",
+      "require": "./dist/latest/no-validation/index.js"
     }
   },
   "files": [

@@ -67,13 +67,9 @@ function pascalCase(str: string): string {
 
 // Fetch OpenAPI spec
 async function fetchOpenAPISpec(): Promise<OpenAPISpec> {
-  const response = await fetch(
-    'https://raw.githubusercontent.com/near/nearcore/master/chain/jsonrpc/openapi/openapi.json'
-  );
-  if (!response.ok) {
-    throw new Error(`Failed to fetch OpenAPI spec: ${response.status}`);
-  }
-  return response.json();
+  const { readFileSync } = await import('fs');
+  const spec = JSON.parse(readFileSync('/workspaces/near-rpc-typescript/tools/codegen/openapi-versions/openapi-latest.json', 'utf8'));
+  return spec;
 }
 
 // Type generation utilities

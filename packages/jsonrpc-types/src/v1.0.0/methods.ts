@@ -1,5 +1,5 @@
 // Auto-generated method mapping from NEAR OpenAPI spec
-// Generated on: 2025-08-01T15:16:11.400Z
+// Generated on: 2025-08-01T15:15:33.531Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 // Maps OpenAPI paths to actual JSON-RPC method names
@@ -17,17 +17,14 @@ export const PATH_TO_METHOD_MAP = {
   "/EXPERIMENTAL_tx_status": "EXPERIMENTAL_tx_status",
   "/EXPERIMENTAL_validators_ordered": "EXPERIMENTAL_validators_ordered",
   "/block": "block",
-  "/block_effects": "block_effects",
   "/broadcast_tx_async": "broadcast_tx_async",
   "/broadcast_tx_commit": "broadcast_tx_commit",
   "/changes": "changes",
   "/chunk": "chunk",
   "/client_config": "client_config",
   "/gas_price": "gas_price",
-  "/genesis_config": "genesis_config",
   "/health": "health",
   "/light_client_proof": "light_client_proof",
-  "/maintenance_windows": "maintenance_windows",
   "/network_info": "network_info",
   "/next_light_client_block": "next_light_client_block",
   "/query": "query",

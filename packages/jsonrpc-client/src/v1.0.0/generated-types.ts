@@ -56,7 +56,7 @@ import type {
   RpcValidatorResponse,
   RpcValidatorsOrderedRequest,
 } from '@near-js/jsonrpc-types';
-import type { NearRpcClient } from './client';
+import type { NearRpcClient } from '../client';
 
 // Dynamic RPC methods interface with proper typing
 export interface DynamicRpcMethods {

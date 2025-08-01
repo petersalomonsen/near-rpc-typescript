@@ -1,5 +1,5 @@
 // Auto-generated exports for tree-shakable functions
-// Generated at: 2025-08-01T15:16:10.712Z
+// Generated at: 2025-08-01T15:15:32.625Z
 // Do not edit manually - changes will be overwritten
 
 export {
@@ -32,6 +32,3 @@ export {
   tx,
   validators,
 } from './generated-types';
-
-// Re-export convenience functions
-export { viewAccount, viewFunction, viewAccessKey } from './convenience';

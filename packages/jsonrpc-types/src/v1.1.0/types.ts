@@ -1,5 +1,5 @@
 // Auto-generated TypeScript types from NEAR OpenAPI spec using z.infer (zod/mini version)
-// Generated on: 2025-08-01T15:16:11.394Z
+// Generated on: 2025-08-01T15:14:52.612Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/mini';
@@ -338,8 +338,6 @@ export type JsonRpcRequestFor_EXPERIMENTALValidatorsOrdered = z.infer<ReturnType
 
 export type JsonRpcRequestForBlock = z.infer<ReturnType<typeof schemas.JsonRpcRequestForBlockSchema>>;
 
-export type JsonRpcRequestForBlockEffects = z.infer<ReturnType<typeof schemas.JsonRpcRequestForBlockEffectsSchema>>;
-
 export type JsonRpcRequestForBroadcastTxAsync = z.infer<ReturnType<typeof schemas.JsonRpcRequestForBroadcastTxAsyncSchema>>;
 
 export type JsonRpcRequestForBroadcastTxCommit = z.infer<ReturnType<typeof schemas.JsonRpcRequestForBroadcastTxCommitSchema>>;
@@ -352,13 +350,9 @@ export type JsonRpcRequestForClientConfig = z.infer<ReturnType<typeof schemas.Js
 
 export type JsonRpcRequestForGasPrice = z.infer<ReturnType<typeof schemas.JsonRpcRequestForGasPriceSchema>>;
 
-export type JsonRpcRequestForGenesisConfig = z.infer<ReturnType<typeof schemas.JsonRpcRequestForGenesisConfigSchema>>;
-
 export type JsonRpcRequestForHealth = z.infer<ReturnType<typeof schemas.JsonRpcRequestForHealthSchema>>;
 
 export type JsonRpcRequestForLightClientProof = z.infer<ReturnType<typeof schemas.JsonRpcRequestForLightClientProofSchema>>;
-
-export type JsonRpcRequestForMaintenanceWindows = z.infer<ReturnType<typeof schemas.JsonRpcRequestForMaintenanceWindowsSchema>>;
 
 export type JsonRpcRequestForNetworkInfo = z.infer<ReturnType<typeof schemas.JsonRpcRequestForNetworkInfoSchema>>;
 
@@ -820,10 +814,6 @@ export type BlockRequest = z.infer<ReturnType<typeof schemas.BlockRequestSchema>
 
 export type BlockResponse = z.infer<ReturnType<typeof schemas.BlockResponseSchema>>;
 
-export type BlockEffectsRequest = z.infer<ReturnType<typeof schemas.BlockEffectsRequestSchema>>;
-
-export type BlockEffectsResponse = z.infer<ReturnType<typeof schemas.BlockEffectsResponseSchema>>;
-
 export type BroadcastTxAsyncRequest = z.infer<ReturnType<typeof schemas.BroadcastTxAsyncRequestSchema>>;
 
 export type BroadcastTxAsyncResponse = z.infer<ReturnType<typeof schemas.BroadcastTxAsyncResponseSchema>>;
@@ -848,8 +838,6 @@ export type GasPriceRequest = z.infer<ReturnType<typeof schemas.GasPriceRequestS
 
 export type GasPriceResponse = z.infer<ReturnType<typeof schemas.GasPriceResponseSchema>>;
 
-export type GenesisConfigResponse = z.infer<ReturnType<typeof schemas.GenesisConfigResponseSchema>>;
-
 export type HealthRequest = z.infer<ReturnType<typeof schemas.HealthRequestSchema>>;
 
 export type HealthResponse = z.infer<ReturnType<typeof schemas.HealthResponseSchema>>;
@@ -857,10 +845,6 @@ export type HealthResponse = z.infer<ReturnType<typeof schemas.HealthResponseSch
 export type LightClientProofRequest = z.infer<ReturnType<typeof schemas.LightClientProofRequestSchema>>;
 
 export type LightClientProofResponse = z.infer<ReturnType<typeof schemas.LightClientProofResponseSchema>>;
-
-export type MaintenanceWindowsRequest = z.infer<ReturnType<typeof schemas.MaintenanceWindowsRequestSchema>>;
-
-export type MaintenanceWindowsResponse = z.infer<ReturnType<typeof schemas.MaintenanceWindowsResponseSchema>>;
 
 export type NetworkInfoRequest = z.infer<ReturnType<typeof schemas.NetworkInfoRequestSchema>>;
 

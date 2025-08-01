@@ -1,5 +1,5 @@
 // Auto-generated exports for tree-shakable functions
-// Generated at: 2025-08-01T15:16:10.712Z
+// Generated at: 2025-08-01T13:50:26.203Z
 // Do not edit manually - changes will be overwritten
 
 export {
@@ -16,14 +16,17 @@ export {
   experimentalTxStatus,
   experimentalValidatorsOrdered,
   block,
+  blockEffects,
   broadcastTxAsync,
   broadcastTxCommit,
   changes,
   chunk,
   clientConfig,
   gasPrice,
+  genesisConfig,
   health,
   lightClientProof,
+  maintenanceWindows,
   networkInfo,
   nextLightClientBlock,
   query,
@@ -33,5 +36,4 @@ export {
   validators,
 } from './generated-types';
 
-// Re-export convenience functions
-export { viewAccount, viewFunction, viewAccessKey } from './convenience';
+export { viewAccount, viewFunction, viewAccessKey } from '../convenience';

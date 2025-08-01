@@ -32,6 +32,3 @@ export {
   tx,
   validators,
 } from './generated-types';
-
-// Re-export convenience functions
-export { viewAccount, viewFunction, viewAccessKey } from './convenience';

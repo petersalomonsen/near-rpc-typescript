@@ -1,5 +1,5 @@
 // Auto-generated Zod schemas from NEAR OpenAPI spec (zod/mini version)
-// Generated on: 2025-08-01T15:16:11.400Z
+// Generated on: 2025-08-01T15:15:33.531Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/mini';
@@ -23,13 +23,11 @@ export const AccessKeyCreationConfigViewSchema = () => z.object({
   functionCallCostPerByte: z.lazy(() => FeeSchema())
 });
 
-// Describes information about an access key including the public key. 
 export const AccessKeyInfoViewSchema = () => z.object({
   accessKey: z.lazy(() => AccessKeyViewSchema()),
   publicKey: z.lazy(() => PublicKeySchema())
 });
 
-// Lists access keys 
 export const AccessKeyListSchema = () => z.object({
   keys: z.array(z.lazy(() => AccessKeyInfoViewSchema()))
 });
@@ -39,10 +37,6 @@ export const AccessKeyPermissionSchema = () => z.union([z.object({
   FunctionCall: z.lazy(() => FunctionCallPermissionSchema())
 }), z.enum(["FullAccess"])]);
 
-//
- // Describes the permission scope for an access key. Whether it is a function
- // call or a full access key.
- 
 export const AccessKeyPermissionViewSchema = () => z.union([z.enum(["FullAccess"]), z.object({
   FunctionCall: z.object({
   allowance: z.optional(z.union([z.union([z.string(), z.null()]), z.null()])),
@@ -51,7 +45,6 @@ export const AccessKeyPermissionViewSchema = () => z.union([z.enum(["FullAccess"
 })
 })]);
 
-// Describes access key permission scope and nonce. 
 export const AccessKeyViewSchema = () => z.object({
   nonce: z.number(),
   permission: z.lazy(() => AccessKeyPermissionViewSchema())
@@ -63,17 +56,6 @@ export const AccountCreationConfigViewSchema = () => z.object({
   registrarAccountId: z.lazy(() => AccountIdSchema())
 });
 
-//
- // AccountData is a piece of global state that a validator signs and
- // broadcasts to the network. It is essentially the data that a validator
- // wants to share with the network. All the nodes in the network are
- // collecting the account data broadcasted by the validators. Since the number
- // of the validators is bounded and their identity is known (and the maximal
- // size of allowed AccountData is bounded) the global state that is
- // distributed in the form of AccountData is bounded as well. Find more
- // information in the docs
- // [here](https://github.com/near/nearcore/blob/560f7fc8f4b3106e0d5d46050688610b1f104ac6/chain/client/src/client.rs#L2232)
- 
 export const AccountDataViewSchema = () => z.object({
   accountKey: z.lazy(() => PublicKeySchema()),
   peerId: z.lazy(() => PublicKeySchema()),
@@ -112,7 +94,6 @@ export const AccountViewSchema = () => z.object({
   storageUsage: z.number()
 });
 
-// Account ID with its public key. 
 export const AccountWithPublicKeySchema = () => z.object({
   accountId: z.lazy(() => AccountIdSchema()),
   publicKey: z.lazy(() => PublicKeySchema())
@@ -267,7 +248,7 @@ export const ActionViewSchema = () => z.union([z.enum(["CreateAccount"]), z.obje
 })
 }), z.object({
   FunctionCall: z.object({
-  args: z.lazy(() => FunctionArgsSchema()),
+  args: z.string(),
   deposit: z.string(),
   gas: z.number(),
   methodName: z.string()
@@ -368,7 +349,6 @@ export const ActionsValidationErrorSchema = () => z.union([z.enum(["DeleteAction
 })
 })]);
 
-// An action that adds key with public key associated 
 export const AddKeyActionSchema = () => z.object({
   accessKey: z.lazy(() => AccessKeySchema()),
   publicKey: z.lazy(() => PublicKeySchema())
@@ -402,15 +382,10 @@ export const BandwidthRequestsSchema = () => z.object({
   V1: z.lazy(() => BandwidthRequestsV1Schema())
 });
 
-// Version 1 of [`BandwidthRequest`]. 
 export const BandwidthRequestsV1Schema = () => z.object({
   requests: z.array(z.lazy(() => BandwidthRequestSchema()))
 });
 
-//
- // A part of a state for the current head of a light client. More info
- // [here](https://nomicon.io/ChainSpec/LightClient).
- 
 export const BlockHeaderInnerLiteViewSchema = () => z.object({
   blockMerkleRoot: z.lazy(() => CryptoHashSchema()),
   epochId: z.lazy(() => CryptoHashSchema()),
@@ -423,9 +398,8 @@ export const BlockHeaderInnerLiteViewSchema = () => z.object({
   timestampNanosec: z.string()
 });
 
-// Contains main info about the block. 
 export const BlockHeaderViewSchema = () => z.object({
-  approvals: z.array(z.union([z.lazy(() => SignatureSchema()), z.null()])),
+  approvals: z.array(z.lazy(() => SignatureSchema())),
   blockBodyHash: z.optional(z.union([z.lazy(() => CryptoHashSchema()), z.null()])),
   blockMerkleRoot: z.lazy(() => CryptoHashSchema()),
   blockOrdinal: z.optional(z.union([z.union([z.number(), z.null()]), z.null()])),
@@ -463,26 +437,19 @@ export const BlockHeaderViewSchema = () => z.object({
 
 export const BlockIdSchema = () => z.union([z.number(), z.lazy(() => CryptoHashSchema())]);
 
-// Height and hash of a block 
 export const BlockStatusViewSchema = () => z.object({
   hash: z.lazy(() => CryptoHashSchema()),
   height: z.number()
 });
 
-// A result returned by contract method 
 export const CallResultSchema = () => z.object({
   logs: z.array(z.string()),
   result: z.array(z.number())
 });
 
-//
- // Status of the
- // [catchup](https://near.github.io/nearcore/architecture/how/sync.html#catchup)
- // process
- 
 export const CatchupStatusViewSchema = () => z.object({
   blocksToCatchup: z.array(z.lazy(() => BlockStatusViewSchema())),
-  shardSyncStatus: z.record(z.string(), z.unknown()),
+  shardSyncStatus: z.record(z.string(), z.string()),
   syncBlockHash: z.lazy(() => CryptoHashSchema()),
   syncBlockHeight: z.number()
 });
@@ -504,7 +471,6 @@ export const ChunkDistributionUrisSchema = () => z.object({
   set: z.string()
 });
 
-// Contains main info about the chunk. 
 export const ChunkHeaderViewSchema = () => z.object({
   balanceBurnt: z.string(),
   bandwidthRequests: z.optional(z.union([z.lazy(() => BandwidthRequestsSchema()), z.null()])),
@@ -540,10 +506,6 @@ export const CompilationErrorSchema = () => z.union([z.object({
 })
 })]);
 
-//
- // The configuration for congestion control. More info about congestion
- // [here](https://near.github.io/nearcore/architecture/how/receipt-congestion.html?highlight=congestion#receipt-congestion)
- 
 export const CongestionControlConfigViewSchema = () => z.object({
   allowedShardOutgoingGas: z.number(),
   maxCongestionIncomingGas: z.number(),
@@ -559,10 +521,6 @@ export const CongestionControlConfigViewSchema = () => z.object({
   rejectTxCongestionThreshold: z.number()
 });
 
-//
- // Stores the congestion level of a shard. More info about congestion
- // [here](https://near.github.io/nearcore/architecture/how/receipt-congestion.html?highlight=congestion#receipt-congestion)
- 
 export const CongestionInfoViewSchema = () => z.object({
   allowedShard: z.number(),
   bufferedReceiptsGas: z.string(),
@@ -576,10 +534,6 @@ export const ContractCodeViewSchema = () => z.object({
   hash: z.lazy(() => CryptoHashSchema())
 });
 
-//
- // Shows gas profile. More info
- // [here](https://near.github.io/nearcore/architecture/gas/gas_profile.html?highlight=WASM_HOST_COST#example-transaction-gas-profile).
- 
 export const CostGasUsedSchema = () => z.object({
   cost: z.string(),
   costCategory: z.string(),
@@ -591,7 +545,6 @@ export const CreateAccountActionSchema = () => z.record(z.string(), z.unknown())
 
 export const CryptoHashSchema = () => z.string();
 
-// Describes information about the current epoch validator 
 export const CurrentEpochValidatorInfoSchema = () => z.object({
   accountId: z.lazy(() => AccountIdSchema()),
   isSlashed: z.boolean(),
@@ -611,7 +564,6 @@ export const CurrentEpochValidatorInfoSchema = () => z.object({
   stake: z.string()
 });
 
-// The fees settings for a data receipt creation 
 export const DataReceiptCreationConfigViewSchema = () => z.object({
   baseCost: z.lazy(() => FeeSchema()),
   costPerByte: z.lazy(() => FeeSchema())
@@ -879,14 +831,6 @@ export const FinalExecutionStatusSchema = () => z.union([z.enum(["NotStarted"]),
 // Different types of finality. 
 export const FinalitySchema = () => z.enum(["optimistic", "near-final", "final"]);
 
-//
- // This type is used to mark function arguments. NOTE: The main reason for
- // this to exist (except the type-safety) is that the value is transparently
- // serialized and deserialized as a base64-encoded string when serde is used
- // (serde_json).
- 
-export const FunctionArgsSchema = () => z.string();
-
 export const FunctionCallActionSchema = () => z.object({
   args: z.string(),
   deposit: z.string(),
@@ -984,7 +928,7 @@ export const GenesisConfigSchema = () => z.object({
   validators: z.array(z.lazy(() => AccountInfoSchema()))
 });
 
-export const GenesisConfigRequestSchema = () => z.null();
+export const GenesisConfigRequestSchema = () => z.record(z.string(), z.unknown());
 
 export const GlobalContractDeployModeSchema = () => z.union([z.enum(["CodeHash"]), z.enum(["AccountId"])]);
 
@@ -1254,13 +1198,6 @@ export const JsonRpcRequestForBlockSchema = () => z.object({
   params: z.lazy(() => RpcBlockRequestSchema())
 });
 
-export const JsonRpcRequestForBlockEffectsSchema = () => z.object({
-  id: z.string(),
-  jsonrpc: z.string(),
-  method: z.enum(["block_effects"]),
-  params: z.lazy(() => RpcStateChangesInBlockRequestSchema())
-});
-
 export const JsonRpcRequestForBroadcastTxAsyncSchema = () => z.object({
   id: z.string(),
   jsonrpc: z.string(),
@@ -1303,13 +1240,6 @@ export const JsonRpcRequestForGasPriceSchema = () => z.object({
   params: z.lazy(() => RpcGasPriceRequestSchema())
 });
 
-export const JsonRpcRequestForGenesisConfigSchema = () => z.object({
-  id: z.string(),
-  jsonrpc: z.string(),
-  method: z.enum(["genesis_config"]),
-  params: z.lazy(() => GenesisConfigRequestSchema())
-});
-
 export const JsonRpcRequestForHealthSchema = () => z.object({
   id: z.string(),
   jsonrpc: z.string(),
@@ -1322,13 +1252,6 @@ export const JsonRpcRequestForLightClientProofSchema = () => z.object({
   jsonrpc: z.string(),
   method: z.enum(["light_client_proof"]),
   params: z.lazy(() => RpcLightClientExecutionProofRequestSchema())
-});
-
-export const JsonRpcRequestForMaintenanceWindowsSchema = () => z.object({
-  id: z.string(),
-  jsonrpc: z.string(),
-  method: z.enum(["maintenance_windows"]),
-  params: z.lazy(() => RpcMaintenanceWindowsRequestSchema())
 });
 
 export const JsonRpcRequestForNetworkInfoSchema = () => z.object({
@@ -1815,7 +1738,7 @@ export const RpcChunkResponseSchema = () => z.object({
   transactions: z.array(z.lazy(() => SignedTransactionViewSchema()))
 });
 
-export const RpcClientConfigRequestSchema = () => z.null();
+export const RpcClientConfigRequestSchema = () => z.record(z.string(), z.unknown());
 
 // ClientConfig where some fields can be updated at runtime. 
 export const RpcClientConfigResponseSchema = () => z.object({
@@ -1827,7 +1750,6 @@ export const RpcClientConfigResponseSchema = () => z.object({
   chainId: z.string(),
   chunkDistributionNetwork: z.optional(z.union([z.lazy(() => ChunkDistributionNetworkConfigSchema()), z.null()])),
   chunkRequestRetryPeriod: z.array(z.number()),
-  chunkValidationThreads: z.number(),
   chunkWaitMult: z.array(z.number()),
   clientBackgroundMigrationThreads: z.number(),
   doomslugStepPeriod: z.array(z.number()),
@@ -1860,9 +1782,6 @@ export const RpcClientConfigResponseSchema = () => z.object({
   saveTrieChanges: z.boolean(),
   saveTxOutcomes: z.boolean(),
   skipSyncWait: z.boolean(),
-  stateRequestServerThreads: z.number(),
-  stateRequestThrottlePeriod: z.array(z.number()),
-  stateRequestsPerThrottlePeriod: z.number(),
   stateSync: z.lazy(() => StateSyncConfigSchema()),
   stateSyncEnabled: z.boolean(),
   stateSyncExternalBackoff: z.array(z.number()),
@@ -1880,7 +1799,8 @@ export const RpcClientConfigResponseSchema = () => z.object({
   ttlAccountIdRouter: z.array(z.number()),
   txRoutingHeightHorizon: z.number(),
   version: z.lazy(() => VersionSchema()),
-  viewClientThreads: z.number()
+  viewClientThreads: z.number(),
+  viewClientThrottlePeriod: z.array(z.number())
 });
 
 export const RpcCongestionLevelRequestSchema = () => z.union([z.object({
@@ -1911,7 +1831,7 @@ export const RpcErrorSchema = () => z.intersection(z.union([z.object({
 })]), z.object({
   cause: z.optional(z.unknown()),
   code: z.number(),
-  data: z.optional(z.unknown()),
+  data: z.optional(z.union([z.union([z.unknown(), z.null()]), z.null()])),
   message: z.string(),
   name: z.optional(z.unknown())
 }));
@@ -1924,9 +1844,9 @@ export const RpcGasPriceResponseSchema = () => z.object({
   gasPrice: z.string()
 });
 
-export const RpcHealthRequestSchema = () => z.null();
+export const RpcHealthRequestSchema = () => z.record(z.string(), z.unknown());
 
-export const RpcHealthResponseSchema = () => z.null();
+export const RpcHealthResponseSchema = () => z.record(z.string(), z.unknown());
 
 export const RpcKnownProducerSchema = () => z.object({
   accountId: z.lazy(() => AccountIdSchema()),
@@ -1967,12 +1887,8 @@ export const RpcLightClientNextBlockRequestSchema = () => z.object({
   lastBlockHash: z.lazy(() => CryptoHashSchema())
 });
 
-//
- // A state for the current head of a light client. More info
- // [here](https://nomicon.io/ChainSpec/LightClient).
- 
 export const RpcLightClientNextBlockResponseSchema = () => z.object({
-  approvalsAfterNext: z.optional(z.array(z.union([z.lazy(() => SignatureSchema()), z.null()]))),
+  approvalsAfterNext: z.optional(z.array(z.lazy(() => SignatureSchema()))),
   innerLite: z.optional(z.lazy(() => BlockHeaderInnerLiteViewSchema())),
   innerRestHash: z.optional(z.lazy(() => CryptoHashSchema())),
   nextBlockInnerHash: z.optional(z.lazy(() => CryptoHashSchema())),
@@ -1984,7 +1900,7 @@ export const RpcMaintenanceWindowsRequestSchema = () => z.object({
   accountId: z.lazy(() => AccountIdSchema())
 });
 
-export const RpcNetworkInfoRequestSchema = () => z.null();
+export const RpcNetworkInfoRequestSchema = () => z.record(z.string(), z.unknown());
 
 export const RpcNetworkInfoResponseSchema = () => z.object({
   activePeers: z.array(z.lazy(() => RpcPeerInfoSchema())),
@@ -2045,142 +1961,42 @@ export const RpcProtocolConfigResponseSchema = () => z.object({
   transactionValidityPeriod: z.number()
 });
 
-export const RpcQueryRequestSchema = () => z.union([z.intersection(z.object({
+export const RpcQueryRequestSchema = () => z.intersection(z.union([z.object({
   blockId: z.lazy(() => BlockIdSchema())
 }), z.object({
+  finality: z.lazy(() => FinalitySchema())
+}), z.object({
+  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
+})]), z.union([z.object({
   accountId: z.lazy(() => AccountIdSchema()),
   requestType: z.enum(["view_account"])
-})), z.intersection(z.object({
-  blockId: z.lazy(() => BlockIdSchema())
 }), z.object({
   accountId: z.lazy(() => AccountIdSchema()),
   requestType: z.enum(["view_code"])
-})), z.intersection(z.object({
-  blockId: z.lazy(() => BlockIdSchema())
 }), z.object({
   accountId: z.lazy(() => AccountIdSchema()),
   includeProof: z.optional(z.boolean()),
-  prefixBase64: z.lazy(() => StoreKeySchema()),
+  prefixBase64: z.string(),
   requestType: z.enum(["view_state"])
-})), z.intersection(z.object({
-  blockId: z.lazy(() => BlockIdSchema())
 }), z.object({
   accountId: z.lazy(() => AccountIdSchema()),
   publicKey: z.lazy(() => PublicKeySchema()),
   requestType: z.enum(["view_access_key"])
-})), z.intersection(z.object({
-  blockId: z.lazy(() => BlockIdSchema())
 }), z.object({
   accountId: z.lazy(() => AccountIdSchema()),
   requestType: z.enum(["view_access_key_list"])
-})), z.intersection(z.object({
-  blockId: z.lazy(() => BlockIdSchema())
 }), z.object({
   accountId: z.lazy(() => AccountIdSchema()),
-  argsBase64: z.lazy(() => FunctionArgsSchema()),
+  argsBase64: z.string(),
   methodName: z.string(),
   requestType: z.enum(["call_function"])
-})), z.intersection(z.object({
-  blockId: z.lazy(() => BlockIdSchema())
 }), z.object({
   codeHash: z.lazy(() => CryptoHashSchema()),
   requestType: z.enum(["view_global_contract_code"])
-})), z.intersection(z.object({
-  blockId: z.lazy(() => BlockIdSchema())
 }), z.object({
   accountId: z.lazy(() => AccountIdSchema()),
   requestType: z.enum(["view_global_contract_code_by_account_id"])
-})), z.intersection(z.object({
-  finality: z.lazy(() => FinalitySchema())
-}), z.object({
-  accountId: z.lazy(() => AccountIdSchema()),
-  requestType: z.enum(["view_account"])
-})), z.intersection(z.object({
-  finality: z.lazy(() => FinalitySchema())
-}), z.object({
-  accountId: z.lazy(() => AccountIdSchema()),
-  requestType: z.enum(["view_code"])
-})), z.intersection(z.object({
-  finality: z.lazy(() => FinalitySchema())
-}), z.object({
-  accountId: z.lazy(() => AccountIdSchema()),
-  includeProof: z.optional(z.boolean()),
-  prefixBase64: z.lazy(() => StoreKeySchema()),
-  requestType: z.enum(["view_state"])
-})), z.intersection(z.object({
-  finality: z.lazy(() => FinalitySchema())
-}), z.object({
-  accountId: z.lazy(() => AccountIdSchema()),
-  publicKey: z.lazy(() => PublicKeySchema()),
-  requestType: z.enum(["view_access_key"])
-})), z.intersection(z.object({
-  finality: z.lazy(() => FinalitySchema())
-}), z.object({
-  accountId: z.lazy(() => AccountIdSchema()),
-  requestType: z.enum(["view_access_key_list"])
-})), z.intersection(z.object({
-  finality: z.lazy(() => FinalitySchema())
-}), z.object({
-  accountId: z.lazy(() => AccountIdSchema()),
-  argsBase64: z.lazy(() => FunctionArgsSchema()),
-  methodName: z.string(),
-  requestType: z.enum(["call_function"])
-})), z.intersection(z.object({
-  finality: z.lazy(() => FinalitySchema())
-}), z.object({
-  codeHash: z.lazy(() => CryptoHashSchema()),
-  requestType: z.enum(["view_global_contract_code"])
-})), z.intersection(z.object({
-  finality: z.lazy(() => FinalitySchema())
-}), z.object({
-  accountId: z.lazy(() => AccountIdSchema()),
-  requestType: z.enum(["view_global_contract_code_by_account_id"])
-})), z.intersection(z.object({
-  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
-}), z.object({
-  accountId: z.lazy(() => AccountIdSchema()),
-  requestType: z.enum(["view_account"])
-})), z.intersection(z.object({
-  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
-}), z.object({
-  accountId: z.lazy(() => AccountIdSchema()),
-  requestType: z.enum(["view_code"])
-})), z.intersection(z.object({
-  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
-}), z.object({
-  accountId: z.lazy(() => AccountIdSchema()),
-  includeProof: z.optional(z.boolean()),
-  prefixBase64: z.lazy(() => StoreKeySchema()),
-  requestType: z.enum(["view_state"])
-})), z.intersection(z.object({
-  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
-}), z.object({
-  accountId: z.lazy(() => AccountIdSchema()),
-  publicKey: z.lazy(() => PublicKeySchema()),
-  requestType: z.enum(["view_access_key"])
-})), z.intersection(z.object({
-  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
-}), z.object({
-  accountId: z.lazy(() => AccountIdSchema()),
-  requestType: z.enum(["view_access_key_list"])
-})), z.intersection(z.object({
-  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
-}), z.object({
-  accountId: z.lazy(() => AccountIdSchema()),
-  argsBase64: z.lazy(() => FunctionArgsSchema()),
-  methodName: z.string(),
-  requestType: z.enum(["call_function"])
-})), z.intersection(z.object({
-  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
-}), z.object({
-  codeHash: z.lazy(() => CryptoHashSchema()),
-  requestType: z.enum(["view_global_contract_code"])
-})), z.intersection(z.object({
-  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
-}), z.object({
-  accountId: z.lazy(() => AccountIdSchema()),
-  requestType: z.enum(["view_global_contract_code_by_account_id"])
-}))]);
+})]));
 
 export const RpcQueryResponseSchema = () => z.union([z.lazy(() => AccountViewSchema()), z.lazy(() => ContractCodeViewSchema()), z.lazy(() => ViewStateResultSchema()), z.lazy(() => CallResultSchema()), z.lazy(() => AccessKeyViewSchema()), z.lazy(() => AccessKeyListSchema())]);
 
@@ -2228,115 +2044,35 @@ export const RpcSplitStorageInfoResponseSchema = () => z.object({
  // view]: ./index.html [`StateChangesRequest`]:
  // ../types/struct.StateChangesRequest.html
  
-export const RpcStateChangesInBlockByTypeRequestSchema = () => z.union([z.intersection(z.object({
+export const RpcStateChangesInBlockByTypeRequestSchema = () => z.intersection(z.union([z.object({
   blockId: z.lazy(() => BlockIdSchema())
 }), z.object({
+  finality: z.lazy(() => FinalitySchema())
+}), z.object({
+  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
+})]), z.union([z.object({
   accountIds: z.array(z.lazy(() => AccountIdSchema())),
   changesType: z.enum(["account_changes"])
-})), z.intersection(z.object({
-  blockId: z.lazy(() => BlockIdSchema())
 }), z.object({
   changesType: z.enum(["single_access_key_changes"]),
   keys: z.array(z.lazy(() => AccountWithPublicKeySchema()))
-})), z.intersection(z.object({
-  blockId: z.lazy(() => BlockIdSchema())
 }), z.object({
   changesType: z.enum(["single_gas_key_changes"]),
   keys: z.array(z.lazy(() => AccountWithPublicKeySchema()))
-})), z.intersection(z.object({
-  blockId: z.lazy(() => BlockIdSchema())
 }), z.object({
   accountIds: z.array(z.lazy(() => AccountIdSchema())),
   changesType: z.enum(["all_access_key_changes"])
-})), z.intersection(z.object({
-  blockId: z.lazy(() => BlockIdSchema())
 }), z.object({
   accountIds: z.array(z.lazy(() => AccountIdSchema())),
   changesType: z.enum(["all_gas_key_changes"])
-})), z.intersection(z.object({
-  blockId: z.lazy(() => BlockIdSchema())
 }), z.object({
   accountIds: z.array(z.lazy(() => AccountIdSchema())),
   changesType: z.enum(["contract_code_changes"])
-})), z.intersection(z.object({
-  blockId: z.lazy(() => BlockIdSchema())
 }), z.object({
   accountIds: z.array(z.lazy(() => AccountIdSchema())),
   changesType: z.enum(["data_changes"]),
-  keyPrefixBase64: z.lazy(() => StoreKeySchema())
-})), z.intersection(z.object({
-  finality: z.lazy(() => FinalitySchema())
-}), z.object({
-  accountIds: z.array(z.lazy(() => AccountIdSchema())),
-  changesType: z.enum(["account_changes"])
-})), z.intersection(z.object({
-  finality: z.lazy(() => FinalitySchema())
-}), z.object({
-  changesType: z.enum(["single_access_key_changes"]),
-  keys: z.array(z.lazy(() => AccountWithPublicKeySchema()))
-})), z.intersection(z.object({
-  finality: z.lazy(() => FinalitySchema())
-}), z.object({
-  changesType: z.enum(["single_gas_key_changes"]),
-  keys: z.array(z.lazy(() => AccountWithPublicKeySchema()))
-})), z.intersection(z.object({
-  finality: z.lazy(() => FinalitySchema())
-}), z.object({
-  accountIds: z.array(z.lazy(() => AccountIdSchema())),
-  changesType: z.enum(["all_access_key_changes"])
-})), z.intersection(z.object({
-  finality: z.lazy(() => FinalitySchema())
-}), z.object({
-  accountIds: z.array(z.lazy(() => AccountIdSchema())),
-  changesType: z.enum(["all_gas_key_changes"])
-})), z.intersection(z.object({
-  finality: z.lazy(() => FinalitySchema())
-}), z.object({
-  accountIds: z.array(z.lazy(() => AccountIdSchema())),
-  changesType: z.enum(["contract_code_changes"])
-})), z.intersection(z.object({
-  finality: z.lazy(() => FinalitySchema())
-}), z.object({
-  accountIds: z.array(z.lazy(() => AccountIdSchema())),
-  changesType: z.enum(["data_changes"]),
-  keyPrefixBase64: z.lazy(() => StoreKeySchema())
-})), z.intersection(z.object({
-  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
-}), z.object({
-  accountIds: z.array(z.lazy(() => AccountIdSchema())),
-  changesType: z.enum(["account_changes"])
-})), z.intersection(z.object({
-  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
-}), z.object({
-  changesType: z.enum(["single_access_key_changes"]),
-  keys: z.array(z.lazy(() => AccountWithPublicKeySchema()))
-})), z.intersection(z.object({
-  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
-}), z.object({
-  changesType: z.enum(["single_gas_key_changes"]),
-  keys: z.array(z.lazy(() => AccountWithPublicKeySchema()))
-})), z.intersection(z.object({
-  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
-}), z.object({
-  accountIds: z.array(z.lazy(() => AccountIdSchema())),
-  changesType: z.enum(["all_access_key_changes"])
-})), z.intersection(z.object({
-  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
-}), z.object({
-  accountIds: z.array(z.lazy(() => AccountIdSchema())),
-  changesType: z.enum(["all_gas_key_changes"])
-})), z.intersection(z.object({
-  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
-}), z.object({
-  accountIds: z.array(z.lazy(() => AccountIdSchema())),
-  changesType: z.enum(["contract_code_changes"])
-})), z.intersection(z.object({
-  syncCheckpoint: z.lazy(() => SyncCheckpointSchema())
-}), z.object({
-  accountIds: z.array(z.lazy(() => AccountIdSchema())),
-  changesType: z.enum(["data_changes"]),
-  keyPrefixBase64: z.lazy(() => StoreKeySchema())
-}))]);
+  keyPrefixBase64: z.string()
+})]));
 
 export const RpcStateChangesInBlockByTypeResponseSchema = () => z.object({
   blockHash: z.lazy(() => CryptoHashSchema()),
@@ -2356,7 +2092,7 @@ export const RpcStateChangesInBlockResponseSchema = () => z.object({
   changes: z.array(z.lazy(() => StateChangeWithCauseViewSchema()))
 });
 
-export const RpcStatusRequestSchema = () => z.null();
+export const RpcStatusRequestSchema = () => z.record(z.string(), z.unknown());
 
 export const RpcStatusResponseSchema = () => z.object({
   chainId: z.string(),
@@ -2416,7 +2152,6 @@ export const RuntimeConfigViewSchema = () => z.object({
   witnessConfig: z.lazy(() => WitnessConfigViewSchema())
 });
 
-// Describes different fees for the runtime 
 export const RuntimeFeesConfigViewSchema = () => z.object({
   actionCreationConfig: z.lazy(() => ActionCreationConfigViewSchema()),
   actionReceiptCreationConfig: z.lazy(() => FeeSchema()),
@@ -2637,14 +2372,14 @@ export const StateChangeWithCauseViewSchema = () => z.intersection(z.union([z.ob
 }), z.object({
   change: z.object({
   accountId: z.lazy(() => AccountIdSchema()),
-  keyBase64: z.lazy(() => StoreKeySchema()),
-  valueBase64: z.lazy(() => StoreValueSchema())
+  keyBase64: z.string(),
+  valueBase64: z.string()
 }),
   type: z.enum(["data_update"])
 }), z.object({
   change: z.object({
   accountId: z.lazy(() => AccountIdSchema()),
-  keyBase64: z.lazy(() => StoreKeySchema())
+  keyBase64: z.string()
 }),
   type: z.enum(["data_deletion"])
 }), z.object({
@@ -2667,8 +2402,8 @@ export const StateChangeWithCauseViewSchema = () => z.intersection(z.union([z.ob
  // inclusion of given state item.
  
 export const StateItemSchema = () => z.object({
-  key: z.lazy(() => StoreKeySchema()),
-  value: z.lazy(() => StoreValueSchema())
+  key: z.string(),
+  value: z.string()
 });
 
 export const StateSyncConfigSchema = () => z.object({
@@ -2715,22 +2450,6 @@ export const StorageUsageConfigViewSchema = () => z.object({
   numBytesAccount: z.number(),
   numExtraBytesRecord: z.number()
 });
-
-//
- // This type is used to mark keys (arrays of bytes) that are queried from
- // store. NOTE: Currently, this type is only used in the view_client and RPC
- // to be able to transparently pretty-serialize the bytes arrays as
- // base64-encoded strings (see `serialize.rs`).
- 
-export const StoreKeySchema = () => z.string();
-
-//
- // This type is used to mark values returned from store (arrays of bytes).
- // NOTE: Currently, this type is only used in the view_client and RPC to be
- // able to transparently pretty-serialize the bytes arrays as base64-encoded
- // strings (see `serialize.rs`).
- 
-export const StoreValueSchema = () => z.string();
 
 export const SyncCheckpointSchema = () => z.enum(["genesis", "earliest_available"]);
 
@@ -2855,7 +2574,6 @@ export const VersionSchema = () => z.object({
   version: z.string()
 });
 
-// Resulting state values for a view state query request 
 export const ViewStateResultSchema = () => z.object({
   proof: z.optional(z.array(z.string())),
   values: z.array(z.lazy(() => StateItemSchema()))
@@ -2924,10 +2642,6 @@ export const BlockRequestSchema = () => z.lazy(() => JsonRpcRequestForBlockSchem
 
 export const BlockResponseSchema = () => z.lazy(() => JsonRpcResponseFor_RpcBlockResponseAnd_RpcErrorSchema());
 
-export const BlockEffectsRequestSchema = () => z.lazy(() => JsonRpcRequestForBlockEffectsSchema());
-
-export const BlockEffectsResponseSchema = () => z.lazy(() => JsonRpcResponseFor_RpcStateChangesInBlockByTypeResponseAnd_RpcErrorSchema());
-
 export const BroadcastTxAsyncRequestSchema = () => z.lazy(() => JsonRpcRequestForBroadcastTxAsyncSchema());
 
 export const BroadcastTxAsyncResponseSchema = () => z.lazy(() => JsonRpcResponseFor_CryptoHashAnd_RpcErrorSchema());
@@ -2952,8 +2666,6 @@ export const GasPriceRequestSchema = () => z.lazy(() => JsonRpcRequestForGasPric
 
 export const GasPriceResponseSchema = () => z.lazy(() => JsonRpcResponseFor_RpcGasPriceResponseAnd_RpcErrorSchema());
 
-export const GenesisConfigResponseSchema = () => z.lazy(() => JsonRpcResponseFor_GenesisConfigAnd_RpcErrorSchema());
-
 export const HealthRequestSchema = () => z.lazy(() => JsonRpcRequestForHealthSchema());
 
 export const HealthResponseSchema = () => z.lazy(() => JsonRpcResponseFor_Nullable_RpcHealthResponseAnd_RpcErrorSchema());
@@ -2961,10 +2673,6 @@ export const HealthResponseSchema = () => z.lazy(() => JsonRpcResponseFor_Nullab
 export const LightClientProofRequestSchema = () => z.lazy(() => JsonRpcRequestForLightClientProofSchema());
 
 export const LightClientProofResponseSchema = () => z.lazy(() => JsonRpcResponseFor_RpcLightClientExecutionProofResponseAnd_RpcErrorSchema());
-
-export const MaintenanceWindowsRequestSchema = () => z.lazy(() => JsonRpcRequestForMaintenanceWindowsSchema());
-
-export const MaintenanceWindowsResponseSchema = () => z.lazy(() => JsonRpcResponseFor_ArrayOf_RangeOfUint64And_RpcErrorSchema());
 
 export const NetworkInfoRequestSchema = () => z.lazy(() => JsonRpcRequestForNetworkInfoSchema());
 
@@ -3014,17 +2722,14 @@ export const VALIDATION_SCHEMA_MAP: Record<string, {
   'EXPERIMENTAL_tx_status': { requestSchema: EXPERIMENTALTxStatusRequestSchema, responseSchema: EXPERIMENTALTxStatusResponseSchema },
   'EXPERIMENTAL_validators_ordered': { requestSchema: EXPERIMENTALValidatorsOrderedRequestSchema, responseSchema: EXPERIMENTALValidatorsOrderedResponseSchema },
   'block': { requestSchema: BlockRequestSchema, responseSchema: BlockResponseSchema },
-  'block_effects': { requestSchema: BlockEffectsRequestSchema, responseSchema: BlockEffectsResponseSchema },
   'broadcast_tx_async': { requestSchema: BroadcastTxAsyncRequestSchema, responseSchema: BroadcastTxAsyncResponseSchema },
   'broadcast_tx_commit': { requestSchema: BroadcastTxCommitRequestSchema, responseSchema: BroadcastTxCommitResponseSchema },
   'changes': { requestSchema: ChangesRequestSchema, responseSchema: ChangesResponseSchema },
   'chunk': { requestSchema: ChunkRequestSchema, responseSchema: ChunkResponseSchema },
   'client_config': { requestSchema: ClientConfigRequestSchema, responseSchema: ClientConfigResponseSchema },
   'gas_price': { requestSchema: GasPriceRequestSchema, responseSchema: GasPriceResponseSchema },
-  'genesis_config': { requestSchema: GenesisConfigRequestSchema, responseSchema: GenesisConfigResponseSchema },
   'health': { requestSchema: HealthRequestSchema, responseSchema: HealthResponseSchema },
   'light_client_proof': { requestSchema: LightClientProofRequestSchema, responseSchema: LightClientProofResponseSchema },
-  'maintenance_windows': { requestSchema: MaintenanceWindowsRequestSchema, responseSchema: MaintenanceWindowsResponseSchema },
   'network_info': { requestSchema: NetworkInfoRequestSchema, responseSchema: NetworkInfoResponseSchema },
   'next_light_client_block': { requestSchema: NextLightClientBlockRequestSchema, responseSchema: NextLightClientBlockResponseSchema },
   'query': { requestSchema: QueryRequestSchema, responseSchema: QueryResponseSchema },
