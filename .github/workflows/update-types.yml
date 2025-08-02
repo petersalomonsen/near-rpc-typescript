@@ -34,8 +34,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Generate code from OpenAPI spec
-        run: pnpm generate
+      - name: Fetch OpenAPI spec versions
+        run: pnpm fetch-versions
+
+      - name: Generate code for all versions
+        run: pnpm generate-all
 
       - name: Format generated code
         run: pnpm format
@@ -74,18 +77,26 @@ jobs:
             This PR contains auto-generated updates from the NEAR Protocol OpenAPI specification.
 
             ## Changes
-            - Updated TypeScript types
-            - Updated Zod schemas  
+            - Discovered and fetched new OpenAPI spec versions
+            - Updated TypeScript types for all versions
+            - Updated Zod schemas for all versions
             - Updated RPC method mappings
             - Updated client interfaces and functions
+            - Updated version-specific exports
+
+            ## Generated Versions
+            - Latest version from master branch
+            - All tagged releases (v1.0.0, v1.1.0, v1.1.1, etc.)
 
             ## Validation
-            - [x] Code generation completed successfully
+            - [x] Version discovery completed successfully
+            - [x] Code generation for all versions completed
             - [x] Code formatted with prettier
             - [x] Types compile successfully
             - [x] Tests pass
             - [x] Linting passes
             - [x] Build succeeds
+            - [x] Package.json exports updated
             - [x] No breaking changes detected
 
             All validation steps are run automatically as part of this workflow.
