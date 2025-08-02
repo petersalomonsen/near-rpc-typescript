@@ -88,7 +88,6 @@ describe('Version Manifest Handling', () => {
 
     expect(latestEntry).toBeDefined();
     expect(latestEntry?.commitHash).toBe('ghi789'); // Same as 1.1.1
-    
   });
 
   it('should handle adding a new version as latest', () => {
@@ -143,7 +142,6 @@ describe('Version Manifest Handling', () => {
     const latestEntry = readManifest.versions.find(v => v.version === 'latest');
     expect(latestEntry).toBeDefined();
     expect(latestEntry?.commitHash).toBe('xyz999'); // Same as new 1.2.0
-    
 
     const v120Entry = readManifest.versions.find(v => v.version === '1.2.0');
     expect(v120Entry).toBeDefined();

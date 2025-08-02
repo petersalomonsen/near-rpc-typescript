@@ -1,5 +1,5 @@
 // Auto-generated TypeScript types from NEAR OpenAPI spec using z.infer (zod/mini version)
-// Generated on: 2025-08-01T15:15:33.525Z
+// Generated on: 2025-08-02T07:24:41.674Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/mini';
@@ -1034,6 +1034,7 @@ export type StateChangeWithCauseView = z.infer<
  */
 export type StateItem = z.infer<ReturnType<typeof schemas.StateItemSchema>>;
 
+/** Options for dumping state to S3. */
 export type StateSyncConfig = z.infer<
   ReturnType<typeof schemas.StateSyncConfigSchema>
 >;
@@ -1065,10 +1066,6 @@ export type StorageUsageConfigView = z.infer<
 
 export type SyncCheckpoint = z.infer<
   ReturnType<typeof schemas.SyncCheckpointSchema>
->;
-
-export type SyncConcurrency = z.infer<
-  ReturnType<typeof schemas.SyncConcurrencySchema>
 >;
 
 /** Configures how to fetch state parts during state sync. */

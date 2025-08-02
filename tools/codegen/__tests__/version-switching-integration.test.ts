@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { readFileSync, writeFileSync, existsSync, cpSync, rmSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
@@ -8,7 +8,6 @@ import type { VersionManifest } from '../fetch-all-versions';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = join(__dirname, '../../..');
 const OPENAPI_VERSIONS_DIR = join(__dirname, '../openapi-versions');
-const BACKUP_DIR = join(__dirname, '../openapi-versions-backup-integration');
 
 // This is a lighter integration test that demonstrates version switching
 // without running the full code generation

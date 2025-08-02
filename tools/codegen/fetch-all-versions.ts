@@ -159,6 +159,13 @@ export async function fetchAllOpenAPIVersions(): Promise<VersionManifest> {
   // Add latest version
   console.log('\nFetching latest spec from master branch...');
   try {
+    // Get the latest commit info for the openapi.json file
+    const latestCommitInfo = execSync(
+      `gh api 'repos/near/nearcore/commits?path=chain/jsonrpc/openapi/openapi.json&per_page=1' --jq '.[0] | {sha: .sha, date: .commit.author.date, message: .commit.message}'`,
+      { encoding: 'utf8' }
+    );
+    const latestCommit = JSON.parse(latestCommitInfo);
+
     const latestSpec = await downloadSpec('master');
     const latestVersion = latestSpec.info?.version || 'unknown';
 
@@ -169,26 +176,35 @@ export async function fetchAllOpenAPIVersions(): Promise<VersionManifest> {
 
     versions.set('latest', {
       version: 'latest',
-      date: new Date().toISOString(),
-      commitSha: 'master',
+      date: latestCommit.date,
+      commitSha: latestCommit.sha,
       specPath: 'openapi-latest.json',
-      commitMessage: 'Latest from master branch',
+      commitMessage: latestCommit.message.split('\n')[0],
       methods: extractMethods(latestSpec),
     });
 
     console.log(`  ✓ Downloaded latest (version ${latestVersion})`);
+    console.log(
+      `    Commit: ${latestCommit.sha.substring(0, 8)} (${latestCommit.date})`
+    );
   } catch (error) {
     console.error('  ✗ Failed to fetch latest spec:', error);
   }
 
   // Create manifest
+  const sortedVersions = Array.from(versions.values()).sort((a, b) => {
+    if (a.version === 'latest') return 1;
+    if (b.version === 'latest') return -1;
+    return b.date.localeCompare(a.date);
+  });
+
+  // Use the date from the latest version (which is the most recent commit)
+  const latestVersion = sortedVersions.find(v => v.version === 'latest');
+  const lastUpdated = latestVersion?.date || new Date().toISOString();
+
   const manifest: VersionManifest = {
-    versions: Array.from(versions.values()).sort((a, b) => {
-      if (a.version === 'latest') return 1;
-      if (b.version === 'latest') return -1;
-      return b.date.localeCompare(a.date);
-    }),
-    lastUpdated: new Date().toISOString(),
+    versions: sortedVersions,
+    lastUpdated,
   };
 
   // Save manifest

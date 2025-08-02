@@ -17,6 +17,8 @@
     "format": "prettier --write '*.{ts,js}' 'tools/**/*.{ts,js}' 'tests/**/*.{ts,js}' 'examples/**/*.{ts,js}' 'scripts/**/*.{ts,js}' && pnpm -r format",
     "clean": "pnpm -r clean",
     "generate": "pnpm --filter @near-js/jsonrpc-types generate",
+    "fetch-versions": "tsx tools/codegen/fetch-all-versions.ts",
+    "generate-all": "tsx tools/codegen/generate-all-versions.ts",
     "typecheck": "pnpm -r typecheck",
     "type-coverage": "typescript-coverage-report",
     "dev": "pnpm -r --parallel dev",
