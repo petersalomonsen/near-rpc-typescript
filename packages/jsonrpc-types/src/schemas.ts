@@ -1,5 +1,5 @@
 // Auto-generated Zod schemas from NEAR OpenAPI spec (zod/mini version)
-// Generated on: 2026-06-24T09:26:08.375Z
+// Generated on: 2026-07-15T06:48:03.826Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/mini';
@@ -1533,6 +1533,12 @@ export const ExtCostsConfigViewSchema = () =>
     ripemd160Block: z.optional(z.lazy(() => NearGasSchema())),
     sha256Base: z.optional(z.lazy(() => NearGasSchema())),
     sha256Byte: z.optional(z.lazy(() => NearGasSchema())),
+    sha3_256Base: z.optional(z.lazy(() => NearGasSchema())),
+    sha3_256Byte: z.optional(z.lazy(() => NearGasSchema())),
+    sha3_384Base: z.optional(z.lazy(() => NearGasSchema())),
+    sha3_384Byte: z.optional(z.lazy(() => NearGasSchema())),
+    sha3_512Base: z.optional(z.lazy(() => NearGasSchema())),
+    sha3_512Byte: z.optional(z.lazy(() => NearGasSchema())),
     storageHasKeyBase: z.optional(z.lazy(() => NearGasSchema())),
     storageHasKeyByte: z.optional(z.lazy(() => NearGasSchema())),
     storageIterCreateFromByte: z.optional(z.lazy(() => NearGasSchema())),
@@ -1571,14 +1577,6 @@ export const ExtCostsConfigViewSchema = () =>
     yieldCreateWithIdBase: z.optional(z.lazy(() => NearGasSchema())),
     yieldResumeBase: z.optional(z.lazy(() => NearGasSchema())),
     yieldResumeByte: z.optional(z.lazy(() => NearGasSchema())),
-  });
-
-export const ExternalStorageConfigSchema = () =>
-  z.object({
-    externalStorageFallbackThreshold: z.optional(z.number()),
-    location: z.optional(z.lazy(() => ExternalStorageLocationSchema())),
-    numConcurrentRequests: z.optional(z.number()),
-    numConcurrentRequestsDuringCatchup: z.optional(z.number()),
   });
 
 // Supported external storage backends and their minimal config.
@@ -3491,7 +3489,6 @@ export const RpcClientConfigResponseSchema = () =>
     stateRequestThrottlePeriod: z.optional(z.array(z.number())),
     stateRequestsPerThrottlePeriod: z.optional(z.number()),
     stateSync: z.optional(z.lazy(() => StateSyncConfigSchema())),
-    stateSyncExternalBackoff: z.optional(z.array(z.number())),
     stateSyncExternalTimeout: z.optional(z.array(z.number())),
     stateSyncP2pTimeout: z.optional(z.array(z.number())),
     stateSyncRetryBackoff: z.optional(z.array(z.number())),
@@ -5500,13 +5497,7 @@ export const SyncConcurrencySchema = () =>
   });
 
 // Configures how to fetch state parts during state sync.
-export const SyncConfigSchema = () =>
-  z.union([
-    z.enum(['Peers']),
-    z.object({
-      ExternalStorage: z.lazy(() => ExternalStorageConfigSchema()),
-    }),
-  ]);
+export const SyncConfigSchema = () => z.enum(['Peers']);
 
 export const Tier1ProxyViewSchema = () =>
   z.object({
@@ -5624,6 +5615,7 @@ export const VMConfigViewSchema = () =>
     p256VerifyHostFn: z.optional(z.boolean()),
     reftypesBulkMemory: z.optional(z.boolean()),
     regularOpCost: z.optional(z.number()),
+    sha3HostFns: z.optional(z.boolean()),
     storageGetMode: z.optional(z.lazy(() => StorageGetModeSchema())),
     vmKind: z.optional(z.lazy(() => VMKindSchema())),
     yieldWithIdHostFns: z.optional(z.boolean()),
