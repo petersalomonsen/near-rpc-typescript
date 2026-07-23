@@ -1,5 +1,5 @@
 // Auto-generated Zod schemas from NEAR OpenAPI spec (zod/mini version)
-// Generated on: 2026-07-15T06:48:03.826Z
+// Generated on: 2026-07-23T08:25:51.303Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/mini';
@@ -42,6 +42,9 @@ export const AccessKeyInfoViewSchema = () =>
 export const AccessKeyListSchema = () =>
   z.object({
     keys: z.array(z.lazy(() => AccessKeyInfoViewSchema())),
+    lastKey: z.optional(
+      z.union([z.lazy(() => PublicKeyHandleSchema()), z.null()])
+    ),
   });
 
 // Defines permissions for AccessKey
@@ -567,6 +570,7 @@ export const ActionsValidationErrorSchema = () =>
         numberOfDeployActions: z.number(),
       }),
     }),
+    z.enum(['FunctionCallEmptyMethodName']),
   ]);
 
 // An action that adds key with public key associated
@@ -3508,6 +3512,7 @@ export const RpcClientConfigResponseSchema = () =>
     ttlAccountIdRouter: z.optional(z.array(z.number())),
     txRoutingHeightHorizon: z.optional(z.number()),
     version: z.optional(z.lazy(() => VersionSchema())),
+    viewAccessKeysLimit: z.optional(z.number()),
     viewClientThreads: z.optional(z.number()),
   });
 
@@ -3865,6 +3870,15 @@ export const RpcQueryErrorSchema = () =>
       info: z.object({
         blockHash: z.lazy(() => CryptoHashSchema()),
         blockHeight: z.number(),
+        limit: z.number(),
+        requestedAccountId: z.lazy(() => AccountIdSchema()),
+      }),
+      name: z.enum(['TOO_MANY_ACCESS_KEYS']),
+    }),
+    z.object({
+      info: z.object({
+        blockHash: z.lazy(() => CryptoHashSchema()),
+        blockHeight: z.number(),
         error: z.lazy(() => FunctionCallErrorSchema()),
         vmError: z.string(),
       }),
@@ -3937,6 +3951,10 @@ export const RpcQueryRequestSchema = () =>
       }),
       z.object({
         accountId: z.lazy(() => AccountIdSchema()),
+        afterKey: z.optional(
+          z.union([z.lazy(() => PublicKeyHandleSchema()), z.null()])
+        ),
+        limit: z.optional(z.union([z.union([z.number(), z.null()]), z.null()])),
         requestType: z.enum(['view_access_key_list']),
       })
     ),
@@ -4028,6 +4046,10 @@ export const RpcQueryRequestSchema = () =>
       }),
       z.object({
         accountId: z.lazy(() => AccountIdSchema()),
+        afterKey: z.optional(
+          z.union([z.lazy(() => PublicKeyHandleSchema()), z.null()])
+        ),
+        limit: z.optional(z.union([z.union([z.number(), z.null()]), z.null()])),
         requestType: z.enum(['view_access_key_list']),
       })
     ),
@@ -4119,6 +4141,10 @@ export const RpcQueryRequestSchema = () =>
       }),
       z.object({
         accountId: z.lazy(() => AccountIdSchema()),
+        afterKey: z.optional(
+          z.union([z.lazy(() => PublicKeyHandleSchema()), z.null()])
+        ),
+        limit: z.optional(z.union([z.union([z.number(), z.null()]), z.null()])),
         requestType: z.enum(['view_access_key_list']),
       })
     ),
@@ -4600,6 +4626,9 @@ export const RpcTransactionErrorSchema = () =>
       name: z.enum(['INTERNAL_ERROR']),
     }),
     z.object({
+      info: z.optional(
+        z.union([z.lazy(() => TimeoutErrorCauseSchema()), z.null()])
+      ),
       name: z.enum(['TIMEOUT_ERROR']),
     }),
   ]);
@@ -4771,6 +4800,10 @@ export const RpcViewAccessKeyListRequestSchema = () =>
     ]),
     z.object({
       accountId: z.lazy(() => AccountIdSchema()),
+      afterKey: z.optional(
+        z.union([z.lazy(() => PublicKeyHandleSchema()), z.null()])
+      ),
+      limit: z.optional(z.union([z.union([z.number(), z.null()]), z.null()])),
     })
   );
 
@@ -4780,6 +4813,9 @@ export const RpcViewAccessKeyListResponseSchema = () =>
     blockHash: z.lazy(() => CryptoHashSchema()),
     blockHeight: z.number(),
     keys: z.array(z.lazy(() => AccessKeyInfoViewSchema())),
+    lastKey: z.optional(
+      z.union([z.lazy(() => PublicKeyHandleSchema()), z.null()])
+    ),
   });
 
 export const RpcViewAccessKeyRequestSchema = () =>
@@ -5504,6 +5540,29 @@ export const Tier1ProxyViewSchema = () =>
     addr: z.string(),
     peerId: z.lazy(() => PublicKeySchema()),
   });
+
+//
+// Explains why a transaction status request returned a
+// `RpcTransactionError::TimeoutError`:
+
+export const TimeoutErrorCauseSchema = () =>
+  z.union([
+    z.object({
+      cause: z.enum(['NOT_OBSERVED']),
+    }),
+    z.object({
+      cause: z.enum(['PENDING']),
+      status: z.lazy(() => RpcTransactionResponseSchema()),
+    }),
+    z.object({
+      cause: z.enum(['DOES_NOT_TRACK_SHARD']),
+      shardId: z.lazy(() => ShardIdSchema()),
+    }),
+    z.object({
+      cause: z.enum(['ERROR']),
+      debugInfo: z.string(),
+    }),
+  ]);
 
 //
 // Describes the expected behavior of the node regarding shard tracking. If
