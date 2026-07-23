@@ -1,5 +1,5 @@
 // Auto-generated TypeScript types from NEAR OpenAPI spec using z.infer (zod/mini version)
-// Generated on: 2026-07-15T06:48:03.814Z
+// Generated on: 2026-07-23T08:25:51.291Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/mini';
@@ -1612,6 +1612,14 @@ export type SyncConfig = z.infer<ReturnType<typeof schemas.SyncConfigSchema>>;
 
 export type Tier1ProxyView = z.infer<
   ReturnType<typeof schemas.Tier1ProxyViewSchema>
+>;
+
+/**
+ * Explains why a transaction status request returned a
+ * `RpcTransactionError::TimeoutError`:
+ */
+export type TimeoutErrorCause = z.infer<
+  ReturnType<typeof schemas.TimeoutErrorCauseSchema>
 >;
 
 /**
