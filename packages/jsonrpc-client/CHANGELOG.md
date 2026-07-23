@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.8.0](https://github.com/near/near-jsonrpc-client-ts/compare/jsonrpc-client-v1.7.3...jsonrpc-client-v1.8.0) (2026-07-23)
+
+
+### Features
+
+* update generated code from OpenAPI spec ([#106](https://github.com/near/near-jsonrpc-client-ts/issues/106)) ([59d51db](https://github.com/near/near-jsonrpc-client-ts/commit/59d51db1f7f93b8ad9b376db0978bc7616d1dc20))
+* update generated code from OpenAPI spec ([#95](https://github.com/near/near-jsonrpc-client-ts/issues/95)) ([6a753b3](https://github.com/near/near-jsonrpc-client-ts/commit/6a753b33ba3e12d9d1271f9c76ceb63b0d3d9e8d))
+
 ## [1.7.3](https://github.com/near/near-jsonrpc-client-ts/compare/jsonrpc-client-v1.7.2...jsonrpc-client-v1.7.3) (2026-06-24)
 
 
