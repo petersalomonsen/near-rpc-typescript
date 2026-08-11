@@ -1,5 +1,5 @@
 // Auto-generated Zod schemas from NEAR OpenAPI spec (zod/mini version)
-// Generated on: 2026-07-23T08:25:51.303Z
+// Generated on: 2026-08-11T06:20:14.580Z
 // Do not edit manually - run 'pnpm generate' to regenerate
 
 import { z } from 'zod/mini';
@@ -371,6 +371,17 @@ export const ActionErrorKindSchema = () =>
         numNonces: z.number(),
       }),
     }),
+    z.object({
+      TotalPromiseInputSizeExceeded: z.object({
+        limit: z.number(),
+        size: z.number(),
+      }),
+    }),
+    z.object({
+      ReceiptStorageProofSizeExceeded: z.object({
+        limit: z.number(),
+      }),
+    }),
   ]);
 
 export const ActionViewSchema = () =>
@@ -624,6 +635,9 @@ export const BandwidthRequestsV1Schema = () =>
 export const BlockHeaderInnerLiteViewSchema = () =>
   z.object({
     blockMerkleRoot: z.lazy(() => CryptoHashSchema()),
+    chunkExecutionRoot: z.optional(
+      z.union([z.lazy(() => CryptoHashSchema()), z.null()])
+    ),
     epochId: z.lazy(() => CryptoHashSchema()),
     height: z.number(),
     nextBpHash: z.lazy(() => CryptoHashSchema()),
@@ -649,6 +663,9 @@ export const BlockHeaderViewSchema = () =>
     challengesRoot: z.lazy(() => CryptoHashSchema()),
     chunkEndorsements: z.optional(
       z.union([z.union([z.array(z.array(z.number())), z.null()]), z.null()])
+    ),
+    chunkExecutionRoot: z.optional(
+      z.union([z.lazy(() => CryptoHashSchema()), z.null()])
     ),
     chunkHeadersRoot: z.lazy(() => CryptoHashSchema()),
     chunkMask: z.array(z.boolean()),
@@ -803,6 +820,9 @@ export const ChunkHeaderViewSchema = () =>
 export const CloudArchivalWriterConfigSchema = () =>
   z.object({
     archiveBlockData: z.optional(z.boolean()),
+    catchUpThrottle: z.optional(
+      z.lazy(() => DurationAsStdSchemaProviderSchema())
+    ),
     pollingInterval: z.optional(
       z.lazy(() => DurationAsStdSchemaProviderSchema())
     ),
@@ -1523,6 +1543,8 @@ export const ExtCostsConfigViewSchema = () =>
     keccak512Byte: z.optional(z.lazy(() => NearGasSchema())),
     logBase: z.optional(z.lazy(() => NearGasSchema())),
     logByte: z.optional(z.lazy(() => NearGasSchema())),
+    mlDsaVerifyBase: z.optional(z.lazy(() => NearGasSchema())),
+    mlDsaVerifyByte: z.optional(z.lazy(() => NearGasSchema())),
     p256VerifyBase: z.optional(z.lazy(() => NearGasSchema())),
     p256VerifyByte: z.optional(z.lazy(() => NearGasSchema())),
     promiseAndBase: z.optional(z.lazy(() => NearGasSchema())),
@@ -1930,6 +1952,11 @@ export const HostErrorSchema = () =>
     }),
     z.object({
       P256VerifyInvalidInput: z.object({
+        msg: z.string(),
+      }),
+    }),
+    z.object({
+      MlDsaVerifyInvalidInput: z.object({
         msg: z.string(),
       }),
     }),
@@ -2945,6 +2972,9 @@ export const LimitConfigSchema = () =>
       z.union([z.union([z.number(), z.null()]), z.null()])
     ),
     maxGasBurnt: z.optional(z.lazy(() => NearGasSchema())),
+    maxGlobalsPerContract: z.optional(
+      z.union([z.union([z.number(), z.null()]), z.null()])
+    ),
     maxInstrumentedCodeSize: z.optional(
       z.union([z.union([z.number(), z.null()]), z.null()])
     ),
@@ -2971,6 +3001,7 @@ export const LimitConfigSchema = () =>
     ),
     maxPromisesPerFunctionCallAction: z.optional(z.number()),
     maxReceiptSize: z.optional(z.number()),
+    maxReceiptTotalInputSize: z.optional(z.number()),
     maxRegisterSize: z.optional(z.number()),
     maxStackHeight: z.optional(z.number()),
     maxTablesPerContract: z.optional(
@@ -3139,6 +3170,7 @@ export const PrepareErrorSchema = () =>
     z.enum(['TooManyParamsPerFunction']),
     z.enum(['TooManyParamsPerContract']),
     z.enum(['OperandStackTooLarge']),
+    z.enum(['TooManyGlobals']),
   ]);
 
 //
@@ -3429,6 +3461,7 @@ export const RpcClientConfigResponseSchema = () =>
     blockProductionTrackingDelay: z.optional(
       z.lazy(() => MutableConfigValueSchema())
     ),
+    blockRequestTimeout: z.optional(z.array(z.number())),
     catchupStepPeriod: z.optional(z.array(z.number())),
     chainId: z.optional(z.string()),
     chunkDistributionNetwork: z.optional(
@@ -3493,7 +3526,6 @@ export const RpcClientConfigResponseSchema = () =>
     stateRequestThrottlePeriod: z.optional(z.array(z.number())),
     stateRequestsPerThrottlePeriod: z.optional(z.number()),
     stateSync: z.optional(z.lazy(() => StateSyncConfigSchema())),
-    stateSyncExternalTimeout: z.optional(z.array(z.number())),
     stateSyncP2pTimeout: z.optional(z.array(z.number())),
     stateSyncRetryBackoff: z.optional(z.array(z.number())),
     syncCheckPeriod: z.optional(z.array(z.number())),
@@ -5670,6 +5702,7 @@ export const VMConfigViewSchema = () =>
     limitConfig: z.optional(z.lazy(() => LimitConfigSchema())),
     linearOpBaseCost: z.optional(z.number()),
     linearOpUnitCost: z.optional(z.number()),
+    mlDsaVerifyHostFn: z.optional(z.boolean()),
     oneYoctoOnPromise: z.optional(z.boolean()),
     p256VerifyHostFn: z.optional(z.boolean()),
     reftypesBulkMemory: z.optional(z.boolean()),
